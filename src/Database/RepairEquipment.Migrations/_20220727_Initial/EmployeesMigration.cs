@@ -13,7 +13,6 @@ namespace RepairEquipment.Migrations._20220727_Initial
     internal sealed class EmployeesMigration : ISubMigration
     {
         private const string TableName = Tables.Employee;
-
         public void Up(Migration migration)
         {
             migration.Create.Table(TableName)
