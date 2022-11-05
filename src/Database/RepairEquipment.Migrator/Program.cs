@@ -24,7 +24,7 @@ static bool CheckDatabaseExists(string connectionString)
 {
     using (var connection = new SqlConnection(connectionString))
     {
-        using (var command = new SqlCommand($"SELECT db_id('HOOBOB')", connection))
+        using (var command = new SqlCommand($"SELECT db_id('RepairEquipment')", connection))
         {
             connection.Open();
             return (command.ExecuteScalar() != DBNull.Value);

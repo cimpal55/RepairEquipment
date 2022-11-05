@@ -10,7 +10,13 @@ namespace RepairEquipment.Migrations
         public override ISubMigration[] GetMigrations() =>
             new ISubMigration[]
             {
-                new EmployeesMigration()
+                new EquipmentTypesMigration(),
+                new EmployeesMigration(),
+                new ClientsMigration(),
+                new EquipmentsMigration(),
+                new DocumentsMigration(),
+                new DocumentDetailsMigration(),
+                new EquipmentHistoryMigration()
             };
     }
 }

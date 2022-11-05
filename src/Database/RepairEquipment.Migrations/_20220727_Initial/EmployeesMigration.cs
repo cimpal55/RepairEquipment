@@ -1,11 +1,6 @@
 ﻿using FluentMigrator;
 using RepairEquipment.Data;
 using RepairEquipment.Migrations.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static RepairEquipment.Data.Columns;
 
 namespace RepairEquipment.Migrations._20220727_Initial
@@ -26,7 +21,6 @@ namespace RepairEquipment.Migrations._20220727_Initial
                 .WithColumn(Employee.Email).AsString(50).NotNullable()
                 .WithColumn(Employee.Created).AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
         }
-
         public void Down(Migration migration)
         {
             migration.Delete.Table(TableName);

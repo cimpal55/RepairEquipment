@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RepairEquipment.Data.Models
+﻿namespace RepairEquipment.Data.Models
 {
     public sealed record EmployeeRecord
     {
