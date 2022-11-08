@@ -1,19 +1,10 @@
 ﻿@inherits LayoutComponentBase
 
-<PageTitle>RepairEquipment</PageTitle>
-
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
+<div class="container-fluid h-100">
+    <div class="row h-100">
+        <NavMenu></NavMenu>
+        <div id="page-content-wrapper">
             @Body
-        </article>
-    </main>
+        </div>
+    </div>
 </div>

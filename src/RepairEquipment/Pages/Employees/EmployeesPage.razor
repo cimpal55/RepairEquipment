@@ -1,0 +1,48 @@
+﻿@page "/employees"
+@using RepairEquipment.Models
+@using RepairEquipment.Shared.Models.Data
+
+<h1 class="page-title">All employees</h1>
+@if (Employees == null)
+{
+    <p><em>Loading ... </em></p>
+}
+else
+{
+    <table class="table table-light">
+        <thead class="table-primary">
+            <tr>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Kods</th>
+                <th>Personālāis kods</th>
+                <th>Talrunis</th>
+                <th>E-pasts</th>
+                <th>Adrese</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var employee in Employees)
+            {
+                <tr>
+                    <td>@employee.Name</td>
+                    <td>@employee.Surname</td>
+                    <td>@employee.Code</td>
+                    <td>@employee.PersonalCode</td>
+                    <td>@employee.Phone</td>
+                    <td>@employee.Email</td>
+                    <td>@employee.Address</td>
+                </tr>
+            }
+    </tbody>
+    </table>
+}
+
+@code {
+    public List<Employee>? Employees { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        Employees = MockDataService.Employees;
+    }
+}
