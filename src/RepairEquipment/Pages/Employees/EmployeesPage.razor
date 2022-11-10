@@ -50,6 +50,6 @@ else
         string connstring = "Data Source=.\\SQLEXPRESS;Initial Catalog=RepairEquipment;Integrated Security=True;";
         string sql = "SELECT * FROM TBL_CONF_Employees";
         Employees = await _data.LoadData<Employee, dynamic>(sql, new { },
-        (connstring));
+        _config.GetConnectionString("ConnectionStrings")[Default]);
     }
 }
