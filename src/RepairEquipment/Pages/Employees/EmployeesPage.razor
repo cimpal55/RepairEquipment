@@ -1,6 +1,10 @@
 ﻿@page "/employees"
 @using RepairEquipment.Models
 @using RepairEquipment.Shared.Models.Data
+@using RepairEquipment.Client
+
+@inject ISQLDataAccess _data
+@inject IConfiguration _config
 
 <h1 class="page-title">All employees</h1>
 @if (Employees == null)
@@ -41,8 +45,11 @@ else
 @code {
     public List<Employee>? Employees { get; set; } = default!;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        Employees = MockDataService.Employees;
+        string connstring = "Data Source=.\\SQLEXPRESS;Initial Catalog=RepairEquipment;Integrated Security=True;";
+        string sql = "SELECT * FROM TBL_CONF_Employees";
+        Employees = await _data.LoadData<Employee, dynamic>(sql, new { },
+        (connstring));
     }
 }

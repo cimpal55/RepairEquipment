@@ -12,9 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\RepairEquipment.Core\RepairEquipment.Core.csproj" />
+    <ProjectReference Include="..\..\RepairEquipment.Client\RepairEquipment.Client.csproj" />
     <ProjectReference Include="..\RepairEquipment.Client\RepairEquipment.Shared.csproj" />
-    <ProjectReference Include="..\RepairEquipment.Core\RepairEquipment.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\Admin\" />
   </ItemGroup>
 
 </Project>
