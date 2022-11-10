@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\RepairEquipment.Client\RepairEquipment.Client.csproj" />
     <ProjectReference Include="..\RepairEquipment.Client\RepairEquipment.Shared.csproj" />
     <ProjectReference Include="..\RepairEquipment.Shared\RepairEquipment.Shared.csproj" />
   </ItemGroup>
