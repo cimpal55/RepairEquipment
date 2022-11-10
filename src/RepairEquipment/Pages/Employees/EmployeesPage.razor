@@ -47,9 +47,9 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        string connstring = "Data Source=.\\SQLEXPRESS;Initial Catalog=RepairEquipment;Integrated Security=True;";
+        string connstring = "Data Source=.\\SQLEXPRESS;Initial Catalog=RepairEquipment;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=False;";
         string sql = "SELECT * FROM TBL_CONF_Employees";
         Employees = await _data.LoadData<Employee, dynamic>(sql, new { },
-        _config.GetConnectionString("ConnectionStrings")[Default]);
+        (connstring));
     }
 }
