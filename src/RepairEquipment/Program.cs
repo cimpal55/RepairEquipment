@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Components.Web;
 using RepairEquipment.Data;
 using Dapper;
 using RepairEquipment.Client.DbAccess;
+using RepairEquipment.Client.Services.Interfaces;
+using RepairEquipment.Client.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +13,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 builder.Services.AddSingleton<WeatherForecastService>();
-builder.Services.AddSingleton<ISqlDataAccess, SqlDataAccess>();
+builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
+builder.Services.AddTransient<IEmployeeService, EmployeeService>();
 
 var app = builder.Build();
 
