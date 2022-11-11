@@ -1,0 +1,26 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudTextField T="string" Label="Name" @bind-Value="employee.Name" />
+        <MudTextField T="string" Label="Surname" @bind-Value="employee.Surname" />
+        <MudTextField T="string" Label="Code" @bind-Value="employee.Code" />
+        <MudTextField T="string" Label="PersonalCode" @bind-Value="employee.PersonalCode" />
+        <MudTextField T="string" Label="Phone" @bind-Value="employee.Phone" />
+        <MudTextField T="string" Label="Email" @bind-Value="employee.Email" />
+        <MudTextField T="string" Label="Address" @bind-Value="employee.Address" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="@MudDialog.Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public Employee employee { get; set; }
+
+    private void Submit()
+    {
+        MudDialog.Close(DialogResult.Ok<Employee>(employee));
+    }
+}
