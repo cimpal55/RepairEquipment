@@ -1,18 +1,37 @@
 ﻿@page "/employees"
+@using RepairEquipment.Client.DbAccess
+@using RepairEquipment.Client.Services.Interfaces
 @using RepairEquipment.Models
-@using RepairEquipment.Shared.Models.Data
-@using RepairEquipment.Client
-
-@inject ISQLDataAccess _data
+@using RepairEquipment.Shared.Models
+@using RepairEquipment.Client.Services
+@inject IEmployeeService _data
 @inject IConfiguration _config
 
-<h1 class="page-title">All employees</h1>
 @if (Employees == null)
 {
     <p><em>Loading ... </em></p>
 }
 else
 {
+    <div class="page-title">
+        <h1>All employees</h1>
+        <button class="button-add" role="button">CREATE</button>
+        <EditForm Model="@newEmployee" OnValidSubmit="@InsertEmployee">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <InputText id="name" @bind-Value="@newEmployee.Name"/>
+            <InputText id="surname" @bind-Value="@newEmployee.Surname"/>
+            <InputText id="code" @bind-Value="@newEmployee.Code"/>
+            <InputText id="personalCode" @bind-Value="@newEmployee.PersonalCode"/>
+            <InputText id="phone" @bind-Value="@newEmployee.Phone"/>
+            <InputText id="email" @bind-Value="@newEmployee.Email"/>
+            <InputText id="address" @bind-Value="@newEmployee.Address"/>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </EditForm>
+    </div>
+
     <table class="table table-light">
         <thead class="table-primary">
             <tr>
@@ -23,6 +42,7 @@ else
                 <th>Talrunis</th>
                 <th>E-pasts</th>
                 <th>Adrese</th>
+                <th>Darbības</th>
             </tr>
         </thead>
         <tbody>
@@ -43,13 +63,36 @@ else
 }
 
 @code {
-    public List<Employee>? Employees { get; set; } = default!;
+    private List<Employee>? Employees;
+
+    private Employee newEmployee = new Employee();
+
 
     protected override async Task OnInitializedAsync()
     {
-        string connstring = "Data Source=.\\SQLEXPRESS;Initial Catalog=RepairEquipment;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=False;";
-        string sql = "SELECT * FROM TBL_CONF_Employees";
-        Employees = await _data.LoadData<Employee, dynamic>(sql, new { },
-        (connstring));
+        Employees = await _data.GetEmployeesList();
+        StateHasChanged();
     }
+
+    private async Task InsertEmployee()
+    {
+        Employee emp = new Employee
+        {
+            Name = newEmployee.Name,
+            Surname = newEmployee.Surname,
+            Code = newEmployee.Code,
+            PersonalCode = newEmployee.PersonalCode,
+            Phone = newEmployee.Phone,
+            Email = newEmployee.Email,
+            Address = newEmployee.Address,
+        };
+
+        await _data.InsertEmployeeAsync(emp);
+
+        Employees.Add(emp);
+        
+        newEmployee = new Employee();
+       
+    }
+
 }
