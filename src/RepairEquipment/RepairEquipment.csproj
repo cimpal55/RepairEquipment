@@ -9,12 +9,10 @@
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.1" />
-    <PackageReference Include="MudBlazor" Version="6.0.18" />
-    <PackageReference Include="Toolbelt.AspNetCore.CssLiveReloader" Version="1.1.4" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RepairEquipment.Client\RepairEquipment.Client.csproj" />
+    <ProjectReference Include="..\RepairEquipment.Client\RepairEquipment.Shared.csproj" />
     <ProjectReference Include="..\RepairEquipment.Shared\RepairEquipment.Shared.csproj" />
   </ItemGroup>
 

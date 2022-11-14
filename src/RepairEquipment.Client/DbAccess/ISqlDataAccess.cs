@@ -2,8 +2,7 @@
 {
     public interface ISqlDataAccess
     {
-        string ConnectionString { get; set; }
-        Task<List<T>> LoadData<T, U>(string sql, U parameters);
-        Task SaveData<T>(string sql, T parameters);
+        Task<List<T>> LoadData<T, U>(string sql, U parameters, string connString);
+        Task SaveData<T>(string sql, T parameters, string connString);
     }
 }

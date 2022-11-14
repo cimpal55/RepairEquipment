@@ -1,5 +1,6 @@
 ﻿using FluentMigrator;
 using RepairEquipment.Data;
+using RepairEquipment.Data.Models;
 using RepairEquipment.Migrations.Interfaces;
 using static RepairEquipment.Data.Columns;
 

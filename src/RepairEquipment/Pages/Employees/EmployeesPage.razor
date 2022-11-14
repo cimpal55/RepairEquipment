@@ -1,146 +1,55 @@
 ﻿@page "/employees"
-@using RepairEquipment.Client.DbAccess
-@using RepairEquipment.Client.Services.Interfaces
-@using RepairEquipment.Shared.Dialogs
-@using RepairEquipment.Shared.Models
-@using RepairEquipment.Client.Services
-@inject IEmployeeService _data
-@inject ISnackbar _snackbar
-@inject IConfiguration _config
-@inject IDialogService _dialogService;
+@using RepairEquipment.Models
+@using RepairEquipment.Shared.Models.Data
+@using RepairEquipment.Client
 
+@inject ISQLDataAccess _data
+@inject IConfiguration _config
+
+<h1 class="page-title">All employees</h1>
 @if (Employees == null)
 {
     <p><em>Loading ... </em></p>
 }
 else
 {
-<MudContainer Class="d-flex justify-center mb-2">
-    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" Size="Size.Large" IconSize="Size.Large" Label="Add A New
-    Cake" Class="ma-2" @onclick="(e => InsertEmployee())" />
-</MudContainer>
-
-<MudPaper Elevation="7">
-    <MudTable Items="Employees"
-              Dense="false"
-              Hover="true"
-              Filter="new Func<Employee, bool>(FilterFunc)"
-              @bind-SelectedItem="newEmployee"
-              SortLabel="Sort By"
-              CommitEditTooltip="Commit Edit"
-              OnCommitEditClick="@(()=>_snackbar.Add("Commit Handle"))">
-
-          <ColGroup>
-              <col/>
-              <col/>
-              <col/>
-              <col/>
-              <col/>
-              <col/>
-              <col/>
-          </ColGroup>
-          
-          <ToolBarContent>
-              <MudText Typo="Typo.h6">
-                  Employee List
-              </MudText>
-              <MudSpacer />
-              <MudTextField @bind-Value="searchString" Placeholder="Search"
-                            Adornment="Adornment.Start"
-                            AdornmentIcon="@Icons.Filled.Search"
-                            IconSize="Size.Medium"
-                            Class="mt-0"/>          
-          </ToolBarContent>
-          
-          <HeaderContent>
-              <MudTh>
-                    <MudTableSortLabel SortBy="new Func<Employee, object>(x=>x.Name)">
-                        Name
-                    </MudTableSortLabel>
-                    <MudTableSortLabel SortBy="new Func<Employee, object>(x=>x.Surname)">
-                        Surname
-                    </MudTableSortLabel>
-                    <MudTableSortLabel SortBy="new Func<Employee, object>(x=>x.Code)">
-                        Code
-                    </MudTableSortLabel>
-                    <MudTableSortLabel SortBy="new Func<Employee, object>(x=>x.PersonalCode)">
-                        PersonalCode
-                    </MudTableSortLabel>
-                    <MudTableSortLabel SortBy="new Func<Employee, object>(x=>x.Phone)">
-                        Phone
-                    </MudTableSortLabel>
-                    <MudTableSortLabel SortBy="new Func<Employee, object>(x=>x.Email)">
-                        Email
-                    </MudTableSortLabel>
-                    <MudTableSortLabel SortBy="new Func<Employee, object>(x=>x.Address)">
-                        Address
-                    </MudTableSortLabel>
-              </MudTh>
-          </HeaderContent>
-          
-          <RowTemplate>
-               <MudTd DataLabel="Name">@context.Name</MudTd>    
-               <MudTd DataLabel="Surname">@context.Surname</MudTd>  
-               <MudTd DataLabel="Code">@context.Code</MudTd>  
-               <MudTd DataLabel="PersonalCode">@context.PersonalCode</MudTd>  
-               <MudTd DataLabel="Phone">@context.Phone</MudTd>  
-               <MudTd DataLabel="Email">@context.Email</MudTd>  
-               <MudTd DataLabel="Address">@context.Address</MudTd>  
-          </RowTemplate>
-
-          <RowEditingTemplate>
-              <MudTd>@context.Name</MudTd>
-              <MudTd>@context.Surname</MudTd>
-              <MudTd>@context.Code</MudTd>
-              <MudTd>@context.PersonalCode</MudTd>
-              <MudTd>@context.Phone</MudTd>
-              <MudTd>@context.Email</MudTd>
-              <MudTd>@context.Address</MudTd>
-          </RowEditingTemplate>
-
-          <PagerContent>
-              <MudTablePager />
-          </PagerContent>
-
-    </MudTable>
-</MudPaper>
+    <table class="table table-light">
+        <thead class="table-primary">
+            <tr>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Kods</th>
+                <th>Personālāis kods</th>
+                <th>Talrunis</th>
+                <th>E-pasts</th>
+                <th>Adrese</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var employee in Employees)
+            {
+                <tr>
+                    <td>@employee.Name</td>
+                    <td>@employee.Surname</td>
+                    <td>@employee.Code</td>
+                    <td>@employee.PersonalCode</td>
+                    <td>@employee.Phone</td>
+                    <td>@employee.Email</td>
+                    <td>@employee.Address</td>
+                </tr>
+            }
+    </tbody>
+    </table>
 }
 
 @code {
-    private List<Employee>? Employees;
-
-    private Employee newEmployee = new Employee();
-
-    private string searchString = "";
+    public List<Employee>? Employees { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
-        Employees = await _data.GetEmployeesList();
+        string connstring = "Data Source=.\\SQLEXPRESS;Initial Catalog=RepairEquipment;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=False;";
+        string sql = "SELECT * FROM TBL_CONF_Employees";
+        Employees = await _data.LoadData<Employee, dynamic>(sql, new { },
+        (connstring));
     }
-
-    private async Task InsertEmployee()
-    {
-        var parameters = new DialogParameters();
-        parameters.Add("employee", new Employee());
-        var dialog = await _dialogService.Show<EmployeeDialog>("Create A Employee", parameters).Result;
-        
-        if (dialog.Data != null) {
-            Employee newEmployee = dialog.Data as Employee;
-            await _data.InsertEmployeeAsync(newEmployee);
-        }
-    }
-
-    private bool FilterFunc(Employee item)
-    {
-        if (string.IsNullOrEmpty(searchString)) return true;
-        if (item.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (item.Surname.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (item.Code.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (item.PersonalCode.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (item.Phone.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (item.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (item.Address.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        return false;
-    }
-
 }
