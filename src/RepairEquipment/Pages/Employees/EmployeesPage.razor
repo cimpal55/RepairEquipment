@@ -1,11 +1,11 @@
 ﻿@page "/employees"
 @using RepairEquipment.Client.DbAccess
 @using RepairEquipment.Client.Services.Interfaces
-@using RepairEquipment.Models
 @using RepairEquipment.Shared.Models
 @using RepairEquipment.Client.Services
 @inject IEmployeeService _data
 @inject IConfiguration _config
+@inject IDialogService _dialogService;
 
 @if (Employees == null)
 {
@@ -16,83 +16,119 @@ else
     <div class="page-title">
         <h1>All employees</h1>
         <button class="button-add" role="button">CREATE</button>
-        <EditForm Model="@newEmployee" OnValidSubmit="@InsertEmployee">
+        <EditForm Model="@Employee" OnValidSubmit="@InsertEmployee">
             <DataAnnotationsValidator />
             <ValidationSummary />
 
-            <InputText id="name" @bind-Value="@newEmployee.Name"/>
-            <InputText id="surname" @bind-Value="@newEmployee.Surname"/>
-            <InputText id="code" @bind-Value="@newEmployee.Code"/>
-            <InputText id="personalCode" @bind-Value="@newEmployee.PersonalCode"/>
-            <InputText id="phone" @bind-Value="@newEmployee.Phone"/>
-            <InputText id="email" @bind-Value="@newEmployee.Email"/>
-            <InputText id="address" @bind-Value="@newEmployee.Address"/>
+            <InputText id="name" @bind-Value="@Employee.Name"/>
+            <InputText id="surname" @bind-Value="@Employee.Surname"/>
+            <InputText id="code" @bind-Value="@Employee.Code"/>
+            <InputText id="personalCode" @bind-Value="@Employee.PersonalCode"/>
+            <InputText id="phone" @bind-Value="@Employee.Phone"/>
+            <InputText id="email" @bind-Value="@Employee.Email"/>
+            <InputText id="address" @bind-Value="@Employee.Address"/>
 
             <button type="submit" class="btn btn-primary">Submit</button>
         </EditForm>
     </div>
 
-    <table class="table table-light">
-        <thead class="table-primary">
-            <tr>
-                <th>First name</th>
-                <th>Last name</th>
-                <th>Kods</th>
-                <th>Personālāis kods</th>
-                <th>Talrunis</th>
-                <th>E-pasts</th>
-                <th>Adrese</th>
-                <th>Darbības</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var employee in Employees)
-            {
-                <tr>
-                    <td>@employee.Name</td>
-                    <td>@employee.Surname</td>
-                    <td>@employee.Code</td>
-                    <td>@employee.PersonalCode</td>
-                    <td>@employee.Phone</td>
-                    <td>@employee.Email</td>
-                    <td>@employee.Address</td>
-                </tr>
-            }
-    </tbody>
-    </table>
+    <MudTable Items="@Employees" Dense="false" Hover="true" Filter="new Func<Employee, bool>(Filter)">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">Employees</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" 
+                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"/>
+            </ToolBarContent>
+            
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Surname</MudTh>
+                <MudTh>Code</MudTh>
+                <MudTh>PersonalCode</MudTh>
+                <MudTh>Phone</MudTh>
+                <MudTh>Email</MudTh>
+                <MudTh>Address</MudTh>
+            </HeaderContent>
+
+            <RowTemplate>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Surname">@context.Surname</MudTd>
+                <MudTd DataLabel="Code">@context.Code</MudTd>
+                <MudTd DataLabel="PersonalCode">@context.PersonalCode</MudTd>
+                <MudTd DataLabel="Phone">@context.Phone</MudTd>
+                <MudTd DataLabel="Email">@context.Email</MudTd>
+                <MudTd DataLabel="Address">@context.Address</MudTd>
+                <MudTd DataLabel="">
+                    <MudFab @onclick="@(()=>UpdateEmployee())" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit"
+                            Size="Size.Small" IconSize="Size.Small"/>
+                    <MudFab @onclick="@(()=>DeleteEmployee())" Color="Color.Primary" Icon="@Icons.Material.Filled.Delete"
+                            Size="Size.Small" IconSize="Size.Small"/>        
+                </MudTd>
+            </RowTemplate>
+
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+    </MudTable>
+
+    <MudText Inline="true">Selected: @Employee?.Name</MudText>
+
+
 }
+
 
 @code {
     private List<Employee>? Employees;
-
-    private Employee newEmployee = new Employee();
-
+    private Employee Employee = new Employee();
+    private string searchString = "";
 
     protected override async Task OnInitializedAsync()
     {
         Employees = await _data.GetEmployeesList();
-        StateHasChanged();
     }
 
     private async Task InsertEmployee()
     {
         Employee emp = new Employee
         {
-            Name = newEmployee.Name,
-            Surname = newEmployee.Surname,
-            Code = newEmployee.Code,
-            PersonalCode = newEmployee.PersonalCode,
-            Phone = newEmployee.Phone,
-            Email = newEmployee.Email,
-            Address = newEmployee.Address,
+            Name = Employee.Name,
+            Surname = Employee.Surname,
+            Code = Employee.Code,
+            PersonalCode = Employee.PersonalCode,
+            Phone = Employee.Phone,
+            Email = Employee.Email,
+            Address = Employee.Address,
         };
 
         await _data.InsertEmployeeAsync(emp);
 
         Employees.Add(emp);
-        
-        newEmployee = new Employee();
-       
+
+        Employee = new Employee();
     }
+    
+    private async Task UpdateEmployee() { }
+
+    private async Task DeleteEmployee() 
+    {
+        await _data.DeleteEmployeeAsync(Employee);
+        Employees.Remove(Employee);
+        Employee = new Employee();
+    }
+
+    private bool Filter(Employee emp) 
+    {
+        if (string.IsNullOrWhiteSpace(searchString)) return true;
+        if (emp.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (emp.Surname.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (emp.Code.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (emp.PersonalCode.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (emp.Phone.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (emp.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (emp.Address.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        return false;
+    }
+
+
 
 }

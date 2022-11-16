@@ -5,12 +5,14 @@ using Dapper;
 using RepairEquipment.Client.DbAccess;
 using RepairEquipment.Client.Services.Interfaces;
 using RepairEquipment.Client.Services;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddMudServices();
 
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
