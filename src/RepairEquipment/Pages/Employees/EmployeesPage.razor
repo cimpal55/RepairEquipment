@@ -15,24 +15,10 @@ else
 {
     <div class="page-title">
         <h1>All employees</h1>
-        <button class="button-add" role="button">CREATE</button>
-        <EditForm Model="@Employee" OnValidSubmit="@InsertEmployee">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-
-            <InputText id="name" @bind-Value="@Employee.Name"/>
-            <InputText id="surname" @bind-Value="@Employee.Surname"/>
-            <InputText id="code" @bind-Value="@Employee.Code"/>
-            <InputText id="personalCode" @bind-Value="@Employee.PersonalCode"/>
-            <InputText id="phone" @bind-Value="@Employee.Phone"/>
-            <InputText id="email" @bind-Value="@Employee.Email"/>
-            <InputText id="address" @bind-Value="@Employee.Address"/>
-
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </EditForm>
+        <MudButton @onclick="InsertEmployee" Variant="Variant.Filled" Color="Color.Primary">CREATE</MudButton>
     </div>
 
-    <MudTable Items="@Employees" Dense="false" Hover="true" Filter="new Func<Employee, bool>(Filter)">
+    <MudTable Items="@Employees" Dense="true" Hover="true" Filter="new Func<Employee, bool>(Filter)">
             <ToolBarContent>
                 <MudText Typo="Typo.h6">Employees</MudText>
                 <MudSpacer />
@@ -41,6 +27,7 @@ else
             </ToolBarContent>
             
             <HeaderContent>
+                <MudTh>ID</MudTh>
                 <MudTh>Name</MudTh>
                 <MudTh>Surname</MudTh>
                 <MudTh>Code</MudTh>
@@ -51,6 +38,7 @@ else
             </HeaderContent>
 
             <RowTemplate>
+                <MudTd DataLabel="Id">@context.ID</MudTd>
                 <MudTd DataLabel="Name">@context.Name</MudTd>
                 <MudTd DataLabel="Surname">@context.Surname</MudTd>
                 <MudTd DataLabel="Code">@context.Code</MudTd>
@@ -59,10 +47,10 @@ else
                 <MudTd DataLabel="Email">@context.Email</MudTd>
                 <MudTd DataLabel="Address">@context.Address</MudTd>
                 <MudTd DataLabel="">
-                    <MudFab @onclick="@(()=>UpdateEmployee())" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit"
-                            Size="Size.Small" IconSize="Size.Small"/>
-                    <MudFab @onclick="@(()=>DeleteEmployee())" Color="Color.Primary" Icon="@Icons.Material.Filled.Delete"
-                            Size="Size.Small" IconSize="Size.Small"/>        
+                    <MudFab @onclick="@(()=>UpdateEmployee(context.ID))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit"
+                            Size="Size.Small" IconSize="Size.Small"/>     
+                    <MudFab @onclick="@(()=>DeleteEmployee(context.ID))" Color="Color.Primary" Icon="@Icons.Material.Filled.Delete"
+                            Size="Size.Small" IconSize="Size.Small"/>            
                 </MudTd>
             </RowTemplate>
 
@@ -71,13 +59,12 @@ else
             </PagerContent>
     </MudTable>
 
-    <MudText Inline="true">Selected: @Employee?.Name</MudText>
-
 
 }
 
 
 @code {
+
     private List<Employee>? Employees;
     private Employee Employee = new Employee();
     private string searchString = "";
@@ -87,33 +74,49 @@ else
         Employees = await _data.GetEmployeesList();
     }
 
+    private void EmployeeDialog() {
+        _dialogService.Show<EmployeeDialog>();
+    }
+
     private async Task InsertEmployee()
     {
-        Employee emp = new Employee
+
+        var parameters = new DialogParameters();
+        parameters.Add("Employee", new Employee());
+        var dialog = _dialogService.Show<EmployeeDialog>("Create Employee", parameters);
+
+        var result = await dialog.Result;
+        if (!result.Cancelled)
         {
-            Name = Employee.Name,
-            Surname = Employee.Surname,
-            Code = Employee.Code,
-            PersonalCode = Employee.PersonalCode,
-            Phone = Employee.Phone,
-            Email = Employee.Email,
-            Address = Employee.Address,
-        };
+            Employee emp = new Employee
+            {
+                Name = Employee.Name,
+                Surname = Employee.Surname,
+                Code = Employee.Code,
+                PersonalCode = Employee.PersonalCode,
+                Phone = Employee.Phone,
+                Email = Employee.Email,
+                Address = Employee.Address,
+            };
 
-        await _data.InsertEmployeeAsync(emp);
+            await _data.InsertEmployeeAsync(emp);
 
-        Employees.Add(emp);
+            Employees.Add(emp);
 
-        Employee = new Employee();
+            Employee = new Employee();
+        }
     }
     
-    private async Task UpdateEmployee() { }
-
-    private async Task DeleteEmployee() 
+    private async Task UpdateEmployee(int id)
     {
-        await _data.DeleteEmployeeAsync(Employee);
-        Employees.Remove(Employee);
-        Employee = new Employee();
+        Employee obj = Employees.Where(x => x.ID == id).FirstOrDefault();
+        await _data.UpdateEmployeeAsync(obj)
+    }
+
+    private async Task DeleteEmployee(int id)
+    {
+        Employee obj = Employees.Where(x => x.ID == id).FirstOrDefault();
+        await _data.DeleteEmployeeAsync(obj);
     }
 
     private bool Filter(Employee emp) 

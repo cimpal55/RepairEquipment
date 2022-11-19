@@ -1,8 +1,6 @@
 ﻿using RepairEquipment.Client.DbAccess;
 using RepairEquipment.Client.Services.Interfaces;
 using RepairEquipment.Shared.Models.Data;
-using System.Configuration;
-using System.Data.SqlClient;
 
 namespace RepairEquipment.Client.Services
 {
@@ -15,7 +13,7 @@ namespace RepairEquipment.Client.Services
         }
         public Task DeleteEmployeeAsync(Employee item)
         {
-            string sql = "DELETE FROM Employees WHERE Id = @Id";
+            string sql = "DELETE FROM Employees WHERE ID = @ID";
             return _data.SaveData(sql, item);
         }
 
@@ -34,14 +32,14 @@ namespace RepairEquipment.Client.Services
         {
             string sql = @"INSERT INTO TBL_CONF_Employees (Name, Surname, Code, PersonalCode, Phone, Email, Address) 
                            VALUES (@Name, @Surname, @Code, @PersonalCode, @Phone, @Email, @Address);";
-            return _data.SaveData(sql, item); 
-            
+            return _data.SaveData(sql, item);
+
         }
-        
+
         public Task UpdateEmployeeAsync(int id)
         {
             string sql = @"UPDATE TBL_CONF_Employees SET Name = @Name, Surname = @Surname, Code = @Code, 
-                           PersonalCode = @PersonalCode, Phone = @Phone, Email = @Email, Address = @Address WHERE Id = @Id";
+                           PersonalCode = @PersonalCode, Phone = @Phone, Email = @Email, Address = @Address WHERE ID = @id";
             return _data.SaveData(sql, id);
         }
     }

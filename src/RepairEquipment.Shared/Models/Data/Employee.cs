@@ -4,6 +4,9 @@ namespace RepairEquipment.Shared.Models.Data
 {
     public sealed record Employee
     {
+        [Key]
+        public int ID { get; init; }
+
         [Required]
         public string Name { get; set; } = string.Empty;
 

@@ -1,1 +1,26 @@
-﻿
+﻿@using RepairEquipment.Client.Services
+
+    <MudDialog>
+        <DialogContent>
+           <MudTextField T="string" Label="Name" @bind-Value="Employee.Name"/>
+           <MudTextField T="string" Label="Surname" @bind-Value="Employee.Surname"/>
+           <MudTextField T="string" Label="Code" @bind-Value="Employee.Code"/>
+           <MudTextField T="string" Label="PersonalCode" @bind-Value="Employee.PersonalCode"/>
+           <MudTextField T="string" Label="Phone" @bind-Value="Employee.Phone"/>
+           <MudTextField T="string" Label="Email" @bind-Value="Employee.Email"/>
+           <MudTextField T="string" Label="Address" @bind-Value="Employee.Address"/>
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="Cancel">Cancel</MudButton>
+            <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+        </DialogActions>
+    </MudDialog>
+
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public Employee Employee { get; set; } = new Employee();
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+}

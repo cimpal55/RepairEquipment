@@ -25,8 +25,8 @@ namespace RepairEquipment.Migrations._20220727_Initial
                     .Row(new { Name = "Mazvērtīgais inventārs", FixedAssetNeeded = true, Created = DateTime.Now });
         }
         public void Down(Migration migration)
-                {
-                    migration.Delete.Table(TableName);
-                }
-            }
+        {
+            migration.Delete.Table(TableName);
+        }
+    }
 }

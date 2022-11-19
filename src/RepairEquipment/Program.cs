@@ -1,11 +1,8 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using RepairEquipment.Data;
-using Dapper;
-using RepairEquipment.Client.DbAccess;
-using RepairEquipment.Client.Services.Interfaces;
-using RepairEquipment.Client.Services;
 using MudBlazor.Services;
+using RepairEquipment.Client.DbAccess;
+using RepairEquipment.Client.Services;
+using RepairEquipment.Client.Services.Interfaces;
+using RepairEquipment.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

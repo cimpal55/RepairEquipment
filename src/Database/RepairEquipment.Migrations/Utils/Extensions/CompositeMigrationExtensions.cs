@@ -1,10 +1,5 @@
 ﻿using FluentMigrator;
 using RepairEquipment.Migrations.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RepairEquipment.Migrations.Utils.Extensions
 {

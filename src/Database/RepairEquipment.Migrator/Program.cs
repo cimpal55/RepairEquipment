@@ -1,8 +1,8 @@
-﻿using RepairEquipment.Migrations;
+﻿using Dapper;
 using FluentMigrator.Runner;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Data.SqlClient;
-using Dapper;
+using Microsoft.Extensions.DependencyInjection;
+using RepairEquipment.Migrations;
 
 var serviceProvider = CreateServices();
 
