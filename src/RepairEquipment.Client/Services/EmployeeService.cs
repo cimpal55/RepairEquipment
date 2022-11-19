@@ -13,7 +13,7 @@ namespace RepairEquipment.Client.Services
         }
         public Task DeleteEmployeeAsync(Employee item)
         {
-            string sql = "DELETE FROM Employees WHERE ID = @ID";
+            string sql = "DELETE FROM TBL_CONF_Employees WHERE ID = @ID";
             return _data.SaveData(sql, item);
         }
 

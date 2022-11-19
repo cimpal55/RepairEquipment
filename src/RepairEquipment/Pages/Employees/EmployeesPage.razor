@@ -106,17 +106,18 @@ else
             Employee = new Employee();
         }
     }
-    
+
     private async Task UpdateEmployee(int id)
     {
-        Employee obj = Employees.Where(x => x.ID == id).FirstOrDefault();
-        await _data.UpdateEmployeeAsync(obj)
+        var employeeObj = new Employee();
+
     }
 
     private async Task DeleteEmployee(int id)
     {
         Employee obj = Employees.Where(x => x.ID == id).FirstOrDefault();
         await _data.DeleteEmployeeAsync(obj);
+        Employees = await _data.GetEmployeesList();
     }
 
     private bool Filter(Employee emp) 
