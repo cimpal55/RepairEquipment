@@ -19,7 +19,8 @@ else
         <MudButton @onclick="InsertEmployee" Variant="Variant.Filled" Color="Color.Primary">CREATE</MudButton>
     </div>
 
-    <MudTable Items="@Employees" Dense="true" Hover="true" Filter="new Func<Employee, bool>(Filter)">
+    <MudTable @ref="_employeeTable" Items="@Employees" Dense="true" Hover="true" Filter="new Func<Employee, bool>(Filter)"
+              CommitEditTooltip="Commit Edit" @bind-SelectedItem="selectedItem" OnCommitEditClick="@(()=>UpdateEmployee(selectedItem.ID))">
             <ToolBarContent>
                 <MudText Typo="Typo.h6">Employees</MudText>
                 <MudSpacer />
@@ -55,6 +56,31 @@ else
                 </MudTd>
             </RowTemplate>
 
+            <RowEditingTemplate>
+                <MudTd DataLabel="Id">@context.ID</MudTd>
+                <MudTd DataLabel="Name">
+                    <MudTextField @bind-Value="@context.Name" Required />
+                </MudTd>
+                <MudTd DataLabel="Surname">
+                    <MudTextField @bind-Value="@context.Surname" Required />
+                </MudTd>
+                <MudTd DataLabel="Code">
+                    <MudTextField @bind-Value="@context.Code" Required />
+                </MudTd>
+                <MudTd DataLabel="PersonalCode">
+                    <MudTextField @bind-Value="@context.PersonalCode" Required />
+                </MudTd>
+                <MudTd DataLabel="Phone">
+                    <MudTextField @bind-Value="@context.Phone" Required />
+                </MudTd>
+                <MudTd DataLabel="Email">
+                    <MudTextField @bind-Value="@context.Email" Required />
+                </MudTd>
+                <MudTd DataLabel="Address">
+                    <MudTextField @bind-Value="@context.Address" Required />
+                </MudTd>
+            </RowEditingTemplate>
+
             <PagerContent>
                 <MudTablePager />
             </PagerContent>
@@ -66,9 +92,12 @@ else
 
 @code {
 
+    MudTable<Employee> _employeeTable;
+    private Employee selectedItem;
     private List<Employee>? Employees;
     private Employee Employee = new Employee();
     private string searchString = "";
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -92,7 +121,7 @@ else
             Employee employee = result.Data as Employee;
 
             await _data.InsertEmployeeAsync(employee);
-                
+
             Employees.Add(employee);
 
             Employee = new Employee();
@@ -103,16 +132,9 @@ else
 
     private async Task UpdateEmployee(int id)
     {
-        var parameters = new DynamicParameters();
-        parameters.Add("Name", Employee.Name);
-        parameters.Add("Surname", Employee.Surname);
-        parameters.Add("Code", Employee.Code);
-        parameters.Add("PersonalCode", Employee.PersonalCode);
-        parameters.Add("Phone", Employee.Phone);
-        parameters.Add("Email", Employee.Email);
-        parameters.Add("Address", Employee.Address);
-
         Employee obj = Employees.Where(x => x.ID == id).FirstOrDefault();
+        await _data.UpdateEmployeeAsync(obj);
+        Employees = await _data.GetEmployeesList();
 
     }
 
