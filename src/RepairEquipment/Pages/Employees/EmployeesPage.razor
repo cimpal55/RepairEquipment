@@ -1,4 +1,5 @@
 ﻿@page "/employees"
+@using Dapper
 @using RepairEquipment.Client.DbAccess
 @using RepairEquipment.Client.Services.Interfaces
 @using RepairEquipment.Shared.Models
@@ -84,32 +85,34 @@ else
         var parameters = new DialogParameters();
         parameters.Add("Employee", new Employee());
         var dialog = _dialogService.Show<EmployeeDialog>("Create Employee", parameters);
-
         var result = await dialog.Result;
+
         if (!result.Cancelled)
         {
-            Employee emp = new Employee
-            {
-                Name = Employee.Name,
-                Surname = Employee.Surname,
-                Code = Employee.Code,
-                PersonalCode = Employee.PersonalCode,
-                Phone = Employee.Phone,
-                Email = Employee.Email,
-                Address = Employee.Address,
-            };
+            Employee employee = result.Data as Employee;
 
-            await _data.InsertEmployeeAsync(emp);
-
-            Employees.Add(emp);
+            await _data.InsertEmployeeAsync(employee);
+                
+            Employees.Add(employee);
 
             Employee = new Employee();
+
+            Employees = await _data.GetEmployeesList();
         }
     }
 
     private async Task UpdateEmployee(int id)
     {
-        var employeeObj = new Employee();
+        var parameters = new DynamicParameters();
+        parameters.Add("Name", Employee.Name);
+        parameters.Add("Surname", Employee.Surname);
+        parameters.Add("Code", Employee.Code);
+        parameters.Add("PersonalCode", Employee.PersonalCode);
+        parameters.Add("Phone", Employee.Phone);
+        parameters.Add("Email", Employee.Email);
+        parameters.Add("Address", Employee.Address);
+
+        Employee obj = Employees.Where(x => x.ID == id).FirstOrDefault();
 
     }
 

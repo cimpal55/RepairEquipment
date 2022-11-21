@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\Admin\**" />
+    <Content Remove="Pages\Admin\**" />
+    <EmbeddedResource Remove="Pages\Admin\**" />
+    <None Remove="Pages\Admin\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="Dayton.MudBlazor" Version="1.0.12" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.1" />
@@ -16,10 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="..\RepairEquipment.Client\RepairEquipment.Client.csproj" />
     <ProjectReference Include="..\RepairEquipment.Shared\RepairEquipment.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pages\Admin\" />
   </ItemGroup>
 
 </Project>

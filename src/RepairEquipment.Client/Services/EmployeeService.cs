@@ -36,11 +36,11 @@ namespace RepairEquipment.Client.Services
 
         }
 
-        public Task UpdateEmployeeAsync(int id)
+        public Task UpdateEmployeeAsync(Employee item)
         {
             string sql = @"UPDATE TBL_CONF_Employees SET Name = @Name, Surname = @Surname, Code = @Code, 
                            PersonalCode = @PersonalCode, Phone = @Phone, Email = @Email, Address = @Address WHERE ID = @id";
-            return _data.SaveData(sql, id);
+            return _data.SaveData(sql, item);
         }
     }
 }

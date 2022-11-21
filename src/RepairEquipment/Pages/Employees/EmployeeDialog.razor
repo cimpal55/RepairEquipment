@@ -21,6 +21,6 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public Employee Employee { get; set; } = new Employee();
 
-    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Submit() => MudDialog.Close(DialogResult.Ok(Employee));
     void Cancel() => MudDialog.Cancel();
 }
