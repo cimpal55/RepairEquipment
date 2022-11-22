@@ -5,8 +5,7 @@
 @using RepairEquipment.Shared.Models
 @using RepairEquipment.Client.Services
 @inject IEmployeeService _data
-@inject IConfiguration _config
-@inject IDialogService _dialogService;
+@inject IDialogService _dialogService
 
 @if (Employees == null)
 {
@@ -16,10 +15,10 @@ else
 {
     <div class="page-title">
         <h1>All employees</h1>
-        <MudButton @onclick="InsertEmployee" Variant="Variant.Filled" Color="Color.Primary">CREATE</MudButton>
+        <MudButton @onclick="InsertEmployee" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
     </div>
 
-    <MudTable @ref="_employeeTable" Items="@Employees" Dense="true" Hover="true" Filter="new Func<Employee, bool>(Filter)"
+    <MudTable @ref="_employeeTable" Items="@Employees" Dense="true" Hover="true" Filter="new Func<EmployeeRecord, bool>(Filter)"
               CommitEditTooltip="Commit Edit" @bind-SelectedItem="selectedItem" OnCommitEditClick="@(()=>UpdateEmployee(selectedItem.ID))">
             <ToolBarContent>
                 <MudText Typo="Typo.h6">Employees</MudText>
@@ -92,16 +91,16 @@ else
 
 @code {
 
-    MudTable<Employee> _employeeTable;
-    private Employee selectedItem;
-    private List<Employee>? Employees;
-    private Employee Employee = new Employee();
+    MudTable<EmployeeRecord> _employeeTable;
+    private EmployeeRecord selectedItem;
+    private List<EmployeeRecord>? Employees;
+    private EmployeeRecord Employee = new EmployeeRecord();
     private string searchString = "";
 
 
     protected override async Task OnInitializedAsync()
     {
-        Employees = await _data.GetEmployeesList();
+        Employees = await _data.GetEmployeesListAsync();
     }
 
     private void EmployeeDialog() {
@@ -112,40 +111,40 @@ else
     {
 
         var parameters = new DialogParameters();
-        parameters.Add("Employee", new Employee());
+        parameters.Add("Employee", new EmployeeRecord());
         var dialog = _dialogService.Show<EmployeeDialog>("Create Employee", parameters);
         var result = await dialog.Result;
 
         if (!result.Cancelled)
         {
-            Employee employee = result.Data as Employee;
+            EmployeeRecord employee = result.Data as EmployeeRecord;
 
             await _data.InsertEmployeeAsync(employee);
 
             Employees.Add(employee);
 
-            Employee = new Employee();
+            Employee = new EmployeeRecord();
 
-            Employees = await _data.GetEmployeesList();
+            Employees = await _data.GetEmployeesListAsync();
         }
     }
 
     private async Task UpdateEmployee(int id)
     {
-        Employee obj = Employees.Where(x => x.ID == id).FirstOrDefault();
+        EmployeeRecord obj = Employees.Where(x => x.ID == id).FirstOrDefault();
         await _data.UpdateEmployeeAsync(obj);
-        Employees = await _data.GetEmployeesList();
+        Employees = await _data.GetEmployeesListAsync();
 
     }
 
     private async Task DeleteEmployee(int id)
     {
-        Employee obj = Employees.Where(x => x.ID == id).FirstOrDefault();
+        EmployeeRecord obj = Employees.Where(x => x.ID == id).FirstOrDefault();
         await _data.DeleteEmployeeAsync(obj);
-        Employees = await _data.GetEmployeesList();
+        Employees = await _data.GetEmployeesListAsync();
     }
 
-    private bool Filter(Employee emp) 
+    private bool Filter(EmployeeRecord emp) 
     {
         if (string.IsNullOrWhiteSpace(searchString)) return true;
         if (emp.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;

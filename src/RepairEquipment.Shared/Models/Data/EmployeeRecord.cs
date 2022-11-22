@@ -2,7 +2,7 @@
 
 namespace RepairEquipment.Shared.Models.Data
 {
-    public sealed record Employee
+    public sealed record EmployeeRecord
     {
         [Key]
         public int ID { get; init; }

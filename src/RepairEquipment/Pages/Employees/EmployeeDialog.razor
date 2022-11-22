@@ -19,7 +19,7 @@
 
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    [Parameter] public Employee Employee { get; set; } = new Employee();
+    [Parameter] public EmployeeRecord Employee { get; set; } = new EmployeeRecord();
 
     void Submit() => MudDialog.Close(DialogResult.Ok(Employee));
     void Cancel() => MudDialog.Cancel();

@@ -1,0 +1,154 @@
+﻿@page "/clients"
+@using Dapper
+@using RepairEquipment.Client.DbAccess
+@using RepairEquipment.Client.Services.Interfaces
+@using RepairEquipment.Shared.Models
+@using RepairEquipment.Client.Services
+@inject IClientService _data
+@inject IDialogService _dialogService
+
+@if (Clients == null)
+{
+    <p><em>Loading ... </em></p>
+}
+else
+{
+    <div class="page-title">
+        <h1>All clients</h1>
+        <MudButton @onclick="InsertClient" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
+    </div>
+
+    <MudTable @ref="_clientTable" Items="@Clients" Dense="true" Hover="true" Filter="new Func<ClientRecord, bool>(Filter)"
+              CommitEditTooltip="Commit Edit" @bind-SelectedItem="selectedItem" OnCommitEditClick="@(()=>UpdateClient(selectedItem.ID))">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">Clients</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" 
+                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"/>
+            </ToolBarContent>
+            
+            <HeaderContent>
+                <MudTh>ID</MudTh>
+                <MudTh>Name</MudTh>
+                <MudTh>Code</MudTh>
+                <MudTh>RegistrationNr</MudTh>
+                <MudTh>LegalAddress</MudTh>
+                <MudTh>Phone</MudTh>
+                <MudTh>Email</MudTh>
+            </HeaderContent>
+
+            <RowTemplate>
+                <MudTd DataLabel="Id">@context.ID</MudTd>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Surname">@context.Code</MudTd>
+                <MudTd DataLabel="Code">@context.RegistrationNr</MudTd>
+                <MudTd DataLabel="PersonalCode">@context.LegalAddress</MudTd>
+                <MudTd DataLabel="Phone">@context.Phone</MudTd>
+                <MudTd DataLabel="Email">@context.Email</MudTd>
+                <MudTd DataLabel="">
+                    <MudFab @onclick="@(()=>DeleteClient(context.ID))" Color="Color.Primary" Icon="@Icons.Material.Filled.Delete"
+                            Size="Size.Small" IconSize="Size.Small"/>            
+                </MudTd>
+            </RowTemplate>
+
+            <RowEditingTemplate>
+                <MudTd DataLabel="Id">@context.ID</MudTd>
+                <MudTd DataLabel="Name">
+                    <MudTextField @bind-Value="@context.Name" Required />
+                </MudTd>
+                <MudTd DataLabel="Code">
+                    <MudTextField @bind-Value="@context.Code" Required />
+                </MudTd>
+                <MudTd DataLabel="RegistrationNr">
+                    <MudTextField @bind-Value="@context.RegistrationNr" Required />
+                </MudTd>
+                <MudTd DataLabel="LegalAddress">
+                    <MudTextField @bind-Value="@context.LegalAddress" Required />
+                </MudTd>
+                <MudTd DataLabel="Phone">
+                    <MudTextField @bind-Value="@context.Phone" Required />
+                </MudTd>
+                <MudTd DataLabel="Email">
+                    <MudTextField @bind-Value="@context.Email" Required />
+                </MudTd>
+            </RowEditingTemplate>
+
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+    </MudTable>
+
+
+}
+
+
+@code {
+
+    MudTable<ClientRecord> _clientTable;
+    private ClientRecord selectedItem;
+    private List<ClientRecord>? Clients;
+    private ClientRecord Client = new ClientRecord();
+    private string searchString = "";
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Clients = await _data.GetClientsListAsync();
+    }
+
+    private void ClientDialog() {
+        _dialogService.Show<ClientDialog>();
+    }
+
+    private async Task InsertClient()
+    {
+
+        var parameters = new DialogParameters();
+        parameters.Add("Client", new ClientRecord());
+        var dialog = _dialogService.Show<ClientDialog>("Create client", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Cancelled)
+        {
+            ClientRecord client = result.Data as ClientRecord;
+
+            await _data.InsertClientAsync(client);
+
+            Clients.Add(client);
+
+            Client = new ClientRecord();
+
+            Clients = await _data.GetClientsListAsync();
+        }
+    }
+
+    private async Task UpdateClient(int id)
+    {
+        ClientRecord obj = Clients.Where(x => x.ID == id).FirstOrDefault();
+        await _data.UpdateClientAsync(obj);
+        Clients = await _data.GetClientsListAsync();
+
+    }
+    
+    private async Task DeleteClient(int id)
+    {
+        ClientRecord obj = Clients.Where(x => x.ID == id).FirstOrDefault();
+        await _data.DeleteClientAsync(obj);
+        Clients = await _data.GetClientsListAsync();
+    }
+
+    private bool Filter(ClientRecord client) 
+    {
+        if (string.IsNullOrWhiteSpace(searchString)) return true;
+        if (client.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (client.Code.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (client.RegistrationNr.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (client.LegalAddress.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (client.Phone.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (client.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        return false;
+    }
+
+
+
+}

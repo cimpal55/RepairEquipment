@@ -1,6 +1,6 @@
 ﻿namespace RepairEquipment.Shared.Models.Data
 {
-    public sealed record Equipment
+    public sealed record EquipmentRecord
     {
         public int Id { get; init; }
         public string Name { get; init; } = string.Empty;
