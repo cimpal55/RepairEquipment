@@ -1,11 +1,6 @@
 ﻿using RepairEquipment.Client.DbAccess;
 using RepairEquipment.Client.Services.Interfaces;
 using RepairEquipment.Shared.Models.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RepairEquipment.Client.Services
 {
@@ -35,15 +30,18 @@ namespace RepairEquipment.Client.Services
 
         public Task InsertClientAsync(ClientRecord item)
         {
-            string sql = @"INSERT INTO TBL_CONF_Clients (Name, Code, RegistrationNr, LegalAddress, Phone, Email) 
-                           VALUES (@Name, @Code, @RegistrationNr, @LegalAddress, @Phone, @Email);";
+            string sql = @"INSERT INTO TBL_CONF_Clients (Name, Code, RegistrationNr, LegalAddress, Phone, Email, ContactPersonName, ContactPersonAddress, 
+                         ContactPersonPhone, ContactPersonEmail) 
+                         VALUES (@Name, @Code, @RegistrationNr, @LegalAddress, @Phone, @Email, @ContactPersonName, @ContactPersonAddress, 
+                         @ContactPersonPhone, @ContactPersonEmail);";
             return _data.SaveData(sql, item);
         }
 
         public Task UpdateClientAsync(ClientRecord item)
         {
             string sql = @"UPDATE TBL_CONF_Clients SET Name = @Name, Code = @Code, RegistrationNr = @RegistrationNr,
-                           LegalAddress = @LegalAddress, Phone = @Phone, Email = @Email WHERE ID = @ID";
+                           LegalAddress = @LegalAddress, Phone = @Phone, Email = @Email, ContactPersonName = @ContactPersonName, 
+                           ContactPersonAddress = @ContactPersonAddress, ContactPersonPhone = @ContactPersonPhone, ContactPersonEmail = @ContactPersonEmail WHERE ID = @ID";
             return _data.SaveData(sql, item);
         }
     }

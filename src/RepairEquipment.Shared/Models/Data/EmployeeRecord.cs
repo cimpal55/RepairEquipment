@@ -29,5 +29,7 @@ namespace RepairEquipment.Shared.Models.Data
 
         [Required]
         public string Address { get; set; } = string.Empty;
+
+        public DateTime Created { get; init; }
     }
 }

@@ -35,6 +35,10 @@ else
                 <MudTh>LegalAddress</MudTh>
                 <MudTh>Phone</MudTh>
                 <MudTh>Email</MudTh>
+                <MudTh>ContactPersonName</MudTh>
+                <MudTh>ContactPersonAddress</MudTh>
+                <MudTh>ContactPersonPhone</MudTh>
+                <MudTh>ContactPersonEmail</MudTh>
             </HeaderContent>
 
             <RowTemplate>
@@ -45,6 +49,10 @@ else
                 <MudTd DataLabel="PersonalCode">@context.LegalAddress</MudTd>
                 <MudTd DataLabel="Phone">@context.Phone</MudTd>
                 <MudTd DataLabel="Email">@context.Email</MudTd>
+                <MudTd DataLabel="ContactPersonName">@context.ContactPersonName</MudTd>
+                <MudTd DataLabel="ContactPersonAddress">@context.ContactPersonAddress</MudTd>
+                <MudTd DataLabel="ContactPersonPhone">@context.ContactPersonPhone</MudTd>
+                <MudTd DataLabel="ContactPersonEmail">@context.ContactPersonEmail</MudTd>
                 <MudTd DataLabel="">
                     <MudFab @onclick="@(()=>DeleteClient(context.ID))" Color="Color.Primary" Icon="@Icons.Material.Filled.Delete"
                             Size="Size.Small" IconSize="Size.Small"/>            
@@ -71,6 +79,18 @@ else
                 <MudTd DataLabel="Email">
                     <MudTextField @bind-Value="@context.Email" Required />
                 </MudTd>
+                <MudTd DataLabel="ContactPersonName">
+                    <MudTextField @bind-Value="@context.ContactPersonName" Required />
+                </MudTd>
+                <MudTd DataLabel="ContactPersonAddress">
+                    <MudTextField @bind-Value="@context.ContactPersonAddress" Required />
+                </MudTd>
+                <MudTd DataLabel="ContactPersonPhone">
+                    <MudTextField @bind-Value="@context.ContactPersonPhone" Required />
+                </MudTd>
+                <MudTd DataLabel="ContactPersonEmail">
+                    <MudTextField @bind-Value="@context.ContactPersonEmail" Required />
+                </MudTd>                
             </RowEditingTemplate>
 
             <PagerContent>
@@ -146,6 +166,10 @@ else
         if (client.LegalAddress.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         if (client.Phone.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         if (client.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (client.ContactPersonName.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (client.ContactPersonAddress.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (client.ContactPersonPhone.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (client.ContactPersonEmail.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         return false;
     }
 
