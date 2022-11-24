@@ -13,18 +13,19 @@
 }
 else
 {
-    <div class="page-title mud-paper mud-paper-square mud-elevation-1 pa-4 d-flex align-start flex-grow-1">
-        <h1>All employees</h1>
+    <MudPaper Square="true" Style="text-align: left" Class="pa-4 d-flex flex-grow-1">
+        <MudText Typo="Typo.h6">Employees</MudText>
+        <MudSpacer />
         <MudButton @onclick="InsertEmployee" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
-    </div>
+        <MudButton @onclick="@(()=>DeleteEmployee(selectedItem.ID))" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error">DELETE</MudButton>
+    </MudPaper>
 
-    <MudTable @ref="_employeeTable" Items="@Employees" Dense="true" Hover="true" Filter="new Func<EmployeeRecord, bool>(Filter)"
+    <MudTable Class="mud-fab-layout-content" @ref="_employeeTable" Items="@Employees" Dense="@dense" Hover="@hover" Filter="new Func<EmployeeRecord, bool>(Filter)"
               CommitEditTooltip="Commit Edit" @bind-SelectedItem="selectedItem" OnCommitEditClick="@(()=>UpdateEmployee(selectedItem.ID))">
+
             <ToolBarContent>
-                <MudText Typo="Typo.h6">Employees</MudText>
-                <MudSpacer />
-                <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" 
-                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"/>
+                <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
             </ToolBarContent>
             
             <HeaderContent>
@@ -39,20 +40,14 @@ else
             </HeaderContent>
 
             <RowTemplate>
-                <MudTd DataLabel="Id">@context.ID</MudTd>
+                <MudTd DataLabel="Id">>@context.ID</MudTd>
                 <MudTd DataLabel="Name">@context.Name</MudTd>
                 <MudTd DataLabel="Surname">@context.Surname</MudTd>
                 <MudTd DataLabel="Code">@context.Code</MudTd>
                 <MudTd DataLabel="PersonalCode">@context.PersonalCode</MudTd>
                 <MudTd DataLabel="Phone">@context.Phone</MudTd>
                 <MudTd DataLabel="Email">@context.Email</MudTd>
-                <MudTd DataLabel="Address">@context.Address</MudTd>
-                <MudTd DataLabel="">
-                    <MudFab @onclick="@(()=>UpdateEmployee(context.ID))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit"
-                            Size="Size.Small" IconSize="Size.Small"/>     
-                    <MudFab @onclick="@(()=>DeleteEmployee(context.ID))" Color="Color.Primary" Icon="@Icons.Material.Filled.Delete"
-                            Size="Size.Small" IconSize="Size.Small"/>            
-                </MudTd>
+                <MudTd DataLabel="Address">@context.Address</MudTd>     
             </RowTemplate>
 
             <RowEditingTemplate>
@@ -85,6 +80,11 @@ else
             </PagerContent>
     </MudTable>
 
+    <div class="d-flex flex-wrap mt-4">
+        <MudSwitch @bind-Checked="@hover" Color="Color.Primary">Hover</MudSwitch>
+        <MudSwitch @bind-Checked="@dense" Color="Color.Secondary">Dense</MudSwitch>
+    </div>
+
 
 }
 
@@ -96,6 +96,8 @@ else
     private List<EmployeeRecord>? Employees;
     private EmployeeRecord Employee = new EmployeeRecord();
     private string searchString = "";
+    private bool hover = true;
+    private bool dense = false;
 
 
     protected override async Task OnInitializedAsync()

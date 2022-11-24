@@ -1,0 +1,84 @@
+﻿@using RepairEquipment.Client.Services
+
+    <MudDialog>
+        <DialogContent>
+            <MudSubmitForm Command="@ViewModel.Save">
+                <MudItem
+                    xs="12" sm="6" md="12"
+                    Class="d-flex align-end mb-5">
+                
+                    <MudGrid Spacing="0">
+                        <MudItem xs="12">
+                            <MudTextField
+                                Xs="12"
+                                ValueItem="Employee.Name"
+                                Label="Name"
+                                AutoFocus="true"/>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudTextField
+                                Xs="12"
+                                ValueItem="Employee.Surname"
+                                Label="Surname">
+                                @context
+                            </MudTextField>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudTextField
+                                Xs="12"
+                                ValueItem="Employee.Code"
+                                Label="Code">
+                                @context
+                            </MudTextField>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudTextField
+                                Xs="12"
+                                ValueItem="Employee.PersonalCode"
+                                Label="PersonalCode">
+                                @context
+                            </MudTextField>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudTextField
+                                Xs="12"
+                                ValueItem="Employee.Phone"
+                                Label="Phone">
+                                @context
+                            </MudTextField>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudTextField
+                                Xs="12"
+                                ValueItem="Employee.Email"
+                                Label="Email">
+                                @context
+                            </MudTextField>
+                        </MudItem>                    
+                        <MudItem xs="6">
+                            <MudTextField
+                                Xs="12"
+                                ValueItem="Employee.Address"
+                                Label="Address">
+                                @context
+                            </MudTextField>
+                        </MudItem>  
+                    </MudGrid>
+            </MudItem>
+        </MudSubmitForm>
+    </DialogContent>
+
+        <DialogActions>
+            <MudButton OnClick="Cancel">Cancel</MudButton>
+            <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+        </DialogActions>
+        
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public EmployeeRecord Employee { get; set; } = new EmployeeRecord();
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(Employee));
+    void Cancel() => MudDialog.Cancel();
+}
