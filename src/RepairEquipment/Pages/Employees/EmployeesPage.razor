@@ -21,7 +21,7 @@ else
     </MudPaper>
 
     <MudTable Class="mud-fab-layout-content" @ref="_employeeTable" Items="@Employees" Dense="@dense" Hover="@hover" Filter="new Func<EmployeeRecord, bool>(Filter)"
-              CommitEditTooltip="Commit Edit" @bind-SelectedItem="selectedItem" OnCommitEditClick="@(()=>UpdateEmployee(selectedItem.ID))">
+              CommitEditTooltip="Commit Edit" @bind-SelectedItem="selectedItem">
 
             <ToolBarContent>
                 <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start"
@@ -40,7 +40,10 @@ else
             </HeaderContent>
 
             <RowTemplate>
-                <MudTd DataLabel="Id">>@context.ID</MudTd>
+                <MudTd DataLabel="Id">
+                    <div @ondblclick="@(()=>UpdateEmployee(@context.ID))">
+                    @context.ID
+                    </div></MudTd>
                 <MudTd DataLabel="Name">@context.Name</MudTd>
                 <MudTd DataLabel="Surname">@context.Surname</MudTd>
                 <MudTd DataLabel="Code">@context.Code</MudTd>
@@ -49,31 +52,6 @@ else
                 <MudTd DataLabel="Email">@context.Email</MudTd>
                 <MudTd DataLabel="Address">@context.Address</MudTd>     
             </RowTemplate>
-
-            <RowEditingTemplate>
-                <MudTd DataLabel="Id">@context.ID</MudTd>
-                <MudTd DataLabel="Name">
-                    <MudTextField @bind-Value="@context.Name" Required />
-                </MudTd>
-                <MudTd DataLabel="Surname">
-                    <MudTextField @bind-Value="@context.Surname" Required />
-                </MudTd>
-                <MudTd DataLabel="Code">
-                    <MudTextField @bind-Value="@context.Code" Required />
-                </MudTd>
-                <MudTd DataLabel="PersonalCode">
-                    <MudTextField @bind-Value="@context.PersonalCode" Required />
-                </MudTd>
-                <MudTd DataLabel="Phone">
-                    <MudTextField @bind-Value="@context.Phone" Required />
-                </MudTd>
-                <MudTd DataLabel="Email">
-                    <MudTextField @bind-Value="@context.Email" Required />
-                </MudTd>
-                <MudTd DataLabel="Address">
-                    <MudTextField @bind-Value="@context.Address" Required />
-                </MudTd>
-            </RowEditingTemplate>
 
             <PagerContent>
                 <MudTablePager />
@@ -105,9 +83,6 @@ else
         Employees = await _data.GetEmployeesListAsync();
     }
 
-    private void EmployeeDialog() {
-        _dialogService.Show<EmployeeDialog>();
-    }
 
     private async Task InsertEmployee()
     {
@@ -133,9 +108,15 @@ else
 
     private async Task UpdateEmployee(int id)
     {
-        EmployeeRecord obj = Employees.Where(x => x.ID == id).FirstOrDefault();
-        await _data.UpdateEmployeeAsync(obj);
-        Employees = await _data.GetEmployeesListAsync();
+        var parameters = new DialogParameters { ["Employee"] = Employee };
+        var dialog = _dialogService.Show<EmployeeEditDialog>("Edit Employee", parameters);
+        var result = await dialog.Result;
+
+        if(!result.Cancelled) {
+            EmployeeRecord obj = Employees.Where(x => x.ID == id).FirstOrDefault();
+            await _data.UpdateEmployeeAsync(obj);
+            Employees = await _data.GetEmployeesListAsync();
+        }
 
     }
 

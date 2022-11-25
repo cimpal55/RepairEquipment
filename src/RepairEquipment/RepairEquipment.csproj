@@ -25,4 +25,8 @@
     <ProjectReference Include="..\RepairEquipment.Shared\RepairEquipment.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Documents\" />
+  </ItemGroup>
+
 </Project>

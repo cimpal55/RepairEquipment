@@ -1,3 +1,4 @@
+using AngleSharp.Dom;
 using MudBlazor.Services;
 using RepairEquipment.Client.DbAccess;
 using RepairEquipment.Client.Services;
@@ -15,6 +16,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
 builder.Services.AddTransient<IEmployeeService, EmployeeService>();
 builder.Services.AddTransient<IClientService, ClientService>();
+builder.Services.AddTransient<IDocumentService, DocumentService>
 
 var app = builder.Build();
 
