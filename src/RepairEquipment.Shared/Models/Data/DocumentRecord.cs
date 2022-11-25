@@ -2,11 +2,11 @@
 {
     public sealed record DocumentRecord
     {
-        public int Id { get; init; }
+        public int ID { get; init; }
         public string DocumentNumber { get; set; } = string.Empty;
-        public int? ClientId { get; init; }
-        public string? Client { get; init; }
-        public int? EmployeeId { get; init; }
-        public string? Employee { get; init; }
+        public int? ClientId { get; set; }
+        public string? Client { get; set; }
+        public int? EmployeeId { get; set; }
+        public string? Employee { get; set; }
     }
 }

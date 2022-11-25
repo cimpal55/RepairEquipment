@@ -1,0 +1,34 @@
+﻿@using RepairEquipment.Client.Services
+@using RepairEquipment.Client.Services.Interfaces
+@inject IEmployeeService _dataEmployee
+@inject IClientService _dataClient
+
+<MudDialog>
+    <DialogContent>
+        <MudTextField T="string" Label="DocumentNumber" @bind-Value="Document.DocumentNumber" />
+        <MudSelect @bind-Value="Employees" Label="Employee" />
+        <MudSelect @bind-Value="Clients" Label="Client" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public DocumentRecord Document { get; set; } = new DocumentRecord();
+    [Parameter] public EmployeeRecord Employee { get; set; } = new EmployeeRecord();
+    [Parameter] public ClientRecord Client { get; set; } = new ClientRecord();
+    [Parameter] public List<EmployeeRecord>? Employees { get; set; }
+    [Parameter] public List<ClientRecord>? Clients { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Employees = await _dataEmployee.GetEmployeesListAsync();
+        Clients = await _dataClient.GetClientsListAsync();
+    }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(Document));
+    void Cancel() => MudDialog.Cancel();
+}

@@ -40,17 +40,16 @@ else
             </HeaderContent>
 
             <RowTemplate>
-                <MudTd DataLabel="Id">
-                    <div @ondblclick="@(()=>UpdateEmployee(@context.ID))">
-                    @context.ID
-                    </div></MudTd>
+                <div @ondblclick="@(()=>UpdateEmployee(@context.ID))">
+                <MudTd DataLabel="ID">@context.ID</MudTd>
                 <MudTd DataLabel="Name">@context.Name</MudTd>
                 <MudTd DataLabel="Surname">@context.Surname</MudTd>
                 <MudTd DataLabel="Code">@context.Code</MudTd>
                 <MudTd DataLabel="PersonalCode">@context.PersonalCode</MudTd>
                 <MudTd DataLabel="Phone">@context.Phone</MudTd>
                 <MudTd DataLabel="Email">@context.Email</MudTd>
-                <MudTd DataLabel="Address">@context.Address</MudTd>     
+                <MudTd DataLabel="Address">@context.Address</MudTd>
+                </div>
             </RowTemplate>
 
             <PagerContent>
@@ -108,7 +107,7 @@ else
 
     private async Task UpdateEmployee(int id)
     {
-        var parameters = new DialogParameters { ["Employee"] = Employee };
+        var parameters = new DialogParameters { ["Employee"] = selectedItem };
         var dialog = _dialogService.Show<EmployeeEditDialog>("Edit Employee", parameters);
         var result = await dialog.Result;
 
