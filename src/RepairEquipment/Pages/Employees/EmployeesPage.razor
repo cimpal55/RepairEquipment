@@ -6,6 +6,7 @@
 @using RepairEquipment.Client.Services
 @inject IEmployeeService _data
 @inject IDialogService _dialogService
+@inject ISnackbar Snackbar
 
 @if (Employees == null)
 {
@@ -79,9 +80,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Employees = await _data.GetEmployeesListAsync();
+        await GetEmployees();
     }
 
+    private async Task GetEmployees() {
+        Employees = await _data.GetEmployeesListAsync();
+    }
 
     private async Task InsertEmployee()
     {
@@ -101,7 +105,7 @@ else
 
             Employee = new EmployeeRecord();
 
-            Employees = await _data.GetEmployeesListAsync();
+            await GetEmployees();
         }
     }
 
@@ -114,16 +118,32 @@ else
         if(!result.Cancelled) {
             EmployeeRecord obj = Employees.Where(x => x.ID == id).FirstOrDefault();
             await _data.UpdateEmployeeAsync(obj);
-            Employees = await _data.GetEmployeesListAsync();
+            Snackbar.Add($"Employee {obj.ID} successfully updated");
+            await GetEmployees();
         }
-
+        else
+        {
+            Snackbar.Add("Failed to update employee");
+        }
     }
 
     private async Task DeleteEmployee(int id)
     {
-        EmployeeRecord obj = Employees.Where(x => x.ID == id).FirstOrDefault();
-        await _data.DeleteEmployeeAsync(obj);
-        Employees = await _data.GetEmployeesListAsync();
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText", "Do you really want to delete this record? This process cannot be undone.");
+        parameters.Add("ButtonText", "Delete");
+        parameters.Add("Color", Color.Error);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        var dialog = _dialogService.Show<EmployeeDeleteDialog>("Delete", parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled) {
+            EmployeeRecord obj = Employees.Where(x => x.ID == id).FirstOrDefault();
+            await _data.DeleteEmployeeAsync(obj);
+            Snackbar.Add($"#{obj.ID} Employee successfully updated");
+            await GetEmployees();
+        }
     }
 
     private bool Filter(EmployeeRecord emp) 
