@@ -20,7 +20,7 @@ else
         <MudButton @onclick="InsertEmployee" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
         <MudButton @onclick="@(()=>DeleteEmployee(selectedItem.ID))" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error">DELETE</MudButton>
     </MudPaper>
-
+    
     <MudTable Class="mud-fab-layout-content" @ref="_employeeTable" Items="@Employees" Dense="@dense" Hover="@hover" Filter="new Func<EmployeeRecord, bool>(Filter)"
               CommitEditTooltip="Commit Edit" @bind-SelectedItem="selectedItem">
 
@@ -41,16 +41,14 @@ else
             </HeaderContent>
 
             <RowTemplate>
-                <div @ondblclick="@(()=>UpdateEmployee(@context.ID))">
-                <MudTd DataLabel="ID">@context.ID</MudTd>
-                <MudTd DataLabel="Name">@context.Name</MudTd>
-                <MudTd DataLabel="Surname">@context.Surname</MudTd>
-                <MudTd DataLabel="Code">@context.Code</MudTd>
-                <MudTd DataLabel="PersonalCode">@context.PersonalCode</MudTd>
-                <MudTd DataLabel="Phone">@context.Phone</MudTd>
-                <MudTd DataLabel="Email">@context.Email</MudTd>
-                <MudTd DataLabel="Address">@context.Address</MudTd>
-                </div>
+                <MudTd @ondblclick="@(()=>UpdateEmployee(@context.ID))" DataLabel="ID">@context.ID</MudTd>
+                <MudTd @ondblclick="@(()=>UpdateEmployee(@context.ID))" DataLabel="Name">@context.Name</MudTd>
+                <MudTd @ondblclick="@(()=>UpdateEmployee(@context.ID))" DataLabel="Surname">@context.Surname</MudTd>
+                <MudTd @ondblclick="@(()=>UpdateEmployee(@context.ID))" DataLabel="Code">@context.Code</MudTd>
+                <MudTd @ondblclick="@(()=>UpdateEmployee(@context.ID))" DataLabel="PersonalCode">@context.PersonalCode</MudTd>
+                <MudTd @ondblclick="@(()=>UpdateEmployee(@context.ID))" DataLabel="Phone">@context.Phone</MudTd>
+                <MudTd @ondblclick="@(()=>UpdateEmployee(@context.ID))" DataLabel="Email">@context.Email</MudTd>
+                <MudTd @ondblclick="@(()=>UpdateEmployee(@context.ID))" DataLabel="Address">@context.Address</MudTd>
             </RowTemplate>
 
             <PagerContent>
@@ -74,6 +72,7 @@ else
     private List<EmployeeRecord>? Employees;
     private EmployeeRecord Employee = new EmployeeRecord();
     private string searchString = "";
+    private string rowClass = "";
     private bool hover = true;
     private bool dense = false;
 
@@ -118,12 +117,8 @@ else
         if(!result.Cancelled) {
             EmployeeRecord obj = Employees.Where(x => x.ID == id).FirstOrDefault();
             await _data.UpdateEmployeeAsync(obj);
-            Snackbar.Add($"Employee {obj.ID} successfully updated");
+            Snackbar.Add($"#{obj.ID} Employee successfully updated");
             await GetEmployees();
-        }
-        else
-        {
-            Snackbar.Add("Failed to update employee");
         }
     }
 
@@ -158,7 +153,5 @@ else
         if (emp.Address.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         return false;
     }
-
-
 
 }

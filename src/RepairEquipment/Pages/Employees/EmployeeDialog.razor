@@ -1,14 +1,17 @@
 ﻿@using RepairEquipment.Client.Services
+@using System.ComponentModel.DataAnnotations
 
     <MudDialog>
         <DialogContent>
-           <MudTextField T="string" Label="Name" @bind-Value="Employee.Name"/>
-           <MudTextField T="string" Label="Surname" @bind-Value="Employee.Surname"/>
-           <MudTextField T="string" Label="Code" @bind-Value="Employee.Code"/>
-           <MudTextField T="string" Label="PersonalCode" @bind-Value="Employee.PersonalCode"/>
-           <MudTextField T="string" Label="Phone" @bind-Value="Employee.Phone"/>
-           <MudTextField T="string" Label="Email" @bind-Value="Employee.Email"/>
-           <MudTextField T="string" Label="Address" @bind-Value="Employee.Address"/>
+           <MudTextField T="string" Label="Name" Required="true" RequiredError="Name is required!" @bind-Value="Employee.Name"/>
+           <MudTextField T="string" Label="Surname" Required="true" RequiredError="Surname is required!"  @bind-Value="Employee.Surname"/>
+           <MudTextField T="string" Label="Code" Required="true" RequiredError="Code is required!" @bind-Value="Employee.Code"/>
+        <MudTextField T="string" Label="PersonalCode" Validation="@(new MaxLengthAttribute(12) { ErrorMessage = "Personal code should contain 12 numbers" })"
+                         Required="true" RequiredError="Personal code is required!" @bind-Value="Employee.PersonalCode"/>
+           <MudTextField T="string" Label="Phone" Required="true" RequiredError="Phone is required!" @bind-Value="Employee.Phone"/>
+           <MudTextField T="string" Label="Email" Validation="@(new EmailAddressAttribute() { ErrorMessage = "The email address is invalid"} )" 
+                         @bind-Value="Employee.Email" Required="true" RequiredError="Email is required!"/>
+           <MudTextField T="string" Label="Address" Required="true" RequiredError="Address is required!" @bind-Value="Employee.Address"/>
         </DialogContent>
         <DialogActions>
             <MudButton OnClick="Cancel">Cancel</MudButton>
