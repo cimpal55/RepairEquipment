@@ -1,43 +1,43 @@
 ﻿@using RepairEquipment.Client.Services
+@using System.ComponentModel.DataAnnotations
 
 <MudDialog>
 	<DialogContent>
-		<MudSubmitForm>
-            <MudItem
-                xs="12" sm="6" md="12">
-
+		<MudForm @bind-IsValid="@success">
+            <MudItem xs="12" sm="6" md="12">
                 <MudGrid Spacing="0">
-                    @* Name *@ 
-                    <MudTextField Xs="12" @bind-Value="@Employee.Name" Label="Name" AutoFocus="true"/>
-                     
+
+                    @* Name *@
+                    <MudTextField T="string" Label="Name" Required="true" RequiredError="Name is required!" @bind-Value="Employee.Name" />
+
                     @* Surname *@
-                    <MudTextField Xs="12" @bind-Value="@Employee.Surname" Label="Surname" AutoFocus="true"/>
+                    <MudTextField T="string" Label="Surname" Required="true" RequiredError="Surname is required!" @bind-Value="Employee.Surname" />
 
                     @* Code *@
-                    <MudTextField Xs="12" @bind-Value="@Employee.Code" Label="Code" AutoFocus="true" />
+                    <MudTextField T="string" Label="Code" Required="true" RequiredError="Code is required!" @bind-Value="Employee.Code" />
 
                     @* PersonalCode *@
-                    <MudTextField Xs="12" @bind-Value="@Employee.PersonalCode" Label="PersonalCode" AutoFocus="true"/>
-
-                    @* Address *@
-                    <MudTextField Xs="12" @bind-Value="@Employee.Address" Label="Address" AutoFocus="true"/>
-
+                    <MudTextField T="string" Label="PersonalCode" Validation="@(new RegularExpressionAttribute("^[0-3][0-9][01][0-9][0-9][0-9]-[012][0-9][0-9][0-9][0-9]$") { ErrorMessage = "Personal code is incorrect" })"
+                                  Required="true" RequiredError="Personal code is required!" @bind-Value="Employee.PersonalCode" />
                     @* Phone *@
-                    <MudTextField Xs="12" @bind-Value="@Employee.Phone" Label="Phone" AutoFocus="true"/>
+                    <MudTextField T="string" Label="Phone" Required="true" RequiredError="Phone is required!" @bind-Value="Employee.Phone" />
 
                     @* Email *@
-                    <MudTextField Xs="12" @bind-Value="@Employee.Email" Label="Email" AutoFocus="true"/>
+                    <MudTextField T="string" Label="Email" Validation="@(new EmailAddressAttribute() { ErrorMessage = "The email address is invalid"} )"
+                                  @bind-Value="Employee.Email" Required="true" RequiredError="Email is required!" />
 
+                    @* Address *@
+                    <MudTextField T="string" Label="Address" Required="true" RequiredError="Address is required!" @bind-Value="Employee.Address" />
 
                 </MudGrid>
             </MudItem>
-        </MudSubmitForm>
+        </MudForm>
 	</DialogContent>
 
-        <DialogActions>
-            <MudButton OnClick="Cancel">Cancel</MudButton>
-            <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
-        </DialogActions>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" Disabled="@(!success)" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
 
 </MudDialog>
 
@@ -45,6 +45,7 @@
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public EmployeeRecord Employee { get; set; } = new EmployeeRecord();
+    bool success;
 
     void Submit() => MudDialog.Close(DialogResult.Ok(Employee));
     void Cancel() => MudDialog.Cancel();
