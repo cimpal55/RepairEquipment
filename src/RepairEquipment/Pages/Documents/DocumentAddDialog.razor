@@ -1,0 +1,56 @@
+﻿@using RepairEquipment.Client.Services
+@using RepairEquipment.Client.Services.Interfaces
+@inject IEmployeeService _dataEmployee
+@inject IClientService _dataClient
+
+    <MudCard>
+        <MudCardContent>
+           <MudForm @bind-IsValid="@success">
+
+                @* Name *@
+               <MudTextField T="string" Label="DocumentNumber" Required="true" RequiredError="Document number is required!" @bind-Value="Document.DocumentNumber"/>
+               
+               @* Client *@
+               <MudSelect T="string" Label="Client" Required="true" RequiredError="Client is required!" @bind-Value="Document.Client">
+               </MudSelect>
+
+               @* Employee *@
+               <MudSelect T="string" Label="Employee" Required="true" RequiredError="Employee is required!" @bind-Value="Document.Employee">
+                   @foreach (EmployeeRecord employee in Employees)
+                   {
+                        <MudSelectItem Value="@employee">@employee.Name</MudSelectItem>
+                   }
+               </MudSelect>
+               
+            </MudForm>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton OnClick="Cancel">Cancel</MudButton>
+            <MudButton Color="Color.Primary" Disabled="@(!success)" OnClick="Submit">Ok</MudButton>
+        </MudCardActions>
+    </MudCard>
+
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public DocumentRecord Document { get; set; } = new DocumentRecord();
+    [Parameter] public DocumentRecord? _selectedDocument { get; set; }
+    [Parameter] public EmployeeRecord? _selectedEmployee { get; set; }
+    private List<EmployeeRecord>? Employees;
+    bool success;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetEmployees();
+    }
+
+    private async Task GetEmployees()
+    {
+        Employees = await _dataEmployee.GetEmployeesListAsync();
+    }
+
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(Document));
+    void Cancel() => MudDialog.Cancel();
+
+}

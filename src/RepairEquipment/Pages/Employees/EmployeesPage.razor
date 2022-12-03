@@ -18,11 +18,10 @@ else
         <MudText Typo="Typo.h6">Employees</MudText>
         <MudSpacer />
         <MudButton @onclick="InsertEmployee" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
-        <MudButton @onclick="@(()=>DeleteEmployee(selectedItem.ID))" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error">DELETE</MudButton>
+        <MudButton @onclick="@(()=>DeleteEmployee(_selectedItem.ID))" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error">DELETE</MudButton>
     </MudPaper>
     
-    <MudTable Class="mud-fab-layout-content" @ref="_employeeTable" Items="@Employees" Dense="@dense" Hover="@hover" Filter="new Func<EmployeeRecord, bool>(Filter)"
-              CommitEditTooltip="Commit Edit" @bind-SelectedItem="selectedItem">
+    <MudTable Class="mud-fab-layout-content" @ref="_employeeTable" Items="@Employees" Dense="@dense" Hover="@hover" Filter="new Func<EmployeeRecord, bool>(Filter)" @bind-SelectedItem="_selectedItem">
 
             <ToolBarContent>
                 <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start"
@@ -67,15 +66,13 @@ else
 
 @code {
 
-    MudTable<EmployeeRecord> _employeeTable;
-    private EmployeeRecord selectedItem;
+    MudTable<EmployeeRecord>? _employeeTable;
+    private EmployeeRecord? _selectedItem;
     private List<EmployeeRecord>? Employees;
     private EmployeeRecord Employee = new EmployeeRecord();
     private string searchString = "";
-    private string rowClass = "";
     private bool hover = true;
     private bool dense = false;
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -91,33 +88,33 @@ else
 
         var parameters = new DialogParameters();
         parameters.Add("Employee", new EmployeeRecord());
-        var dialog = _dialogService.Show<EmployeeDialog>("Create Employee", parameters);
+        var dialog = _dialogService.Show<EmployeeAddDialog>("Create Employee", parameters);
         var result = await dialog.Result;
 
         if (!result.Cancelled)
         {
-            EmployeeRecord employee = result.Data as EmployeeRecord;
+            EmployeeRecord? employee = result.Data as EmployeeRecord;
 
             await _data.InsertEmployeeAsync(employee);
 
             Employees.Add(employee);
 
             Employee = new EmployeeRecord();
-
+            Snackbar.Add($"#{employee.ID} Employee successfully added");
             await GetEmployees();
         }
     }
 
     private async Task UpdateEmployee(int id)
     {
-        var parameters = new DialogParameters { ["Employee"] = selectedItem };
+        var parameters = new DialogParameters { ["Employee"] = _selectedItem };
         var dialog = _dialogService.Show<EmployeeEditDialog>("Edit Employee", parameters);
         var result = await dialog.Result;
 
         if(!result.Cancelled) {
-            EmployeeRecord obj = Employees.Where(x => x.ID == id).FirstOrDefault();
-            await _data.UpdateEmployeeAsync(obj);
-            Snackbar.Add($"#{obj.ID} Employee successfully updated");
+            EmployeeRecord? employee = Employees.Where(x => x.ID == id).FirstOrDefault();
+            await _data.UpdateEmployeeAsync(employee);
+            Snackbar.Add($"#{employee.ID} Employee successfully updated");
             await GetEmployees();
         }
     }
@@ -134,9 +131,9 @@ else
         var dialog = _dialogService.Show<EmployeeDeleteDialog>("Delete", parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled) {
-            EmployeeRecord obj = Employees.Where(x => x.ID == id).FirstOrDefault();
-            await _data.DeleteEmployeeAsync(obj);
-            Snackbar.Add($"#{obj.ID} Employee successfully updated");
+            EmployeeRecord? employee = Employees.Where(x => x.ID == id).FirstOrDefault();
+            await _data.DeleteEmployeeAsync(employee);
+            Snackbar.Add($"#{employee.ID} Employee successfully deleted");
             await GetEmployees();
         }
     }

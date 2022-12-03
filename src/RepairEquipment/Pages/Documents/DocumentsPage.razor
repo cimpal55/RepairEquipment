@@ -6,6 +6,7 @@
 @using RepairEquipment.Client.Services
 @inject IDocumentService _data
 @inject IDialogService _dialogService
+@inject ISnackbar Snackbar
 
 @if (Documents == null)
 {
@@ -17,11 +18,10 @@ else
         <MudText Typo="Typo.h6">Documents</MudText>
         <MudSpacer />
         <MudButton @onclick="InsertDocument" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
-        <MudButton @onclick="@(()=>DeleteDocument(selectedItem.ID))" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error">DELETE</MudButton>
+        <MudButton @onclick="@(()=>DeleteDocument(_selectedItem.ID))" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error">DELETE</MudButton>
     </MudPaper>
 
-    <MudTable Class="mud-fab-layout-content" @ref="_employeeTable" Items="@Documents" Dense="@dense" Hover="@hover" Filter="new Func<DocumentRecord, bool>(Filter)"
-          CommitEditTooltip="Commit Edit" @bind-SelectedItem="selectedItem">
+    <MudTable Class="mud-fab-layout-content" @ref="_documentTable" Items="@Documents" Dense="@dense" Hover="@hover" Filter="new Func<DocumentRecord, bool>(Filter)" @bind-SelectedItem="_selectedItem">
         <ToolBarContent>
             <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
@@ -35,10 +35,10 @@ else
         </HeaderContent>
 
         <RowTemplate>
-            <MudTd DataLabel="ID">@context.ID</MudTd>
-            <MudTd DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
-            <MudTd DataLabel="Client">@context.Client</MudTd>
-            <MudTd DataLabel="Employee">@context.Employee</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="ID">@context.ID</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="Client">@context.Client</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="Employee">@context.Employee</MudTd>
         </RowTemplate>
 
         <PagerContent>
@@ -57,8 +57,8 @@ else
 
 @code {
 
-    MudTable<DocumentRecord> _employeeTable;
-    private DocumentRecord selectedItem;
+    MudTable<DocumentRecord>? _documentTable;
+    private DocumentRecord? _selectedItem;
     private List<DocumentRecord>? Documents;
     private DocumentRecord Document = new DocumentRecord();
     private string searchString = "";
@@ -67,52 +67,68 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Documents = await _data.GetDocumentsListAsync();
+        await GetDocuments();
     }
 
+    private async Task GetDocuments() {
+        Documents = await _data.GetDocumentsListAsync();
+    }
 
     private async Task InsertDocument()
     {
 
         var parameters = new DialogParameters();
         parameters.Add("Document", new DocumentRecord());
-        var dialog = _dialogService.Show<DocumentDialog>("Create Document", parameters);
+        var dialog = _dialogService.Show<DocumentAddDialog>("Create Document", parameters);
         var result = await dialog.Result;
 
         if (!result.Cancelled)
         {
-            DocumentRecord document = result.Data as DocumentRecord;
+            DocumentRecord? document = result.Data as DocumentRecord;
 
             await _data.InsertDocumentAsync(document);
 
             Documents.Add(document);
 
             Document = new DocumentRecord();
-
-            Documents = await _data.GetDocumentsListAsync();
+            Snackbar.Add($"#{document.ID} Document successfully added");
+            await GetDocuments();
         }
     }
 
     private async Task UpdateDocument(int id)
     {
-        var parameters = new DialogParameters { ["Document"] = selectedItem };
-        var dialog = _dialogService.Show<DocumentDialog>("Edit Document", parameters);
+        var parameters = new DialogParameters { ["Document"] = _selectedItem };
+        var dialog = _dialogService.Show<DocumentEditDialog>("Edit Document", parameters);
         var result = await dialog.Result;
 
         if (!result.Cancelled)
         {
-            DocumentRecord obj = Documents.Where(x => x.ID == id).FirstOrDefault();
-            await _data.UpdateDocumentAsync(obj);
-            Documents = await _data.GetDocumentsListAsync();
+            DocumentRecord document = Documents.Where(x => x.ID == id).FirstOrDefault();
+            await _data.UpdateDocumentAsync(document);
+            Snackbar.Add($"#{document.ID} Document successfully updated");
+            await GetDocuments();
         }
 
     }
 
     private async Task DeleteDocument(int id)
     {
-        DocumentRecord obj = Documents.Where(x => x.ID == id).FirstOrDefault();
-        await _data.DeleteDocumentAsync(obj);
-        Documents = await _data.GetDocumentsListAsync();   
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText", "Do you really want to delete this record? This process cannot be undone.");
+        parameters.Add("ButtonText", "Delete");
+        parameters.Add("Color", Color.Error);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        var dialog = _dialogService.Show<DocumentDeleteDialog>("Delete", parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled) {
+            DocumentRecord? document = Documents.Where(x => x.ID == id).FirstOrDefault();
+            await _data.DeleteDocumentAsync(document);
+            Snackbar.Add($"#{document.ID} Document successfully deleted");
+            await GetDocuments();
+        }
     }
 
     private bool Filter(DocumentRecord document)
@@ -120,9 +136,8 @@ else
         if (string.IsNullOrWhiteSpace(searchString)) return true;
         if (Convert.ToString(document.ID).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         if (document.DocumentNumber.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (Convert.ToString(document.ClientId).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         if (document.Client.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (Convert.ToString(document.EmployeeId).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (document.Employee.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         return false;
     }
 
