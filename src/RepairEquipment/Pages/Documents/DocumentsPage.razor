@@ -6,6 +6,8 @@
 @using RepairEquipment.Client.Services
 @inject IDocumentService _data
 @inject IDialogService _dialogService
+@inject IEmployeeService _employee
+@inject IClientService _client
 @inject ISnackbar Snackbar
 
 @if (Documents == null)
@@ -28,14 +30,12 @@ else
         </ToolBarContent>
 
         <HeaderContent>
-            <MudTh>ID</MudTh>
             <MudTh>DocumentNumber</MudTh>
             <MudTh>Client</MudTh>
             <MudTh>Employee</MudTh>
         </HeaderContent>
 
         <RowTemplate>
-            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="ID">@context.ID</MudTd>
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="Client">@context.Client</MudTd>
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="Employee">@context.Employee</MudTd>
@@ -60,6 +60,8 @@ else
     MudTable<DocumentRecord>? _documentTable;
     private DocumentRecord? _selectedItem;
     private List<DocumentRecord>? Documents;
+    private List<EmployeeRecord>? Employees;
+    private List<ClientRecord>? Clients;
     private DocumentRecord Document = new DocumentRecord();
     private string searchString = "";
     private bool hover = true;
@@ -72,6 +74,8 @@ else
 
     private async Task GetDocuments() {
         Documents = await _data.GetDocumentsListAsync();
+        Employees = await _employee.GetEmployeesListAsync();
+        Clients = await _client.GetClientsListAsync();
     }
 
     private async Task InsertDocument()
@@ -79,11 +83,14 @@ else
 
         var parameters = new DialogParameters();
         parameters.Add("Document", new DocumentRecord());
+        parameters.Add("Employees", Employees);
+        parameters.Add("Clients", Clients);
         var dialog = _dialogService.Show<DocumentAddDialog>("Create Document", parameters);
         var result = await dialog.Result;
 
         if (!result.Cancelled)
         {
+
             DocumentRecord? document = result.Data as DocumentRecord;
 
             await _data.InsertDocumentAsync(document);
@@ -91,7 +98,7 @@ else
             Documents.Add(document);
 
             Document = new DocumentRecord();
-            Snackbar.Add($"#{document.ID} Document successfully added");
+            Snackbar.Add("Document successfully added");
             await GetDocuments();
         }
     }

@@ -1,7 +1,7 @@
 ﻿@using RepairEquipment.Client.Services
 @using RepairEquipment.Client.Services.Interfaces
-@inject IEmployeeService _dataEmployee
-@inject IClientService _dataClient
+@inject IEmployeeService _employee
+
 
     <MudCard>
         <MudCardContent>
@@ -11,11 +11,15 @@
                <MudTextField T="string" Label="DocumentNumber" Required="true" RequiredError="Document number is required!" @bind-Value="Document.DocumentNumber"/>
                
                @* Client *@
-               <MudSelect T="string" Label="Client" Required="true" RequiredError="Client is required!" @bind-Value="Document.Client">
+               <MudSelect Label="Client" Required="true" RequiredError="Client is required!" @bind-Value="_selectedClient.ID">
+                   @foreach (ClientRecord client in Clients)
+                   {
+                        <MudSelectItem Value="@client">@client.Name</MudSelectItem>
+                   }
                </MudSelect>
 
                @* Employee *@
-               <MudSelect T="string" Label="Employee" Required="true" RequiredError="Employee is required!" @bind-Value="Document.Employee">
+               <MudSelect Label="Employee" Required="true" RequiredError="Employee is required!" @bind-Value="_selectedEmployee.ID">
                    @foreach (EmployeeRecord employee in Employees)
                    {
                         <MudSelectItem Value="@employee">@employee.Name</MudSelectItem>
@@ -33,22 +37,17 @@
 
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    [Parameter] public DocumentRecord Document { get; set; } = new DocumentRecord();
-    [Parameter] public DocumentRecord? _selectedDocument { get; set; }
-    [Parameter] public EmployeeRecord? _selectedEmployee { get; set; }
-    private List<EmployeeRecord>? Employees;
+    [Parameter] public DocumentRecord Document { get; set; } = 
+    new DocumentRecord
+    {
+        ClientId = _selectedClient.ID,
+        EmployeeId = _selectedEmployee.ID
+    };
+    [Parameter] public List<EmployeeRecord>? Employees { get; set; }
+    [Parameter] public List<ClientRecord>? Clients { get; set; }
+    [Parameter] public static ClientRecord? _selectedClient { get; set; }
+    [Parameter] public static EmployeeRecord? _selectedEmployee { get; set; }
     bool success;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await GetEmployees();
-    }
-
-    private async Task GetEmployees()
-    {
-        Employees = await _dataEmployee.GetEmployeesListAsync();
-    }
-
 
     void Submit() => MudDialog.Close(DialogResult.Ok(Document));
     void Cancel() => MudDialog.Cancel();
