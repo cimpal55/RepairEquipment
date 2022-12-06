@@ -128,7 +128,7 @@ else
 
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
 
-        var dialog = _dialogService.Show<EmployeeDeleteDialog>("Delete", parameters, options);
+        var dialog = _dialogService.Show<DeleteConfirmation>("Delete", parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled) {
             EmployeeRecord? employee = Employees.Where(x => x.ID == id).FirstOrDefault();

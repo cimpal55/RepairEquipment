@@ -11,7 +11,7 @@
                <MudTextField T="string" Label="DocumentNumber" Required="true" RequiredError="Document number is required!" @bind-Value="Document.DocumentNumber"/>
                
                @* Client *@
-               <MudSelect Label="Client" Required="true" RequiredError="Client is required!" @bind-Value="_selectedClient.ID">
+               <MudSelect Label="Client" Required="true" RequiredError="Client is required!" @bind-Value="_selectedClient">
                    @foreach (ClientRecord client in Clients)
                    {
                         <MudSelectItem Value="@client">@client.Name</MudSelectItem>
@@ -19,7 +19,7 @@
                </MudSelect>
 
                @* Employee *@
-               <MudSelect Label="Employee" Required="true" RequiredError="Employee is required!" @bind-Value="_selectedEmployee.ID">
+               <MudSelect Label="Employee" Required="true" RequiredError="Employee is required!" @bind-Value="Document.EmployeeId">
                    @foreach (EmployeeRecord employee in Employees)
                    {
                         <MudSelectItem Value="@employee">@employee.Name</MudSelectItem>
@@ -37,12 +37,9 @@
 
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    [Parameter] public DocumentRecord Document { get; set; } = 
-    new DocumentRecord
-    {
-        ClientId = _selectedClient.ID,
-        EmployeeId = _selectedEmployee.ID
-    };
+    [Parameter]
+    public DocumentRecord Document { get; set; } =
+    new DocumentRecord();
     [Parameter] public List<EmployeeRecord>? Employees { get; set; }
     [Parameter] public List<ClientRecord>? Clients { get; set; }
     [Parameter] public static ClientRecord? _selectedClient { get; set; }

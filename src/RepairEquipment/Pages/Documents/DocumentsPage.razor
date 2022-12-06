@@ -33,12 +33,16 @@ else
             <MudTh>DocumentNumber</MudTh>
             <MudTh>Client</MudTh>
             <MudTh>Employee</MudTh>
+            <MudTh></MudTh>
         </HeaderContent>
 
         <RowTemplate>
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="Client">@context.Client</MudTd>
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="Employee">@context.Employee</MudTd>
+            <MudTd>
+                <MudLink>details</MudLink>
+            </MudTd>
         </RowTemplate>
 
         <PagerContent>
@@ -128,7 +132,7 @@ else
 
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
 
-        var dialog = _dialogService.Show<DocumentDeleteDialog>("Delete", parameters, options);
+        var dialog = _dialogService.Show<DeleteConfirmation>("Delete", parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled) {
             DocumentRecord? document = Documents.Where(x => x.ID == id).FirstOrDefault();

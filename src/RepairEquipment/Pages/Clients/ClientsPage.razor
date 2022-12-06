@@ -4,6 +4,7 @@
 @using RepairEquipment.Client.Services.Interfaces
 @using RepairEquipment.Shared.Models
 @using RepairEquipment.Client.Services
+@inject ISnackbar Snackbar
 @inject IClientService _data
 @inject IDialogService _dialogService
 
@@ -17,11 +18,11 @@ else
         <MudText Typo="Typo.h6">Clients </MudText>
         <MudSpacer />
         <MudButton @onclick="InsertClient" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
-        <MudButton @onclick="@(()=>DeleteClient(selectedItem.ID))" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error">DELETE</MudButton>
+        <MudButton @onclick="@(()=>DeleteClient(_selectedItem.ID))" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error">DELETE</MudButton>
     </MudPaper>
     
     <MudTable Class="mud-fab-layout-content" @ref="_clientTable" Items="@Clients" Dense="@dense" Hover="@hover" Filter="new Func<ClientRecord, bool>(Filter)"
-              CommitEditTooltip="Commit Edit" @bind-SelectedItem="selectedItem" OnCommitEditClick="@(()=>UpdateClient(selectedItem.ID))">
+              CommitEditTooltip="Commit Edit" @bind-SelectedItem="_selectedItem" OnCommitEditClick="@(()=>UpdateClient(_selectedItem.ID))">
 
             <ToolBarContent>
                 <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start"
@@ -43,52 +44,18 @@ else
             </HeaderContent>
 
             <RowTemplate>
-                <MudTd DataLabel="ID">@context.ID</MudTd>
-                <MudTd DataLabel="Name">@context.Name</MudTd>
-                <MudTd DataLabel="Surname">@context.Code</MudTd>
-                <MudTd DataLabel="Code">@context.RegistrationNr</MudTd>
-                <MudTd DataLabel="PersonalCode">@context.LegalAddress</MudTd>
-                <MudTd DataLabel="Phone">@context.Phone</MudTd>
-                <MudTd DataLabel="Email">@context.Email</MudTd>
-                <MudTd DataLabel="ContactPersonName">@context.ContactPersonName</MudTd>
-                <MudTd DataLabel="ContactPersonAddress">@context.ContactPersonAddress</MudTd>
-                <MudTd DataLabel="ContactPersonPhone">@context.ContactPersonPhone</MudTd>
-                <MudTd DataLabel="ContactPersonEmail">@context.ContactPersonEmail</MudTd>
+                <MudTd @ondblclick="@(()=>UpdateClient(@context.ID))" DataLabel="ID">@context.ID</MudTd>
+                <MudTd @ondblclick="@(()=>UpdateClient(@context.ID))" DataLabel="Name">@context.Name</MudTd>
+                <MudTd @ondblclick="@(()=>UpdateClient(@context.ID))" DataLabel="Surname">@context.Code</MudTd>
+                <MudTd @ondblclick="@(()=>UpdateClient(@context.ID))" DataLabel="Code">@context.RegistrationNr</MudTd>
+                <MudTd @ondblclick="@(()=>UpdateClient(@context.ID))" DataLabel="PersonalCode">@context.LegalAddress</MudTd>
+                <MudTd @ondblclick="@(()=>UpdateClient(@context.ID))" DataLabel="Phone">@context.Phone</MudTd>
+                <MudTd @ondblclick="@(()=>UpdateClient(@context.ID))"  DataLabel="Email">@context.Email</MudTd>
+                <MudTd @ondblclick="@(()=>UpdateClient(@context.ID))" DataLabel="ContactPersonName">@context.ContactPersonName</MudTd>
+                <MudTd @ondblclick="@(()=>UpdateClient(@context.ID))" DataLabel="ContactPersonAddress">@context.ContactPersonAddress</MudTd>
+                <MudTd @ondblclick="@(()=>UpdateClient(@context.ID))" DataLabel="ContactPersonPhone">@context.ContactPersonPhone</MudTd>
+                <MudTd @ondblclick="@(()=>UpdateClient(@context.ID))" DataLabel="ContactPersonEmail">@context.ContactPersonEmail</MudTd>
             </RowTemplate>
-
-            <RowEditingTemplate>
-                <MudTd DataLabel="Id">@context.ID</MudTd>
-                <MudTd DataLabel="Name">
-                    <MudTextField @bind-Value="@context.Name" Required />
-                </MudTd>
-                <MudTd DataLabel="Code">
-                    <MudTextField @bind-Value="@context.Code" Required />
-                </MudTd>
-                <MudTd DataLabel="RegistrationNr">
-                    <MudTextField @bind-Value="@context.RegistrationNr" Required />
-                </MudTd>
-                <MudTd DataLabel="LegalAddress">
-                    <MudTextField @bind-Value="@context.LegalAddress" Required />
-                </MudTd>
-                <MudTd DataLabel="Phone">
-                    <MudTextField @bind-Value="@context.Phone" Required />
-                </MudTd>
-                <MudTd DataLabel="Email">
-                    <MudTextField @bind-Value="@context.Email" Required />
-                </MudTd>
-                <MudTd DataLabel="ContactPersonName">
-                    <MudTextField @bind-Value="@context.ContactPersonName" Required />
-                </MudTd>
-                <MudTd DataLabel="ContactPersonAddress">
-                    <MudTextField @bind-Value="@context.ContactPersonAddress" Required />
-                </MudTd>
-                <MudTd DataLabel="ContactPersonPhone">
-                    <MudTextField @bind-Value="@context.ContactPersonPhone" Required />
-                </MudTd>
-                <MudTd DataLabel="ContactPersonEmail">
-                    <MudTextField @bind-Value="@context.ContactPersonEmail" Required />
-                </MudTd>                
-            </RowEditingTemplate>
 
             <PagerContent>
                 <MudTablePager />
@@ -106,7 +73,7 @@ else
 @code {
 
     MudTable<ClientRecord> _clientTable;
-    private ClientRecord selectedItem;
+    private ClientRecord _selectedItem;
     private List<ClientRecord>? Clients;
     private ClientRecord Client = new ClientRecord();
     private string searchString = "";
@@ -116,18 +83,18 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Clients = await _data.GetClientsListAsync();
+        await GetClients();
     }
 
-    private void ClientDialog() {
-        _dialogService.Show<ClientDialog>();
+    private async Task GetClients() {
+        Clients = await _data.GetClientsListAsync();
     }
 
     private async Task InsertClient()
     {
         var parameters = new DialogParameters();
         parameters.Add("Client", new ClientRecord());
-        var dialog = _dialogService.Show<ClientDialog>("Create client", parameters);
+        var dialog = _dialogService.Show<ClientAddDialog>("Create client", parameters);
         var result = await dialog.Result;
 
         if (!result.Cancelled)
@@ -140,28 +107,47 @@ else
 
             Client = new ClientRecord();
 
-            Clients = await _data.GetClientsListAsync();
+            await GetClients();
         }
     }
 
     private async Task UpdateClient(int id)
     {
-        ClientRecord obj = Clients.Where(x => x.ID == id).FirstOrDefault();
-        await _data.UpdateClientAsync(obj);
-        Clients = await _data.GetClientsListAsync();
+        var parameters = new DialogParameters { ["Client"] = _selectedItem };
+        var dialog = _dialogService.Show<ClientEditDialog>("Edit Client", parameters);
+        var result = await dialog.Result;
 
+        if(!result.Cancelled) {
+            ClientRecord? client = Clients.Where(x => x.ID == id).FirstOrDefault();
+            await _data.UpdateClientAsync(client);
+            Snackbar.Add($"#{client.ID} Client successfully updated");
+            await GetClients();
+        }
     }
     
     private async Task DeleteClient(int id)
     {
-        ClientRecord obj = Clients.Where(x => x.ID == id).FirstOrDefault();
-        await _data.DeleteClientAsync(obj);
-        Clients = await _data.GetClientsListAsync();
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText", "Do you really want to delete this record? This process cannot be undone.");
+        parameters.Add("ButtonText", "Delete");
+        parameters.Add("Color", Color.Error);
+        
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        var dialog = _dialogService.Show<DeleteConfirmation>("Delete", parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled) {
+            ClientRecord? client = Clients.Where(x => x.ID == id).FirstOrDefault();
+            await _data.DeleteClientAsync(client);
+            Snackbar.Add($"#{client.ID} Client successfully deleted");
+            await GetClients();
+        }
     }
 
     private bool Filter(ClientRecord client) 
     {
         if (string.IsNullOrWhiteSpace(searchString)) return true;
+        if (Convert.ToString(client.ID).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         if (client.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         if (client.Code.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         if (client.RegistrationNr.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
