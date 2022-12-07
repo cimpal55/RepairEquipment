@@ -109,7 +109,7 @@ else
         parameters.Add("Equipment", new EquipmentRecord());
         parameters.Add("EquipmentType", EquipmentTypeList);
         parameters.Add("Location", LocationList);
-        var dialog = _dialogService.Show<EquipmentAddDialog>("Create Equipment", parameters);
+        var dialog = _dialogService.Show<EquipmentDialog>("Create Equipment", parameters);
         var result = await dialog.Result;
 
         if (!result.Cancelled)

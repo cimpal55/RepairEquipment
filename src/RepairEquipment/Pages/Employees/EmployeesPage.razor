@@ -87,7 +87,7 @@ else
     {
         var parameters = new DialogParameters();
         parameters.Add("Employee", new EmployeeRecord());
-        var dialog = _dialogService.Show<EmployeeAddDialog>("Create Employee", parameters);
+        var dialog = _dialogService.Show<EmployeeDialog>("Create Employee", parameters);
         var result = await dialog.Result;
 
         if (!result.Cancelled)
@@ -107,7 +107,7 @@ else
     private async Task UpdateEmployee(int id)
     {
         var parameters = new DialogParameters { ["Employee"] = _selectedItem };
-        var dialog = _dialogService.Show<EmployeeEditDialog>("Edit Employee", parameters);
+        var dialog = _dialogService.Show<EmployeeDialog>("Edit Employee", parameters);
         var result = await dialog.Result;
 
         if(!result.Cancelled) {

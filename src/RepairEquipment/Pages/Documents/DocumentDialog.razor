@@ -1,0 +1,64 @@
+﻿@using RepairEquipment.Client.Services
+@using RepairEquipment.Client.Services.Interfaces
+@inject IEmployeeService _employee
+
+
+<MudDialog>
+    <DialogContent>
+        <MudForm @bind-IsValid="@success">
+            <MudItem xs="12" sm="6" md="12" Class="d-flex mb-5">
+                <MudGrid Spacing="1">
+                    
+                    <MudItem xs="12">
+                         @* Name *@
+                        <MudTextField T="string" Label="DocumentNumber" Required="true" RequiredError="Document number is required!" @bind-Value="Document.DocumentNumber"/>                       
+                    </MudItem>
+               
+                    <MudItem xs="12">
+                        @* Client *@
+                        <MudSelect Label="Client" Required="true" RequiredError="Client is required!" @bind-Value="_selectedClient">
+                            @foreach (ClientRecord client in Clients)
+                            {
+                                <MudSelectItem Value="@client">@client.Name</MudSelectItem>
+                            }
+                        </MudSelect>                        
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        @* Employee *@
+                        <MudSelect Label="Employee" Required="true" RequiredError="Employee is required!" @bind-Value="_selectedEmployee">
+                            @foreach (EmployeeRecord employee in Employees)
+                            {
+                                <MudSelectItem Value="@employee">@employee.Name</MudSelectItem>
+                            }
+                        </MudSelect>                        
+                    </MudItem>
+
+                </MudGrid>
+            </MudItem>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        @* Save *@
+        <MudButton OnClick="Submit" StartIcon="@Icons.Rounded.Save" Disabled="@(!success)">Save</MudButton>
+
+        @* Cancel *@
+        <MudButton OnClick="Cancel" Color="Color.Error">Cancel</MudButton>       
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public DocumentRecord Document { get; set; } = new DocumentRecord();
+    [Parameter] public List<EmployeeRecord>? Employees { get; set; }
+    [Parameter] public List<ClientRecord>? Clients { get; set; }
+    [Parameter] public static ClientRecord? _selectedClient { get; set; }
+    [Parameter] public static EmployeeRecord? _selectedEmployee { get; set; }
+    bool success;
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(Document));
+    void Cancel() => MudDialog.Cancel();
+
+}

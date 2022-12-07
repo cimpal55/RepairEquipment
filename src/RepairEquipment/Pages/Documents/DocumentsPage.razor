@@ -98,7 +98,7 @@ else
         parameters.Add("Document", new DocumentRecord());
         parameters.Add("Employees", Employees);
         parameters.Add("Clients", Clients);
-        var dialog = _dialogService.Show<DocumentAddDialog>("Create Document", parameters);
+        var dialog = _dialogService.Show<DocumentDialog>("Create Document", parameters);
         var result = await dialog.Result;
 
         if (!result.Cancelled)
@@ -119,7 +119,7 @@ else
     private async Task UpdateDocument(int id)
     {
         var parameters = new DialogParameters { ["Document"] = _selectedItem };
-        var dialog = _dialogService.Show<DocumentEditDialog>("Edit Document", parameters);
+        var dialog = _dialogService.Show<DocumentDialog>("Edit Document", parameters);
         var result = await dialog.Result;
 
         if (!result.Cancelled)

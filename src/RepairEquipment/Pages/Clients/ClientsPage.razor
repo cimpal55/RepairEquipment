@@ -94,7 +94,7 @@ else
     {
         var parameters = new DialogParameters();
         parameters.Add("Client", new ClientRecord());
-        var dialog = _dialogService.Show<ClientAddDialog>("Create client", parameters);
+        var dialog = _dialogService.Show<ClientDialog>("Create client", parameters);
         var result = await dialog.Result;
 
         if (!result.Cancelled)
@@ -114,7 +114,7 @@ else
     private async Task UpdateClient(int id)
     {
         var parameters = new DialogParameters { ["Client"] = _selectedItem };
-        var dialog = _dialogService.Show<ClientEditDialog>("Edit Client", parameters);
+        var dialog = _dialogService.Show<ClientDialog>("Edit Client", parameters);
         var result = await dialog.Result;
 
         if(!result.Cancelled) {
