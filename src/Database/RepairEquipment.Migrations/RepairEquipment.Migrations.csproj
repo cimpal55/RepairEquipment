@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\RepairEquipment.Shared\RepairEquipment.Shared.csproj" />
     <ProjectReference Include="..\RepairEquipment.Data\RepairEquipment.Data.csproj" />
   </ItemGroup>
 

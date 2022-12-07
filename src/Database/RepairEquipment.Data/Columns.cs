@@ -86,5 +86,12 @@
             public const string Created = "Created";
         }
 
+        public static class Location
+        {
+            public const string Id = "ID";
+            public const string Name = "Name";
+            public const string Created = "Created";
+        }
+
     }
 }

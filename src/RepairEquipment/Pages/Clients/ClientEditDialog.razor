@@ -10,15 +10,15 @@
                     @* Name *@
                     <MudTextField T="string" Label="Name" Required="true" RequiredError="Name is required!" @bind-Value="Client.Name" />
 
-                    @* Surname *@
-                    <MudTextField T="string" Label="Surname" Required="true" RequiredError="Surname is required!" @bind-Value="Client.Surname" />
-
                     @* Code *@
                     <MudTextField T="string" Label="Code" Required="true" RequiredError="Code is required!" @bind-Value="Client.Code" />
 
-                    @* PersonalCode *@
-                    <MudTextField T="string" Label="PersonalCode" Validation="@(new RegularExpressionAttribute("^[0-9]{6}-[0-9]{5}$") { ErrorMessage = "Personal code is incorrect" })"
-                                  Required="true" RequiredError="Personal code is required!" @bind-Value="Client.PersonalCode" />
+                    @* RegistrationNr *@
+                    <MudTextField T="string" Label="LegalAddress" Required="true" RequiredError="Phone is required!" @bind-Value="Client.RegistrationNr" />
+                    
+                    @* LegalAddress *@
+                    <MudTextField T="string" Label="LegalAddress" Required="true" RequiredError="Phone is required!" @bind-Value="Client.LegalAddress" />
+                    
                     @* Phone *@
                     <MudTextField T="string" Label="Phone" Required="true" RequiredError="Phone is required!" @bind-Value="Client.Phone" />
 

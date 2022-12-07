@@ -16,6 +16,7 @@ namespace RepairEquipment.Migrations
                 new EquipmentsMigration(),
                 new DocumentsMigration(),
                 new DocumentDetailsMigration(),
+                new LocationsMigration(),
                 new EquipmentHistoryMigration()
             };
     }

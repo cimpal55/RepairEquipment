@@ -20,7 +20,7 @@ else
         <MudText Typo="Typo.h6">Documents</MudText>
         <MudSpacer />
         <MudButton @onclick="InsertDocument" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
-        <MudButton @onclick="@(()=>DeleteDocument(_selectedItem.ID))" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error">DELETE</MudButton>
+        <MudButton @onclick="@(()=>DeleteDocument(_selectedItem.Id))" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error">DELETE</MudButton>
     </MudPaper>
 
     <MudTable Class="mud-fab-layout-content" @ref="_documentTable" Items="@Documents" Dense="@dense" Hover="@hover" Filter="new Func<DocumentRecord, bool>(Filter)" @bind-SelectedItem="_selectedItem">
@@ -37,9 +37,9 @@ else
         </HeaderContent>
 
         <RowTemplate>
-            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
-            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="Client">@context.Client</MudTd>
-            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="Employee">@context.Employee</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Client">@context.Client</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Employee">@context.Employee</MudTd>
             <MudTd>
                 <MudLink>details</MudLink>
             </MudTd>
@@ -115,9 +115,9 @@ else
 
         if (!result.Cancelled)
         {
-            DocumentRecord document = Documents.Where(x => x.ID == id).FirstOrDefault();
+            DocumentRecord document = Documents.Where(x => x.Id == id).FirstOrDefault();
             await _data.UpdateDocumentAsync(document);
-            Snackbar.Add($"#{document.ID} Document successfully updated");
+            Snackbar.Add($"#{document.Id} Document successfully updated");
             await GetDocuments();
         }
 
@@ -135,9 +135,9 @@ else
         var dialog = _dialogService.Show<DeleteConfirmation>("Delete", parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled) {
-            DocumentRecord? document = Documents.Where(x => x.ID == id).FirstOrDefault();
+            DocumentRecord? document = Documents.Where(x => x.Id == id).FirstOrDefault();
             await _data.DeleteDocumentAsync(document);
-            Snackbar.Add($"#{document.ID} Document successfully deleted");
+            Snackbar.Add($"#{document.Id} Document successfully deleted");
             await GetDocuments();
         }
     }
@@ -145,7 +145,7 @@ else
     private bool Filter(DocumentRecord document)
     {
         if (string.IsNullOrWhiteSpace(searchString)) return true;
-        if (Convert.ToString(document.ID).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (Convert.ToString(document.Id).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         if (document.DocumentNumber.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         if (document.Client.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         if (document.Employee.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;

@@ -8,6 +8,7 @@
         public const string Employee = "TBL_CONF_Employees";
         public const string Document = "TBL_Documents";
         public const string DocumentDetail = "TBL_DocumentDetails";
+        public const string Location = "TBL_CONF_Locations";
         public const string EquipmentHistory = "TBL_EquipmentHistory";
     }
 }

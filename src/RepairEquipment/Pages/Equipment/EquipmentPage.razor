@@ -1,0 +1,74 @@
+﻿@page "/equipment"
+@using Dapper
+@using RepairEquipment.Client.DbAccess
+@using RepairEquipment.Client.Services.Interfaces
+@using RepairEquipment.Shared.Models
+@using RepairEquipment.Client.Services
+@inject IEquipmentService _data
+@inject IDialogService _dialogService
+@inject ISnackbar Snackbar
+
+@if (Equipment == null)
+{
+    <p><em>Loading ... </em></p>
+}
+else
+{
+    <MudPaper Square="true" Style="text-align: left" Class="pa-4 d-flex flex-grow-1">
+        <MudText Typo="Typo.h6">Equipment</MudText>
+        <MudSpacer />
+        <MudButton @onclick="InsertEquipment" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
+        <MudButton @onclick="@(()=>DeleteEquipment(_selectedItem.Id))" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error">DELETE</MudButton>
+    </MudPaper>
+   
+
+
+}
+
+
+@code {
+
+    MudTable<EquipmentRecord>? _equipmentTable;
+    private EquipmentRecord? _selectedItem;
+    private List<EquipmentRecord>? EquipmentList;
+    private EquipmentRecord Equipment = new EquipmentRecord();
+    private string searchString = "";
+    private bool hover = true;
+    private bool dense = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetEquipmentList();
+    }
+
+    private async Task GetEquipmentList() {
+        EquipmentList = await _data.GetEquipmentListAsync();
+    }
+
+    private async Task InsertEquipment()
+    {
+
+        var parameters = new DialogParameters();
+    }
+
+    private async Task UpdateEquipment(int id)
+    {
+        var parameters = new DialogParameters();
+    }
+
+    private async Task DeleteEquipment(int id)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText", "Do you really want to delete this record? This process cannot be undone.");
+        parameters.Add("ButtonText", "Delete");
+        parameters.Add("Color", Color.Error);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+    }
+
+    private bool Filter(EquipmentRecord item) 
+    {
+        return false;
+    }
+
+}
