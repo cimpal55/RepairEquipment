@@ -85,7 +85,6 @@ else
 
     private async Task InsertEmployee()
     {
-
         var parameters = new DialogParameters();
         parameters.Add("Employee", new EmployeeRecord());
         var dialog = _dialogService.Show<EmployeeAddDialog>("Create Employee", parameters);

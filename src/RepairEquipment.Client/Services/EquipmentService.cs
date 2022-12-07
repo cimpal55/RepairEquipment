@@ -1,12 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RepairEquipment.Client.DbAccess;
+using RepairEquipment.Client.Services.Interfaces;
+using RepairEquipment.Shared.Models.Data;
 
 namespace RepairEquipment.Client.Services
 {
-    internal class EquipmentService
+    public class EquipmentService : IEquipmentService
     {
+        private readonly ISqlDataAccess _data;
+        public EquipmentService(ISqlDataAccess data)
+        {
+            _data = data;
+        }
+        public Task DeleteEquipmentAsync(EquipmentRecord item)
+        {
+            string sql = "DELETE FROM TBL_CONF_Equipment WHERE ID = @ID";
+            return _data.SaveData(sql, item);
+        }
+
+        public Task<EquipmentRecord?> GetEquipmentDetailsAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<EquipmentRecord>> GetEquipmentListAsync()
+        {
+            string sql = "SELECT * FROM TBL_CONF_Equipment";
+            return _data.LoadData<EquipmentRecord, dynamic>(sql, new { });
+        }
+
+        public Task InsertEquipmentAsync(EquipmentRecord item)
+        {
+            string sql = @"INSERT INTO TBL_CONF_Equipment (Name, TypeId, Type, LocationId, Location, SerialNumber, FixedAssetNr, PurchaseDate, PurchaseSum,
+                         PurchaseInvoceNr, PurchaseInvoiceLink, DepreciationPeriod, Depreciation, Notes) 
+                         VALUES (@Name, @TypeId, @Type, @LocationId, @Location, @SerialNumber, @FixedAssetNr, @PurchaseDate, @PurchaseSum,
+                         @PurchaseInvoceNr, @PurchaseInvoiceLink, @DepreciationPeriod, @Depreciation, @Notes);";
+            return _data.SaveData(sql, item);
+        }
+
+        public Task UpdateEquipmentAsync(EquipmentRecord item)
+        {
+            string sql = @"UPDATE TBL_CONF_Equipment SET Name = @Name, TypeId = @TypeId, LocationId = @LocationId, Location = @Location, SerialNumber = @SerialNumber,
+                         FixedAssetNr = @FixedAssetNr, PurchaseDate = @PurchaseDate, PurchaseSum = @PurchaseSum, PurchaseInvoceNr = @PurchaseInvoceNr,
+                         PurchaseInvoiceLink = @PurchaseInvoiceLink, DepreciationPeriod = @DepreciationPeriod, Depreciation = @Depreciation,
+                         Notes = @Notes, WHERE ID = @ID";
+            return _data.SaveData(sql, item);
+        }
     }
 }

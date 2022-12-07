@@ -6,27 +6,51 @@
            <MudForm @bind-IsValid="@success">
 
                 @* Name *@
-               <MudTextField T="string" Label="Name" Required="true" RequiredError="Name is required!" @bind-Value="Employee.Name"/>
+               <MudTextField T="string" Label="Name" Required="true" RequiredError="Name is required!" @bind-Value="Equipment.Name"/>
 
-               @* Surname *@
-               <MudTextField T="string" Label="Surname" Required="true" RequiredError="Surname is required!"  @bind-Value="Employee.Surname"/>
+               @* Type *@
+               <MudSelect Label="Type" Required="true" RequiredError="Type is required!" @bind-Value="_selectedEquipmentType">
+                   @foreach (EquipmentTypeRecord type in EquipmentType)
+                   {
+                        <MudSelectItem Value="@type">@type.Name</MudSelectItem>
+                   }
+               </MudSelect>
 
-               @* Code *@ 
-               <MudTextField T="string" Label="Code" Required="true" RequiredError="Code is required!" @bind-Value="Employee.Code"/>
+               @* Location *@
+               <MudSelect Label="Location" Required="true" RequiredError="Location is required!" @bind-Value="_selectedLocation">
+                   @foreach (LocationRecord location in Location)
+                   {
+                        <MudSelectItem Value="@location">@location.Name</MudSelectItem>
+                   }
+               </MudSelect>
 
-               @* PersonalCode *@
-               <MudTextField T="string" Label="PersonalCode" Validation="@(new RegularExpressionAttribute("^[0-9]{6}-[0-9]{5}$") { ErrorMessage = "Personal code is incorrect" })"
-                             Required="true" RequiredError="Personal code is required!" @bind-Value="Employee.PersonalCode"/>
-                @* Phone *@ 
-               <MudTextField T="string" Label="Phone" Required="true" RequiredError="Phone is required!" @bind-Value="Employee.Phone"/>
+               @* SerialNumber *@
+               <MudTextField T="string" Label="SerialNumber" Required="true" RequiredError="Serial number is required!" @bind-Value="Equipment.SerialNumber"/>
+               
+               @* FixedAssetNr *@ 
+               <MudTextField T="int" Label="FixedAssetNr" Required="true" RequiredError="FixedAssetNr is required!" @bind-Value="Equipment.FixedAssetNr"/>
 
-               @* Email *@ 
-               <MudTextField T="string" Label="Email" Validation="@(new EmailAddressAttribute() { ErrorMessage = "The email address is invalid"} )" 
-                             @bind-Value="Employee.Email" Required="true" RequiredError="Email is required!"/>
+               @* PurchaseDate *@ 
+               <MudDatePicker Label="dd.MM.yyyy" Editable="true" @bind-Date="Equipment.PurchaseDate" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy"/>
+       
+               @* PurchaseSum *@ 
+               <MudTextField T="decimal" Label="PurchaseSum" Required="true" RequiredError="Purchase sum is required!" @bind-Value="Equipment.PurchaseSum"/>
+               
+               @* PurchaseInvoiceNr *@ 
+               <MudTextField T="string" Label="PurchaseInvoiceNr" Required="true" RequiredError="PurchaseInvoiceNr is required!" @bind-Value="Equipment.PurchaseInvoiceNr"/>
 
-               @* Address *@ 
-               <MudTextField T="string" Label="Address" Required="true" RequiredError="Address is required!" @bind-Value="Employee.Address"/>
+               @* PurchaseInvoiceLink *@ 
+               <MudTextField T="string" Label="PurchaseInvoiceLink" Required="true" RequiredError="PurchaseInvoiceLink is required!" @bind-Value="Equipment.PurchaseInvoiceLink"/>
 
+               @* DepreciationPeriod *@ 
+               <MudTextField T="int" Label="DepreciationPeriod" Required="true" RequiredError="DepreciationPeriod is required!" @bind-Value="Equipment.DepreciationPeriod"/>
+
+               @* Depreciation *@ 
+               <MudTextField T="decimal" Label="DepreciationPeriod" Required="true" RequiredError="Depreciation is required!" @bind-Value="Equipment.Depreciation"/>
+            
+               @* Notes *@ 
+               <MudTextField T="string" Label="Notes" @bind-Value="Equipment.Notes"/>               
+               
             </MudForm>
         </MudCardContent>
         <MudCardActions>
@@ -38,11 +62,16 @@
 
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    [Parameter] public EmployeeRecord Employee { get; set; } = new EmployeeRecord();
+    [Parameter] public EquipmentRecord Equipment { get; set; } = new EquipmentRecord();
+    [Parameter] public static EquipmentTypeRecord? _selectedEquipmentType { get; set; }
+    [Parameter] public static LocationRecord? _selectedLocation { get; set; }
+    [Parameter] public List<EquipmentTypeRecord> EquipmentType { get; set; }
+    [Parameter] public List<LocationRecord> Location { get; set; }
+    
     bool success;
+    
 
-
-    void Submit() => MudDialog.Close(DialogResult.Ok(Employee));
+    void Submit() => MudDialog.Close(DialogResult.Ok(Equipment));
     void Cancel() => MudDialog.Cancel();
 
 }

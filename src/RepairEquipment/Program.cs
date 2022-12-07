@@ -1,9 +1,5 @@
-using AngleSharp.Dom;
 using MudBlazor.Services;
-using RepairEquipment.Client.DbAccess;
-using RepairEquipment.Client.Services;
-using RepairEquipment.Client.Services.Interfaces;
-using RepairEquipment.Data;
+using RepairEquipment.Utils.ServiceRegistration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,12 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices();
-
-builder.Services.AddSingleton<WeatherForecastService>();
-builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
-builder.Services.AddTransient<IEmployeeService, EmployeeService>();
-builder.Services.AddTransient<IClientService, ClientService>();
-builder.Services.AddTransient<IDocumentService, DocumentService>();
+builder.Services.AddRepairEquipmentServices();
 
 var app = builder.Build();
 

@@ -5,7 +5,7 @@ using static RepairEquipment.Data.Columns;
 
 namespace RepairEquipment.Migrations._20220727_Initial
 {
-    internal sealed class EquipmentsMigration : ISubMigration
+    internal sealed class EquipmentMigration : ISubMigration
     {
         private const string TableName = Tables.Equipment;
         public void Up(Migration migration)

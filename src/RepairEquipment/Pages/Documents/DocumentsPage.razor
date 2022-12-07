@@ -74,11 +74,20 @@ else
     protected override async Task OnInitializedAsync()
     {
         await GetDocuments();
+        await GetEmployees();
+        await GetClients();
     }
 
     private async Task GetDocuments() {
         Documents = await _data.GetDocumentsListAsync();
-        Employees = await _employee.GetEmployeesListAsync();
+    }
+
+    private async Task GetEmployees() {
+        Employees = await _employee.GetEmployeesListAsync(); 
+    }
+
+    private async Task GetClients()
+    {
         Clients = await _client.GetClientsListAsync();
     }
 

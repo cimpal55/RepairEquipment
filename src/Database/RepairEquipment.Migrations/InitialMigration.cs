@@ -13,7 +13,7 @@ namespace RepairEquipment.Migrations
                 new EquipmentTypesMigration(),
                 new EmployeesMigration(),
                 new ClientsMigration(),
-                new EquipmentsMigration(),
+                new EquipmentMigration(),
                 new DocumentsMigration(),
                 new DocumentDetailsMigration(),
                 new LocationsMigration(),
