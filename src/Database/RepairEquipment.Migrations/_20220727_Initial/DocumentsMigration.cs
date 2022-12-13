@@ -12,8 +12,8 @@ namespace RepairEquipment.Migrations._20220727_Initial
         {
             migration.Create.Table(TableName)
                 .WithColumn(Document.Id).AsInt32().NotNullable().PrimaryKey().Identity()
-                .WithColumn(Document.ClientId).AsInt32().Nullable()
-                .WithColumn(Document.EmployeeId).AsInt32().Nullable()
+                .WithColumn(Document.ClientId).AsInt32().Nullable().ForeignKey(Tables.Client, Client.Id)
+                .WithColumn(Document.EmployeeId).AsInt32().Nullable().ForeignKey(Tables.Employee, Employee.Id)
                 .WithColumn(Document.DocumentNumber).AsString(50).NotNullable()
                 .WithColumn(Document.Created).AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
 

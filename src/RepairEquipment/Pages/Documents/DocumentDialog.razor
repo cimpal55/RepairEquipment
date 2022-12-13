@@ -58,7 +58,12 @@
     [Parameter] public static EmployeeRecord? _selectedEmployee { get; set; }
     bool success;
 
-    void Submit() => MudDialog.Close(DialogResult.Ok(Document));
+    void Submit()
+    {
+        Document.ClientId = _selectedClient.ID;
+        Document.EmployeeId = _selectedEmployee.ID;
+        MudDialog.Close(DialogResult.Ok(Document));
+    }
     void Cancel() => MudDialog.Cancel();
 
 }

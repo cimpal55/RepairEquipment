@@ -4,7 +4,7 @@ namespace RepairEquipment.Shared.Models.Data
 {
     public sealed record ClientRecord
     {
-        public int ID { get; init; }
+        public int ID { get; set; }
         public string Name { get; set; } = string.Empty;      
         public string Code { get; set; } = string.Empty;
         public string RegistrationNr { get; set; } = string.Empty;

@@ -27,6 +27,11 @@ namespace RepairEquipment.Client.Services
             string sql = "SELECT * FROM TBL_CONF_Employees";
             return _data.LoadData<EmployeeRecord, dynamic>(sql, new { });
         }
+        public Task<List<EmployeeRecord>> GetEmployeeNameAsync(int? id)
+        {
+            string sql = "SELECT Name FROM TBL_CONF_Employees WHERE ID = @ID";
+            return _data.LoadData<EmployeeRecord, dynamic>(sql, new { });
+        }
 
         public Task InsertEmployeeAsync(EmployeeRecord item)
         {

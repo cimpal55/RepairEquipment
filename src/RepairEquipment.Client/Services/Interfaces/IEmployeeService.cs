@@ -9,5 +9,6 @@ namespace RepairEquipment.Client.Services.Interfaces
         public Task InsertEmployeeAsync(EmployeeRecord item);
         public Task UpdateEmployeeAsync(EmployeeRecord item);
         public Task DeleteEmployeeAsync(EmployeeRecord item);
+        public Task<List<EmployeeRecord>> GetEmployeeNameAsync(int? id);
     }
 }
