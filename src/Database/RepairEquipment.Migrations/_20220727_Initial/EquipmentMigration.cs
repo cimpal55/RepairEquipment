@@ -14,7 +14,7 @@ namespace RepairEquipment.Migrations._20220727_Initial
                 .WithColumn(Equipment.Id).AsInt32().NotNullable().PrimaryKey().Identity()
                 .WithColumn(Equipment.Name).AsString(200).NotNullable()
                 .WithColumn(Equipment.TypeId).AsInt32().NotNullable().ForeignKey(Tables.EquipmentType, EquipmentType.Id)
-                .WithColumn(Equipment.Location).AsString(50).NotNullable()
+                .WithColumn(Equipment.Location).AsString(50).NotNullable().ForeignKey(Tables.Location, Location.Id)
                 .WithColumn(Equipment.SerialNumber).AsString(20).Nullable()
                 .WithColumn(Equipment.FixedAssetNr).AsInt32().Nullable()
                 .WithColumn(Equipment.PurchaseDate).AsDateTime().NotNullable()

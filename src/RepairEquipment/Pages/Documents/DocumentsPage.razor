@@ -39,7 +39,7 @@ else
         <RowTemplate>
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Client">@context.ClientId</MudTd>
-            <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Employee">@GetEmployeeName(@context.EmployeeId)</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Employee">@(()=>GetEmployee(@context.EmployeeId))</MudTd>
             <MudTd>
                 <MudLink>details</MudLink>
             </MudTd>
@@ -91,10 +91,9 @@ else
         Clients = await _client.GetClientsListAsync();
     }
 
-    private async Task GetEmployeeName(int? id)
+    private Task GetEmployee(int? id)
     {
-        var employee = _employee.GetEmployeeNameAsync(id);
-        await employee;
+        return _employee.GetEmployeeNameAsync(id);
     }
 
     private async Task InsertDocument()
@@ -118,7 +117,6 @@ else
 
             Document = new DocumentRecord();                
             Snackbar.Add("Document successfully added");
-            await GetEmployeeName(document.EmployeeId);
             await GetDocuments();
         }
     }

@@ -26,6 +26,18 @@ namespace RepairEquipment.Client.DbAccess
                 return data.ToList();
             }
         }
+
+        public async Task<T> LoadRow(string sql, object parameters)
+        {
+            string connectionString = _config.GetConnectionString(ConnectionString);
+
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var data = await connection.ExecuteAsync(sql, parameters);
+                
+                return data;
+            }
+        }
         public async Task SaveData<T>(string sql, T parameters)
         {
             string connectionString = _config.GetConnectionString(ConnectionString);
