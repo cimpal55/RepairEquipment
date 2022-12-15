@@ -17,9 +17,10 @@ namespace RepairEquipment.Client.Services
             return _data.SaveData(sql, item);
         }
 
-        public Task<ClientRecord?> GetClientsAsync(int id)
+        public Task<List<ClientRecord>> GetClientById(int id)
         {
-            throw new NotImplementedException();
+            string sql = "SELECT Name FROM TBL_CONF_Clients WHERE ID = @ID";
+            return _data.LoadData<ClientRecord, dynamic>(sql, new { });
         }
 
         public Task<List<ClientRecord>> GetClientsListAsync()

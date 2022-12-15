@@ -56,6 +56,14 @@ else
                 <MudTd @ondblclick="@(()=>UpdateEquipment(@context.Id))" DataLabel="PurchaseInvoiceLink">@context.PurchaseInvoiceLink</MudTd>
                 <MudTd @ondblclick="@(()=>UpdateEquipment(@context.Id))" DataLabel="DepreciationPeriod">@context.DepreciationPeriod</MudTd>
                 <MudTd @ondblclick="@(()=>UpdateEquipment(@context.Id))" DataLabel="Depreciation">@context.Depreciation</MudTd>         
+                <MudTd Style="float: right">
+                    <MudIconButton
+                        Class="hoverable-item top-0 right-0 mt-3 mr-4"
+                        Color="Color.Error"
+                        Variant="Variant.Filled"
+                        Icon="@Icons.Rounded.Delete"
+                        @onclick="@(()=>DeleteEquipment(@context.Id))"/>               
+                </MudTd>                
             </RowTemplate>
 
             <PagerContent>
@@ -121,7 +129,7 @@ else
             EquipmentList.Add(equipment);
 
             Equipment = new EquipmentRecord();
-            Snackbar.Add($"#{equipment.Id} Equipment successfully added");
+            Snackbar.Add("Equipment successfully added");
             await GetEquipment();
         }
     }

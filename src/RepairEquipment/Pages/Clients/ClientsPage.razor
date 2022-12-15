@@ -55,6 +55,14 @@ else
                 <MudTd @ondblclick="@(()=>UpdateClient(@context.ID))" DataLabel="ContactPersonAddress">@context.ContactPersonAddress</MudTd>
                 <MudTd @ondblclick="@(()=>UpdateClient(@context.ID))" DataLabel="ContactPersonPhone">@context.ContactPersonPhone</MudTd>
                 <MudTd @ondblclick="@(()=>UpdateClient(@context.ID))" DataLabel="ContactPersonEmail">@context.ContactPersonEmail</MudTd>
+                <MudTd Style="float: right">    
+                    <MudIconButton
+                        Class="hoverable-item top-0 right-0 mt-3 mr-4"
+                        Color="Color.Error"
+                        Variant="Variant.Filled"
+                        Icon="@Icons.Rounded.Delete"
+                        @onclick="@(()=>DeleteClient(@context.Id))"/>               
+                </MudTd>                
             </RowTemplate>
 
             <PagerContent>

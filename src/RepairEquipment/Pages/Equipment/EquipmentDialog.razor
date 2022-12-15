@@ -98,7 +98,12 @@
     [Parameter] public List<LocationRecord> Location { get; set; }
     bool success;
 
-    void Submit() => MudDialog.Close(DialogResult.Ok(Equipment));
+    void Submit()
+    {
+        Equipment.LocationId = _selectedLocation.Id;
+        Equipment.TypeId = _selectedEquipmentType.Id;
+        MudDialog.Close(DialogResult.Ok(Equipment));
+    }
     void Cancel() => MudDialog.Cancel();
 
 }

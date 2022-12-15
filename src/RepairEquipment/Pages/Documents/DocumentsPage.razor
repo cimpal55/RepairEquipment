@@ -20,7 +20,6 @@ else
         <MudText Typo="Typo.h6">Documents</MudText>
         <MudSpacer />
         <MudButton @onclick="InsertDocument" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
-        <MudButton @onclick="@(()=>DeleteDocument(_selectedItem.Id))" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error">DELETE</MudButton>
     </MudPaper>
 
     <MudTable Class="mud-fab-layout-content" @ref="_documentTable" Items="@Documents" Dense="@dense" Hover="@hover" Filter="new Func<DocumentRecord, bool>(Filter)" @bind-SelectedItem="_selectedItem">
@@ -35,13 +34,18 @@ else
             <MudTh>Employee</MudTh>
             <MudTh></MudTh>
         </HeaderContent>
-
+        
         <RowTemplate>
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
-            <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Client">@context.ClientId</MudTd>
-            <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Employee">@(()=>GetEmployee(@context.EmployeeId))</MudTd>
-            <MudTd>
-                <MudLink>details</MudLink>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Client">@context.Client</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Employee">@context.Employee</MudTd>
+            <MudTd Style="float: right">
+                <MudIconButton
+                    Class="hoverable-item top-0 right-0 mt-3 mr-4"
+                    Color="Color.Error"
+                    Variant="Variant.Filled"
+                    Icon="@Icons.Rounded.Delete"
+                    @onclick="@(()=>DeleteDocument(@context.Id))"/>               
             </MudTd>
         </RowTemplate>
 
@@ -91,14 +95,8 @@ else
         Clients = await _client.GetClientsListAsync();
     }
 
-    private Task GetEmployee(int? id)
-    {
-        return _employee.GetEmployeeNameAsync(id);
-    }
-
     private async Task InsertDocument()
     {
-
         var parameters = new DialogParameters();
         parameters.Add("Document", new DocumentRecord());
         parameters.Add("Employees", Employees);
@@ -108,14 +106,13 @@ else
 
         if (!result.Cancelled)
         {
-
             DocumentRecord? document = result.Data as DocumentRecord;
 
             await _data.InsertDocumentAsync(document);
 
             Documents.Add(document);
 
-            Document = new DocumentRecord();                
+            Document = new DocumentRecord();
             Snackbar.Add("Document successfully added");
             await GetDocuments();
         }

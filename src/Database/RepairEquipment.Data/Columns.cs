@@ -25,7 +25,7 @@
         {
             public const string Id = "ID";
             public const string TypeId = "TypeID";
-            public const string Location = "Location";
+            public const string LocationId = "LocationID";
             public const string Name = "Name";
             public const string SerialNumber = "SerialNumber";
             public const string FixedAssetNr = "FixedAssetNr";

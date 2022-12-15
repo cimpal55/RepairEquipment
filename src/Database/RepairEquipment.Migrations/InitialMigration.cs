@@ -11,12 +11,12 @@ namespace RepairEquipment.Migrations
             new ISubMigration[]
             {
                 new EquipmentTypesMigration(),
+                new LocationsMigration(),
                 new EmployeesMigration(),
                 new ClientsMigration(),
                 new EquipmentMigration(),
                 new DocumentsMigration(),
                 new DocumentDetailsMigration(),
-                new LocationsMigration(),
                 new EquipmentHistoryMigration()
             };
     }
