@@ -16,5 +16,6 @@ namespace RepairEquipment.Client.Services
             string sql = "SELECT * FROM TBL_CONF_Locations";
             return _data.LoadData<LocationRecord, dynamic>(sql, new { });
         }
+
     }
 }

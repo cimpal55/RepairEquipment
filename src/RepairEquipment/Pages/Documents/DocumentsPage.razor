@@ -8,6 +8,7 @@
 @inject IDialogService _dialogService
 @inject IEmployeeService _employee
 @inject IClientService _client
+@inject IUtilsService _util
 @inject ISnackbar Snackbar
 
 @if (Documents == null)
@@ -47,7 +48,7 @@ else
         
         <RowTemplate>
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
-            <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Client">@context.Client</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Client">@context.ClientId</MudTd>
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Employee">@context.Employee</MudTd>
             <MudTd Style="text-align: right">
                 
@@ -100,13 +101,16 @@ else
         await GetDocuments();
         await GetEmployees();
         await GetClients();
+        Documents.FirstOrDefault().Client = await _util.GetClientNameById(Documents.FirstOrDefault().ClientId);
     }
 
-    private async Task GetDocuments() {
+    private async Task GetDocuments() 
+    {
         Documents = await _data.GetDocumentsListAsync();
     }
 
-    private async Task GetEmployees() {
+    private async Task GetEmployees() 
+    {
         Employees = await _employee.GetEmployeesListAsync(); 
     }
 
