@@ -16,10 +16,20 @@
 }
 else
 {
-    <MudPaper Square="true" Style="text-align: left" Class="pa-4 d-flex flex-grow-1">
+    <MudPaper Square="true" Class="pa-4 d-flex flex-grow-1">
+
         <MudText Typo="Typo.h6">Documents</MudText>
-        <MudSpacer />
-        <MudButton @onclick="InsertDocument" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
+        
+        <MudContainer Style="text-align: right; padding-right: unset; margin-right: 15px">
+            <MudButton @onclick="InsertDocument" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>      
+            <MudToolTipIconButtonEx
+                Icon="@Icons.Filled.Login"
+                Text="Incoming"/>       
+            <MudToolTipIconButtonEx
+                Icon="@Icons.Filled.Logout"
+                Text="Outgoing"/>               
+        </MudContainer>
+
     </MudPaper>
 
     <MudTable Class="mud-fab-layout-content" @ref="_documentTable" Items="@Documents" Dense="@dense" Hover="@hover" Filter="new Func<DocumentRecord, bool>(Filter)" @bind-SelectedItem="_selectedItem">
@@ -39,13 +49,23 @@ else
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Client">@context.Client</MudTd>
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Employee">@context.Employee</MudTd>
-            <MudTd Style="float: right">
+            <MudTd Style="text-align: right">
+                
+                <MudLink Href="">
+                    <MudIconButton
+                        Class="hoverable-item top-0 right-0 mt-3 mr-4"
+                        Color="Color.Info"
+                        Variant="Variant.Filled"
+                        Icon="@Icons.Rounded.DensitySmall"/>
+                </MudLink>
+                
                 <MudIconButton
                     Class="hoverable-item top-0 right-0 mt-3 mr-4"
                     Color="Color.Error"
                     Variant="Variant.Filled"
                     Icon="@Icons.Rounded.Delete"
-                    @onclick="@(()=>DeleteDocument(@context.Id))"/>               
+                    @onclick="@(()=>DeleteDocument(@context.Id))"/>   
+                    
             </MudTd>
         </RowTemplate>
 
@@ -120,7 +140,10 @@ else
 
     private async Task UpdateDocument(int id)
     {
-        var parameters = new DialogParameters { ["Document"] = _selectedItem };
+        var parameters = new DialogParameters();
+        parameters.Add("Document", _selectedItem);
+        parameters.Add("Employees", Employees);
+        parameters.Add("Clients", Clients);
         var dialog = _dialogService.Show<DocumentDialog>("Edit Document", parameters);
         var result = await dialog.Result;
 

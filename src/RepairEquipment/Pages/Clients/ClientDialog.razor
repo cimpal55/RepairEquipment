@@ -7,40 +7,56 @@
             <MudItem xs="12" sm="6" md="12" Class="d-flex mb-5">
                 <MudGrid Spacing="1">
                     
-                    @* Name *@
-                    <MudTextField T="string" Label="Name" Immediate="true" Required="true" RequiredError="Name is required!" @bind-Value="Client.Name" />
+                    <MudItem xs="6">
+                        @* Name *@
+                        <MudTextField T="string" Label="Name" Immediate="true" Required="true" RequiredError="Name is required!" @bind-Value="Client.Name" />                        
+                    </MudItem>
+                    
+                    <MudItem xs="6">
+                        @* Code *@
+                        <MudTextField T="string" Label="Code" Immediate="true" Required="true" RequiredError="Code is required!" @bind-Value="Client.Code" />     
+                    </MudItem>
            
-                    @* Code *@
-                    <MudTextField T="string" Label="Code" Immediate="true" Required="true" RequiredError="Code is required!" @bind-Value="Client.Code" />
+                    <MudItem xs="12">
+                        @* RegistrationNr *@
+                        <MudTextField T="string" Label="RegistrationNr" Immediate="true" Required="true" RequiredError="RegistrationNr is required!" @bind-Value="Client.RegistrationNr" />                        
+                    </MudItem>
            
-                    @* RegistrationNr *@
-                    <MudTextField T="string" Label="RegistrationNr" Immediate="true" Required="true" RequiredError="RegistrationNr is required!" @bind-Value="Client.RegistrationNr" />
-           
-                    <MudItem xs="12" Style="padding:unset">
+                    <MudItem xs="12">
                         @* LegalAddress *@
                         <MudTextField T="string" Label="LegalAddress" Immediate="true" Required="true" RequiredError="Phone is required!" @bind-Value="Client.LegalAddress" />                        
                     </MudItem>
             
-                    @* Phone *@
-                    <MudTextField T="string" Label="Phone" Immediate="true" Required="true" RequiredError="Phone is required!" @bind-Value="Client.Phone" />
+                    <MudItem xs="6">
+                        @* Phone *@
+                        <MudTextField T="string" Label="Phone" Immediate="true" Required="true" RequiredError="Phone is required!" @bind-Value="Client.Phone" />
+                    </MudItem>
            
-                    @* Email *@
-                    <MudTextField T="string" Label="Email" Immediate="true" Validation="@(new EmailAddressAttribute() { ErrorMessage = "The email address is invalid"})" 
-                                  Required="true" RequiredError="Email is required!" @bind-Value="Client.Email" />
+                    <MudItem xs="6">
+                        @* Email *@
+                        <MudTextField T="string" Label="Email" Immediate="true" Validation="@(new EmailAddressAttribute() { ErrorMessage = "The email address is invalid"})" 
+                                      Required="true" RequiredError="Email is required!" @bind-Value="Client.Email" />                        
+                    </MudItem>
 
-                    @* ContactPersonName *@
-                    <MudTextField T="string" Label="ContactPersonName" Immediate="true" Required="true" RequiredError="Contact name is required!" @bind-Value="Client.ContactPersonName" />
+                    <MudItem xs="12">
+                        @* ContactPersonName *@
+                        <MudTextField T="string" Label="ContactPersonName" Immediate="true" Required="true" RequiredError="Contact name is required!" @bind-Value="Client.ContactPersonName" />                        
+                    </MudItem>
 
-                    <MudItem xs="12" Style="padding:unset">
+                    <MudItem xs="12">
                         @* ContactPersonAddress *@
                         <MudTextField T="string" Label="ContactPersonAddress" Immediate="true" Required="true" RequiredError="Contact address is required!" @bind-Value="Client.ContactPersonAddress" />                    
                     </MudItem>
 
-                    @* ContactPersonPhone *@
-                    <MudTextField T="string" Label="ContactPersonPhone" Immediate="true" Required="true" RequiredError="Contact phone is required!" @bind-Value="Client.ContactPersonPhone" />
+                    <MudItem xs="6">
+                        @* ContactPersonPhone *@
+                        <MudTextField T="string" Label="ContactPersonPhone" Immediate="true" Required="true" RequiredError="Contact phone is required!" @bind-Value="Client.ContactPersonPhone" />                        
+                    </MudItem>
 
-                    @* ContactPersonEmail *@
-                    <MudTextField T="string" Label="ContactPersonEmail" Immediate="true" Required="true" RequiredError="ContactPersonEmail is required!" @bind-Value="Client.ContactPersonEmail" />
+                    <MudItem xs="6">
+                        @* ContactPersonEmail *@
+                        <MudTextField T="string" Label="ContactPersonEmail" Immediate="true" Required="true" RequiredError="ContactPersonEmail is required!" @bind-Value="Client.ContactPersonEmail" />                        
+                    </MudItem>
                     
                 </MudGrid>
             </MudItem>

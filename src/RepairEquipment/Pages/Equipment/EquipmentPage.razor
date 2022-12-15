@@ -19,8 +19,7 @@ else
     <MudPaper Square="true" Style="text-align: left" Class="pa-4 d-flex flex-grow-1">
         <MudText Typo="Typo.h6">Equipment</MudText>
         <MudSpacer />
-        <MudButton @onclick="InsertEquipment" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
-        <MudButton @onclick="@(()=>DeleteEquipment(_selectedItem.Id))" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error">DELETE</MudButton>
+        <MudButton Style="margin-right: 15px" @onclick="InsertEquipment" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
     </MudPaper>
     
     <MudTable Class="mud-fab-layout-content" @ref="_equipmentTable" Items="@EquipmentList" Dense="@dense" Hover="@hover" Filter="new Func<EquipmentRecord, bool>(Filter)" @bind-SelectedItem="_selectedItem">
@@ -41,7 +40,9 @@ else
                 <MudTh>PurchaseInvoiceNr</MudTh>
                 <MudTh>PurchaseInvoiceLink</MudTh>
                 <MudTh>DepreciationPeriod</MudTh>
-                <MudTh>Depreciation</MudTh>                
+                <MudTh>Depreciation</MudTh>
+                <MudTh></MudTh>
+                <MudTh></MudTh>
             </HeaderContent>
             
             <RowTemplate>
@@ -56,7 +57,7 @@ else
                 <MudTd @ondblclick="@(()=>UpdateEquipment(@context.Id))" DataLabel="PurchaseInvoiceLink">@context.PurchaseInvoiceLink</MudTd>
                 <MudTd @ondblclick="@(()=>UpdateEquipment(@context.Id))" DataLabel="DepreciationPeriod">@context.DepreciationPeriod</MudTd>
                 <MudTd @ondblclick="@(()=>UpdateEquipment(@context.Id))" DataLabel="Depreciation">@context.Depreciation</MudTd>         
-                <MudTd Style="float: right">
+                <MudTd Style="text-align: right">
                     <MudIconButton
                         Class="hoverable-item top-0 right-0 mt-3 mr-4"
                         Color="Color.Error"
@@ -64,6 +65,7 @@ else
                         Icon="@Icons.Rounded.Delete"
                         @onclick="@(()=>DeleteEquipment(@context.Id))"/>               
                 </MudTd>                
+                <MudTd></MudTd>
             </RowTemplate>
 
             <PagerContent>

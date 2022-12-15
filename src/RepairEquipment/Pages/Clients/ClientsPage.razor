@@ -17,8 +17,7 @@ else
     <MudPaper Square="true" Style="text-align: left" Class="pa-4 d-flex flex-grow-1">
         <MudText Typo="Typo.h6">Clients </MudText>
         <MudSpacer />
-        <MudButton @onclick="InsertClient" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
-        <MudButton @onclick="@(()=>DeleteClient(_selectedItem.ID))" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error">DELETE</MudButton>
+        <MudButton Style="margin-right: 15px" @onclick="InsertClient" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
     </MudPaper>
     
     <MudTable Class="mud-fab-layout-content" @ref="_clientTable" Items="@Clients" Dense="@dense" Hover="@hover" Filter="new Func<ClientRecord, bool>(Filter)"
@@ -41,6 +40,8 @@ else
                 <MudTh>ContactPersonAddress</MudTh>
                 <MudTh>ContactPersonPhone</MudTh>
                 <MudTh>ContactPersonEmail</MudTh>
+                <MudTh></MudTh>
+                <MudTh></MudTh>
             </HeaderContent>
 
             <RowTemplate>
@@ -55,14 +56,15 @@ else
                 <MudTd @ondblclick="@(()=>UpdateClient(@context.ID))" DataLabel="ContactPersonAddress">@context.ContactPersonAddress</MudTd>
                 <MudTd @ondblclick="@(()=>UpdateClient(@context.ID))" DataLabel="ContactPersonPhone">@context.ContactPersonPhone</MudTd>
                 <MudTd @ondblclick="@(()=>UpdateClient(@context.ID))" DataLabel="ContactPersonEmail">@context.ContactPersonEmail</MudTd>
-                <MudTd Style="float: right">    
+                <MudTd Style="text-align: right">    
                     <MudIconButton
                         Class="hoverable-item top-0 right-0 mt-3 mr-4"
                         Color="Color.Error"
                         Variant="Variant.Filled"
                         Icon="@Icons.Rounded.Delete"
-                        @onclick="@(()=>DeleteClient(@context.Id))"/>               
-                </MudTd>                
+                        @onclick="@(()=>DeleteClient(@context.ID))"/>               
+                </MudTd>              
+                <MudTd></MudTd>
             </RowTemplate>
 
             <PagerContent>

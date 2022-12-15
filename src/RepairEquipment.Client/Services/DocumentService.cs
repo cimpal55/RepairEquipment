@@ -37,7 +37,7 @@ namespace RepairEquipment.Client.Services
 
         public Task UpdateDocumentAsync(DocumentRecord item)
         {
-            string sql = @"UPDATE TBL_Documents SET ClientID = @ClientID, EmployeeID = @EmployeeID, DocumentNumber = @DocumentNumber, WHERE ID = @ID";
+            string sql = @"UPDATE TBL_Documents SET ClientID = @ClientID, EmployeeID = @EmployeeID, DocumentNumber = @DocumentNumber WHERE ID = @ID";
             return _data.SaveData(sql, item);
         }
     }

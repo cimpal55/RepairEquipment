@@ -17,8 +17,7 @@ else
     <MudPaper Square="true" Style="text-align: left" Class="pa-4 d-flex flex-grow-1">
         <MudText Typo="Typo.h6">Employees</MudText>
         <MudSpacer />
-        <MudButton @onclick="InsertEmployee" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
-        <MudButton @onclick="@(()=>DeleteEmployee(_selectedItem.ID))" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error">DELETE</MudButton>
+        <MudButton Style="margin-right: 15px" @onclick="InsertEmployee" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
     </MudPaper>
     
     <MudTable Class="mud-fab-layout-content" @ref="_employeeTable" Items="@Employees" Dense="@dense" Hover="@hover" Filter="new Func<EmployeeRecord, bool>(Filter)" @bind-SelectedItem="_selectedItem">
@@ -37,6 +36,8 @@ else
                 <MudTh>Phone</MudTh>
                 <MudTh>Email</MudTh>
                 <MudTh>Address</MudTh>
+                <MudTh></MudTh>
+                <MudTh></MudTh>
             </HeaderContent>
 
             <RowTemplate>
@@ -48,14 +49,15 @@ else
                 <MudTd @ondblclick="@(()=>UpdateEmployee(@context.ID))" DataLabel="Phone">@context.Phone</MudTd>
                 <MudTd @ondblclick="@(()=>UpdateEmployee(@context.ID))" DataLabel="Email">@context.Email</MudTd>
                 <MudTd @ondblclick="@(()=>UpdateEmployee(@context.ID))" DataLabel="Address">@context.Address</MudTd>
-                <MudTd Style="float: right">
+                <MudTd Style="text-align: right">
                     <MudIconButton
                         Class="hoverable-item top-0 right-0 mt-3 mr-4"
                         Color="Color.Error"
                         Variant="Variant.Filled"
                         Icon="@Icons.Rounded.Delete"
-                        @onclick="@(()=>DeleteEmployee(@context.Id))"/>               
+                        @onclick="@(()=>DeleteEmployee(@context.ID))"/>               
                 </MudTd>
+                <MudTd></MudTd>
             </RowTemplate>
 
             <PagerContent>
