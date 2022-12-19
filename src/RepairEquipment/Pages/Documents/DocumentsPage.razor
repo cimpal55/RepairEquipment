@@ -5,6 +5,7 @@
 @using RepairEquipment.Shared.Models
 @using RepairEquipment.Client.Services
 @inject IDocumentService _data
+@inject IDocumentListService _dataList
 @inject IDialogService _dialogService
 @inject IEmployeeService _employee
 @inject IClientService _client
@@ -33,7 +34,7 @@ else
 
     </MudPaper>
 
-    <MudTable Class="mud-fab-layout-content" @ref="_documentTable" Items="@Documents" Dense="@dense" Hover="@hover" Filter="new Func<DocumentRecord, bool>(Filter)" @bind-SelectedItem="_selectedItem">
+    <MudTable Class="mud-fab-layout-content" @ref="_documentTable" Items="@ListItem" Dense="@dense" Hover="@hover">
         <ToolBarContent>
             <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
@@ -48,7 +49,7 @@ else
         
         <RowTemplate>
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
-            <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Client">@context.ClientId</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Client">@context.Client</MudTd>
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Employee">@context.Employee</MudTd>
             <MudTd Style="text-align: right">
                 
@@ -86,8 +87,9 @@ else
 
 @code {
 
-    MudTable<DocumentRecord>? _documentTable;
+    MudTable<DocumentsListItem>? _documentTable;
     private DocumentRecord? _selectedItem;
+    private List<DocumentsListItem>? ListItem;
     private List<DocumentRecord>? Documents;
     private List<EmployeeRecord>? Employees;
     private List<ClientRecord>? Clients;
@@ -101,23 +103,13 @@ else
         await GetDocuments();
         await GetEmployees();
         await GetClients();
-        Documents.FirstOrDefault().Client = await _util.GetClientNameById(Documents.FirstOrDefault().ClientId);
     }
 
-    private async Task GetDocuments() 
-    {
-        Documents = await _data.GetDocumentsListAsync();
-    }
+    private async Task GetDocuments() => ListItem = await _dataList.GetListItemsAsync().ConfigureAwait(false);
 
-    private async Task GetEmployees() 
-    {
-        Employees = await _employee.GetEmployeesListAsync(); 
-    }
+    private async Task GetEmployees() => Employees = await _employee.GetEmployeesListAsync();
 
-    private async Task GetClients()
-    {
-        Clients = await _client.GetClientsListAsync();
-    }
+    private async Task GetClients() => Clients = await _client.GetClientsListAsync();
 
     private async Task InsertDocument()
     {

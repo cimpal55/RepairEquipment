@@ -18,6 +18,7 @@ namespace RepairEquipment.Utils.ServiceRegistration
                 .AddScoped<IDocumentService, DocumentService>()
                 .AddScoped<IEquipmentTypeService, EquipmentTypeService>()
                 .AddScoped<IUtilsService, UtilsService>()
+                .AddScoped<IDocumentListService, DocumentListService>()
                 .AddScoped<ILocationService, LocationService>();
     }
 }

@@ -7,9 +7,12 @@ namespace RepairEquipment.Client.Services
     public class DocumentService : IDocumentService
     {
         private readonly ISqlDataAccess _data;
-        public DocumentService(ISqlDataAccess data)
+
+        private readonly IUtilsService _utils;
+        public DocumentService(ISqlDataAccess data, IUtilsService utils)
         {
             _data = data;
+            _utils = utils;
         }
         public Task DeleteDocumentAsync(DocumentRecord item)
         {
@@ -21,7 +24,7 @@ namespace RepairEquipment.Client.Services
         {
             throw new NotImplementedException();
         }
-
+        
         public Task<List<DocumentRecord>> GetDocumentsListAsync()
         {
             string sql = "SELECT * FROM TBL_Documents";

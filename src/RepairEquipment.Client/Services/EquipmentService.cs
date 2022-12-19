@@ -24,7 +24,8 @@ namespace RepairEquipment.Client.Services
 
         public Task<List<EquipmentRecord>> GetEquipmentListAsync()
         {
-            string sql = "SELECT * FROM TBL_CONF_Equipment";
+            string sql = @"SELECT Name, TypeId, LocationId, SerialNumber, FixedAssetNr,
+                         PurchaseSum, PurchaseInvoiceNr, PurchaseInvoiceLink, DepreciationPeriod, Depreciation, Notes FROM TBL_CONF_Equipment";
             return _data.LoadData<EquipmentRecord, dynamic>(sql, new { });
         }
 

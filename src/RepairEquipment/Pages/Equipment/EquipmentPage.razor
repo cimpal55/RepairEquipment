@@ -10,7 +10,7 @@
 @inject IDialogService _dialogService
 @inject ISnackbar Snackbar
 
-@if (Equipment == null)
+@if (EquipmentList == null)
 {
     <p><em>Loading ... </em></p>
 }
@@ -22,55 +22,31 @@ else
         <MudButton Style="margin-right: 15px" @onclick="InsertEquipment" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
     </MudPaper>
     
-    <MudTable Class="mud-fab-layout-content" @ref="_equipmentTable" Items="@EquipmentList" Dense="@dense" Hover="@hover" Filter="new Func<EquipmentRecord, bool>(Filter)" @bind-SelectedItem="_selectedItem">
+    <MudTable Class="mud-fab-layout-content" @ref="_equipmentTable" Items="@EquipmentList" Dense="@dense" Hover="@hover" Filter="new Func<EquipmentRecord, bool>(Filter)">
 
-            <ToolBarContent>
-                <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start"
-                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
-            </ToolBarContent>
+        <ToolBarContent>
+            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start"
+                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
+        </ToolBarContent>
             
-            <HeaderContent>
-                <MudTh>Name</MudTh>
-                <MudTh>Type</MudTh>
-                <MudTh>Location</MudTh>
-                <MudTh>SerialNumber</MudTh>
-                <MudTh>FixedAssetNr</MudTh>
-                <MudTh>PurchaseDate</MudTh>
-                <MudTh>PurchaseSum</MudTh>
-                <MudTh>PurchaseInvoiceNr</MudTh>
-                <MudTh>PurchaseInvoiceLink</MudTh>
-                <MudTh>DepreciationPeriod</MudTh>
-                <MudTh>Depreciation</MudTh>
-                <MudTh></MudTh>
-                <MudTh></MudTh>
-            </HeaderContent>
+        <HeaderContent>
+            <MudTh>Name</MudTh>
+            <MudTh>Type</MudTh>
+            <MudTh>Location</MudTh>
+            <MudTh>SerialNumber</MudTh>
+            <MudTh>FixedAssetNr</MudTh>
+            <MudTh>PurchaseDate</MudTh>
+        </HeaderContent>
             
-            <RowTemplate>
-                <MudTd @ondblclick="@(()=>UpdateEquipment(@context.Id))" DataLabel="Name">@context.Name</MudTd>
-                <MudTd @ondblclick="@(()=>UpdateEquipment(@context.Id))" DataLabel="Type">@context.Type</MudTd>
-                <MudTd @ondblclick="@(()=>UpdateEquipment(@context.Id))" DataLabel="Location">@context.Location</MudTd>
-                <MudTd @ondblclick="@(()=>UpdateEquipment(@context.Id))" DataLabel="SerialNumber">@context.SerialNumber</MudTd>
-                <MudTd @ondblclick="@(()=>UpdateEquipment(@context.Id))" DataLabel="FixedAssetNr">@context.FixedAssetNr</MudTd>
-                <MudTd @ondblclick="@(()=>UpdateEquipment(@context.Id))" DataLabel="PurchaseDate">@context.PurchaseDate</MudTd>
-                <MudTd @ondblclick="@(()=>UpdateEquipment(@context.Id))" DataLabel="PurchaseSum">@context.PurchaseSum</MudTd>
-                <MudTd @ondblclick="@(()=>UpdateEquipment(@context.Id))" DataLabel="PurchaseInvoiceNr">@context.PurchaseInvoiceNr</MudTd>
-                <MudTd @ondblclick="@(()=>UpdateEquipment(@context.Id))" DataLabel="PurchaseInvoiceLink">@context.PurchaseInvoiceLink</MudTd>
-                <MudTd @ondblclick="@(()=>UpdateEquipment(@context.Id))" DataLabel="DepreciationPeriod">@context.DepreciationPeriod</MudTd>
-                <MudTd @ondblclick="@(()=>UpdateEquipment(@context.Id))" DataLabel="Depreciation">@context.Depreciation</MudTd>         
-                <MudTd Style="text-align: right">
-                    <MudIconButton
-                        Class="hoverable-item top-0 right-0 mt-3 mr-4"
-                        Color="Color.Error"
-                        Variant="Variant.Filled"
-                        Icon="@Icons.Rounded.Delete"
-                        @onclick="@(()=>DeleteEquipment(@context.Id))"/>               
-                </MudTd>                
-                <MudTd></MudTd>
-            </RowTemplate>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Type">@context.TypeId</MudTd>
+            <MudTd DataLabel=""></MudTd>
+        </RowTemplate>
 
-            <PagerContent>
-                <MudTablePager />
-            </PagerContent>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
     </MudTable>
 
     <div class="d-flex flex-wrap mt-4">
@@ -96,22 +72,14 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await GetEquipment();
-        await GetEquipmentType();
-        await GetLocation();
+        await GetEquipmentList();
     }
 
-    private async Task GetEquipment() {
-        EquipmentList = await _data.GetEquipmentListAsync();
-    }
+    private async Task GetEquipmentList() => EquipmentList = await _data.GetEquipmentListAsync();
 
-    private async Task GetEquipmentType() {
-        EquipmentTypeList = await _equipmentType.GetEquipmentTypeListAsync();
-    }
+    private async Task GetEquipmentType() => EquipmentTypeList = await _equipmentType.GetEquipmentTypeListAsync();
 
-    private async Task GetLocation() {
-        LocationList = await _location.GetLocationListAsync();
-    }
+    private async Task GetLocation() => LocationList = await _location.GetLocationListAsync();
 
     private async Task InsertEquipment()
     {
@@ -132,24 +100,10 @@ else
 
             Equipment = new EquipmentRecord();
             Snackbar.Add("Equipment successfully added");
-            await GetEquipment();
+            await GetEquipmentList();
         }
     }
-
-    private async Task UpdateEquipment(int id)
-    {
-        var parameters = new DialogParameters();
-    }
-
-    private async Task DeleteEquipment(int id)
-    {
-        var parameters = new DialogParameters();
-        parameters.Add("ContentText", "Do you really want to delete this record? This process cannot be undone.");
-        parameters.Add("ButtonText", "Delete");
-        parameters.Add("Color", Color.Error);
-
-        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-    }
+    
 
     private bool Filter(EquipmentRecord item) 
     {

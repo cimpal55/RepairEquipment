@@ -14,9 +14,17 @@ namespace RepairEquipment.Client.Services
         }
         public async Task<string> GetClientNameById(int id)
         {
-            string sql = "SELECT Name FROM TBL_CONF_Clients WHERE ID = @ID";
-            var result = await _conn.LoadData<ClientRecord, dynamic>(sql, new { ID = id });
-            return result.FirstOrDefault().Name ?? string.Empty;
+            string sql = @"SELECT Name 
+                               FROM TBL_CONF_Clients
+                               WHERE ID = @id";
+            return _conn.LoadData<string, dynamic>(sql, new { ID = id }).ToString();
+        }
+        public async Task<string> GetEmployeeNameById(int id)
+        {
+            string sql = @"SELECT Name 
+                               FROM TBL_CONF_Employees
+                               WHERE ID = @id";
+            return _conn.LoadData<string, dynamic>(sql, new { ID = id }).ToString();
         }
     }
 }

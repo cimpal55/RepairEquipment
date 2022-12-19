@@ -15,74 +15,74 @@
 //        private readonly IPdfService _pdfService;
 
 //        public DocExportService(
-//            IDocumentsService documentsService,
+//            IDocumentService documentService,
 //            IUtilsService utilsService,
 //            IPdfService pdfService)
 //        {
-//            _documentsService = documentsService;
+//            _documentService = documentService;
 //            _utilsService = utilsService;
 //            _pdfService = pdfService;
 //        }
 
-//        //public async Task<IEnumerable<DocExportRecord>> CreateAsync(string? search, CancellationToken ct = default)
-//        //{
-//        //    var items = await _documentsService
-//        //        .GetDocumentsAsync(search, ct)
-//        //        .Select(x => new DocExportRecord
-//        //        {
-//        //            DocumentNumber = x.DocumentNumber,
-//        //            DocumentDetailNumber = x.DocumentDetailNumber,
-//        //            DocumentDateOut = x.DocumentDateOut,
-//        //            DocumentDateIn = x.DocumentDateIn,
-//        //            Quantity = x.Quantity,
-//        //            Sum = x.Sum,
-//        //            TotalSum = x.TotalSum,
-//        //            Client = _utilsService.GetClientById(x.ClientId),
-//        //            ClientRegistrationNr = x.ClientRegistrationNr,
-//        //            ClientContactPerson = x.ClientContactPerson,
-//        //            Employee = _utilsService.GetEmployeeById(x.EmployeeId),
-//        //            Equipment = _utilsService.GetEquipmentById(x.EquipmentId)
-//        //        })
-//        //        .ConfigureAwait(false);
-
-//        //    return items;
-//        //}
-
-//        public async Task<DocExportFileResponse> ExportPdfAsync(DocExportFileRequest req, string? search, CancellationToken ct = default)
+//        public async Task<IEnumerable<DocExportRecord>> CreateAsync(string? search, CancellationToken ct = default)
 //        {
-//            IDocument document;
-//            var data = await CreateAsync(search, ct)
-//                                                    .ConfigureAwait(false);
+//            var items = await _documentService
+//                .GetDocumentsListAsync(search, ct)
+//                .Select(x => new DocExportRecord
+//                {
+//                    DocumentNumber = x.DocumentNumber,
+//                    DocumentDetailNumber = x.DocumentDetailNumber,
+//                    DocumentDateOut = x.DocumentDateOut,
+//                    DocumentDateIn = x.DocumentDateIn,
+//                    Quantity = x.Quantity,
+//                    Sum = x.Sum,
+//                    TotalSum = x.TotalSum,
+//                    Client = _utilsService.GetClientById(x.ClientId),
+//                    ClientRegistrationNr = x.ClientRegistrationNr,
+//                    ClientContactPerson = x.ClientContactPerson,
+//                    Employee = _utilsService.GetEmployeeById(x.EmployeeId),
+//                    Equipment = _utilsService.GetEquipmentById(x.EquipmentId)
+//                })
+//                .ConfigureAwait(false);
 
-//            var docExportRecords = data.ToList();
-//            if (docExportRecords.Any(x => !string.IsNullOrEmpty(x.Employee)))
-//            {
-//                document = await _pdfService.CreateEmployeePdf(docExportRecords, req.DocType)
-//                                .ConfigureAwait(false);
-//            }
-//            else if (docExportRecords.Any(x => !string.IsNullOrEmpty(x.Client)))
-//            {
-//                document = await _pdfService.CreateClientPdf(docExportRecords, req.DocType)
-//                                .ConfigureAwait(false);
-//            }
-//            else
-//            {
-//                throw new Exception("No one Employee or Client is found!!!");
-//            }
-
-//            return CreateExportResponse(document);
+//            return items;
 //        }
 
-//        private static DocExportFileResponse CreateExportResponse(IDocument document)
-//        {
-//            var stream = new MemoryStream();
-//            document.GeneratePdf(stream);
-//            stream.Position = 0;
+        //        public async Task<DocExportFileResponse> ExportPdfAsync(DocExportFileRequest req, string? search, CancellationToken ct = default)
+        //        {
+        //            IDocument document;
+        //            var data = await CreateAsync(search, ct)
+        //                                                    .ConfigureAwait(false);
 
-//            return new DocExportFileResponse(stream)
-//            {
-//                ContentType = PdfContentType
-//            };
-//        }
+        //            var docExportRecords = data.ToList();
+        //            if (docExportRecords.Any(x => !string.IsNullOrEmpty(x.Employee)))
+        //            {
+        //                document = await _pdfService.CreateEmployeePdf(docExportRecords, req.DocType)
+        //                                .ConfigureAwait(false);
+        //            }
+        //            else if (docExportRecords.Any(x => !string.IsNullOrEmpty(x.Client)))
+        //            {
+        //                document = await _pdfService.CreateClientPdf(docExportRecords, req.DocType)
+        //                                .ConfigureAwait(false);
+        //            }
+        //            else
+        //            {
+        //                throw new Exception("No one Employee or Client is found!!!");
+        //            }
+
+        //            return CreateExportResponse(document);
+        //        }
+
+        //        private static DocExportFileResponse CreateExportResponse(IDocument document)
+        //        {
+        //            var stream = new MemoryStream();
+        //            document.GeneratePdf(stream);
+        //            stream.Position = 0;
+
+        //            return new DocExportFileResponse(stream)
+        //            {
+        //                ContentType = PdfContentType
+        //            };
+        //        }
 //    }
 //}
