@@ -5,13 +5,14 @@
 @using RepairEquipment.Shared.Models
 @using RepairEquipment.Client.Services
 @inject IDocumentService _data
+@inject IDocumentsListService _listData
 @inject IDialogService _dialogService
 @inject IEmployeeService _employee
 @inject IClientService _client
 @inject IUtilsService _util
 @inject ISnackbar Snackbar
 
-@if (Documents == null)
+@if (DocumentsList == null)
 {
     <p><em>Loading ... </em></p>
 }
@@ -33,7 +34,7 @@ else
 
     </MudPaper>
 
-    <MudTable Class="mud-fab-layout-content" @ref="_documentTable" Items="@Documents" Dense="@dense" Hover="@hover" Filter="new Func<DocumentRecord, bool>(Filter)" @bind-SelectedItem="_selectedItem">
+    <MudTable Class="mud-fab-layout-content" @ref="_documentTable" Items="@DocumentsList" Dense="@dense" Hover="@hover" @bind-SelectedItem="_selectedItem">
         <ToolBarContent>
             <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
@@ -48,7 +49,7 @@ else
         
         <RowTemplate>
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
-            <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Client">@context.ClientId</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Client">@context.Client</MudTd>
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Employee">@context.Employee</MudTd>
             <MudTd Style="text-align: right">
                 
@@ -86,11 +87,13 @@ else
 
 @code {
 
-    MudTable<DocumentRecord>? _documentTable;
-    private DocumentRecord? _selectedItem;
+    MudTable<DocumentsListItem>? _documentTable;
+    private DocumentsListItem? _selectedItem;
     private List<DocumentRecord>? Documents;
     private List<EmployeeRecord>? Employees;
     private List<ClientRecord>? Clients;
+    private List<DocumentsListItem>? DocumentsList;
+    private ClientRecord? Client;
     private DocumentRecord Document = new DocumentRecord();
     private string searchString = "";
     private bool hover = true;
@@ -98,26 +101,24 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        await GetDocumentsList();
         await GetDocuments();
         await GetEmployees();
         await GetClients();
-        Documents.FirstOrDefault().Client = await _util.GetClientNameById(Documents.FirstOrDefault().ClientId);
     }
 
-    private async Task GetDocuments() 
-    {
-        Documents = await _data.GetDocumentsListAsync();
+    private async ValueTask GetDocumentsList() {
+        var items = await _listData.GetListItemsAsync().ConfigureAwait(false);
+        DocumentsList = items.ToList();
+    }
+    
+    private async Task GetDocuments() {
+        Documents = await _data.GetDocumentsListAsync().ConfigureAwait(false);
     }
 
-    private async Task GetEmployees() 
-    {
-        Employees = await _employee.GetEmployeesListAsync(); 
-    }
+    private async Task GetEmployees() => Employees = await _employee.GetEmployeesListAsync();
 
-    private async Task GetClients()
-    {
-        Clients = await _client.GetClientsListAsync();
-    }
+    private async Task GetClients() => Clients = await _client.GetClientsListAsync();
 
     private async Task InsertDocument()
     {
@@ -130,15 +131,12 @@ else
 
         if (!result.Cancelled)
         {
-            DocumentRecord? document = result.Data as DocumentRecord;
+            var document = result.Data as DocumentRecord;
 
             await _data.InsertDocumentAsync(document);
 
-            Documents.Add(document);
-
-            Document = new DocumentRecord();
             Snackbar.Add("Document successfully added");
-            await GetDocuments();
+            await GetDocumentsList();
         }
     }
 
@@ -156,7 +154,7 @@ else
             DocumentRecord document = Documents.Where(x => x.Id == id).FirstOrDefault();
             await _data.UpdateDocumentAsync(document);
             Snackbar.Add($"#{document.Id} Document successfully updated");
-            await GetDocuments();
+            await GetDocumentsList();
         }
 
     }
@@ -176,7 +174,7 @@ else
             DocumentRecord? document = Documents.Where(x => x.Id == id).FirstOrDefault();
             await _data.DeleteDocumentAsync(document);
             Snackbar.Add($"#{document.Id} Document successfully deleted");
-            await GetDocuments();
+            await GetDocumentsList();
         }
     }
 
@@ -185,8 +183,8 @@ else
         if (string.IsNullOrWhiteSpace(searchString)) return true;
         if (Convert.ToString(document.Id).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         if (document.DocumentNumber.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (document.Client.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (document.Employee.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (_util.GetClientNameById(document.Id).ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (_util.GetEmployeeNameById(document.Id).ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         return false;
     }
 

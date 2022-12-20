@@ -1,4 +1,5 @@
-﻿using RepairEquipment.Client.DbAccess;
+﻿using LinqToDB;
+using RepairEquipment.Client.DbAccess;
 using RepairEquipment.Client.Services.Interfaces;
 using RepairEquipment.Shared.Models.Data;
 
@@ -6,15 +7,14 @@ namespace RepairEquipment.Client.Services
 {
     public class EquipmentTypeService : IEquipmentTypeService
     {
-        private readonly ISqlDataAccess _data;
-        public EquipmentTypeService(ISqlDataAccess data)
+        private readonly SqlDataAccess _conn;
+        public EquipmentTypeService(SqlDataAccess conn)
         {
-            _data = data;
+            _conn = conn;
         }
-        public Task<List<EquipmentTypeRecord>> GetEquipmentTypeListAsync()
-        {
-            string sql = "SELECT * FROM TBL_CONF_EquipmentTypes";
-            return _data.LoadData<EquipmentTypeRecord, dynamic>(sql, new { });
-        }
+        public async Task<List<EquipmentTypeRecord>> GetEquipmentTypeListAsync() =>
+            await _conn
+                .EquipmentTypeRecords
+                .ToListAsync();
     }
 }

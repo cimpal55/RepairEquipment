@@ -11,13 +11,13 @@ namespace RepairEquipment.Utils.ServiceRegistration
                 .AddSqlServices();
         private static IServiceCollection AddSqlServices(this IServiceCollection @this) =>
             @this
-                .AddScoped<ISqlDataAccess, SqlDataAccess>()
                 .AddScoped<IClientService, ClientService>()
                 .AddScoped<IEmployeeService, EmployeeService>()
                 .AddScoped<IEquipmentService, EquipmentService>()
                 .AddScoped<IDocumentService, DocumentService>()
                 .AddScoped<IEquipmentTypeService, EquipmentTypeService>()
                 .AddScoped<IUtilsService, UtilsService>()
+                .AddScoped<IDocumentsListService, DocumentListService>()
                 .AddScoped<ILocationService, LocationService>();
     }
 }

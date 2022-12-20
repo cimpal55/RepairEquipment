@@ -1,39 +1,26 @@
 ﻿using Dapper;
+using LinqToDB;
+using LinqToDB.Configuration;
+using LinqToDB.Data;
 using Microsoft.Extensions.Configuration;
+using RepairEquipment.Shared.Models.Data;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace RepairEquipment.Client.DbAccess
 {
-    public class SqlDataAccess : ISqlDataAccess
+    public class SqlDataAccess : DataConnection
     {
-        private readonly IConfiguration _config;
-        public string ConnectionString { get; set; } = "Default";
-
-        public SqlDataAccess(IConfiguration config)
+        public SqlDataAccess(LinqToDBConnectionOptions<SqlDataAccess> options)
+            : base(options)
         {
-            _config = config;
         }
-
-        public async Task<List<T>> LoadData<T, U>(string sql, U parameters)
-        {
-            string connectionString = _config.GetConnectionString(ConnectionString);
-
-            using (IDbConnection connection = new SqlConnection(connectionString))
-            {
-                var data = await connection.QueryAsync<T>(sql, parameters);
-
-                return data.ToList();
-            }
-        }
-        public async Task SaveData<T>(string sql, T parameters)
-        {
-            string connectionString = _config.GetConnectionString(ConnectionString);
-
-            using (IDbConnection connection = new SqlConnection(connectionString))
-            {
-                await connection.ExecuteAsync(sql, parameters);
-            }
-        }
+        public ITable<ClientRecord> ClientsRecords => this.GetTable<ClientRecord>();
+        public ITable<EmployeeRecord> EmployeesRecords => this.GetTable<EmployeeRecord>();
+        public ITable<EquipmentRecord> EquipmentRecords => this.GetTable<EquipmentRecord>();
+        public ITable<EquipmentTypeRecord> EquipmentTypeRecords => this.GetTable<EquipmentTypeRecord>();
+        public ITable<DocumentRecord> DocumentsRecords => this.GetTable<DocumentRecord>();
+        public ITable<DocumentDetailRecord> DocumentDetailsRecords => this.GetTable<DocumentDetailRecord>();
+        public ITable<LocationRecord> LocationRecords => this.GetTable<LocationRecord>();
     }
 }

@@ -1,4 +1,5 @@
-﻿using RepairEquipment.Client.DbAccess;
+﻿using LinqToDB;
+using RepairEquipment.Client.DbAccess;
 using RepairEquipment.Client.Services.Interfaces;
 using RepairEquipment.Shared.Models.Data;
 
@@ -6,15 +7,33 @@ namespace RepairEquipment.Client.Services
 {
     public class EquipmentService : IEquipmentService
     {
-        private readonly ISqlDataAccess _data;
-        public EquipmentService(ISqlDataAccess data)
+        private readonly SqlDataAccess _conn;
+        public EquipmentService(SqlDataAccess conn)
         {
-            _data = data;
+            _conn = conn;
         }
-        public Task DeleteEquipmentAsync(EquipmentRecord item)
+        public async Task DeleteEquipmentAsync(EquipmentRecord item)
         {
-            string sql = "DELETE FROM TBL_CONF_Equipment WHERE ID = @ID";
-            return _data.SaveData(sql, item);
+            var record = new EquipmentRecord
+            {
+                Id = item.Id,
+                Name = item.Name,
+                TypeId = item.TypeId,
+                SerialNumber = item.SerialNumber,
+                FixedAssetNr = item.FixedAssetNr,
+                PurchaseDate = item.PurchaseDate,
+                PurchaseSum = item.PurchaseSum,
+                PurchaseInvoiceNr = item.PurchaseInvoiceNr,
+                PurchaseInvoiceLink = item.PurchaseInvoiceLink,
+                DepreciationPeriod = item.DepreciationPeriod,
+                Depreciation = item.Depreciation,
+                Notes = item.Notes,
+                Created = DateTime.Now
+            };
+
+            await _conn
+                .DeleteAsync(record)
+                .ConfigureAwait(false);
         }
 
         public Task<EquipmentRecord?> GetEquipmentDetailsAsync(int id)
@@ -22,28 +41,59 @@ namespace RepairEquipment.Client.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<EquipmentRecord>> GetEquipmentListAsync()
+        public async Task<List<EquipmentRecord>> GetEquipmentListAsync() =>
+            await _conn
+                .EquipmentRecords
+                .ToListAsync();
+
+        public async Task InsertEquipmentAsync(EquipmentRecord item)
         {
-            string sql = "SELECT * FROM TBL_CONF_Equipment";
-            return _data.LoadData<EquipmentRecord, dynamic>(sql, new { });
+            var record = new EquipmentRecord
+            {
+                Id = item.Id,
+                Name = item.Name,
+                TypeId = item.TypeId,
+                SerialNumber = item.SerialNumber,
+                FixedAssetNr = item.FixedAssetNr,
+                PurchaseDate = item.PurchaseDate,
+                PurchaseSum = item.PurchaseSum,
+                PurchaseInvoiceNr = item.PurchaseInvoiceNr,
+                PurchaseInvoiceLink = item.PurchaseInvoiceLink,
+                DepreciationPeriod = item.DepreciationPeriod,
+                Depreciation = item.Depreciation,
+                Notes = item.Notes,
+                LocationId = item.LocationId,
+                Created = DateTime.Now
+            };
+
+            await _conn
+                .InsertAsync(record)
+                .ConfigureAwait(false);
         }
 
-        public Task InsertEquipmentAsync(EquipmentRecord item)
+        public async Task UpdateEquipmentAsync(EquipmentRecord item)
         {
-            string sql = @"INSERT INTO TBL_CONF_Equipment (Name, TypeId, LocationId, SerialNumber, FixedAssetNr, PurchaseDate, PurchaseSum,
-                         PurchaseInvoiceNr, PurchaseInvoiceLink, DepreciationPeriod, Depreciation, Notes) 
-                         VALUES (@Name, @TypeId, @LocationId, @SerialNumber, @FixedAssetNr, @PurchaseDate, @PurchaseSum,
-                         @PurchaseInvoiceNr, @PurchaseInvoiceLink, @DepreciationPeriod, @Depreciation, @Notes);";
-            return _data.SaveData(sql, item);
-        }
+            var record = new EquipmentRecord
+            {
+                Id = item.Id,
+                Name = item.Name,
+                TypeId = item.TypeId,
+                SerialNumber = item.SerialNumber,
+                FixedAssetNr = item.FixedAssetNr,
+                PurchaseDate = item.PurchaseDate,
+                PurchaseSum = item.PurchaseSum,
+                PurchaseInvoiceNr = item.PurchaseInvoiceNr,
+                PurchaseInvoiceLink = item.PurchaseInvoiceLink,
+                DepreciationPeriod = item.DepreciationPeriod,
+                Depreciation = item.Depreciation,
+                Notes = item.Notes,
+                LocationId = item.LocationId,
+                Created = DateTime.Now
+            };
 
-        public Task UpdateEquipmentAsync(EquipmentRecord item)
-        {
-            string sql = @"UPDATE TBL_CONF_Equipment SET Name = @Name, TypeId = @TypeId, LocationId = @LocationId, Location = @Location, SerialNumber = @SerialNumber,
-                         FixedAssetNr = @FixedAssetNr, PurchaseDate = @PurchaseDate, PurchaseSum = @PurchaseSum, PurchaseInvoiceNr = @PurchaseInvoiceNr,
-                         PurchaseInvoiceLink = @PurchaseInvoiceLink, DepreciationPeriod = @DepreciationPeriod, Depreciation = @Depreciation,
-                         Notes = @Notes, WHERE ID = @ID";
-            return _data.SaveData(sql, item);
+            await _conn
+                .UpdateAsync(record)
+                .ConfigureAwait(false);
         }
     }
 }

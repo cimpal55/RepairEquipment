@@ -1,4 +1,5 @@
-﻿using RepairEquipment.Client.DbAccess;
+﻿using LinqToDB;
+using RepairEquipment.Client.DbAccess;
 using RepairEquipment.Client.Services.Interfaces;
 using RepairEquipment.Shared.Models.Data;
 
@@ -6,39 +7,55 @@ namespace RepairEquipment.Client.Services
 {
     public class DocumentService : IDocumentService
     {
-        private readonly ISqlDataAccess _data;
-        public DocumentService(ISqlDataAccess data)
+        private readonly SqlDataAccess _conn;
+        public DocumentService(SqlDataAccess conn)
         {
-            _data = data;
+            _conn = conn;
         }
-        public Task DeleteDocumentAsync(DocumentRecord item)
+        public async Task DeleteDocumentAsync(DocumentRecord item)
         {
-            string sql = "DELETE FROM TBL_Documents WHERE ID = @ID";
-            return _data.SaveData(sql, item);
-        }
+            var record = new DocumentRecord
+            {
+                Id = item.Id
+            };
 
-        public Task<DocumentRecord?> GetDocumentsAsync(int id)
-        {
-            throw new NotImplementedException();
+            await _conn
+                .DeleteAsync(record)
+                .ConfigureAwait(false);
         }
-
-        public Task<List<DocumentRecord>> GetDocumentsListAsync()
+        public async Task<List<DocumentRecord>> GetDocumentsListAsync() =>
+            await _conn
+                .DocumentsRecords
+                .ToListAsync();
+        public async Task InsertDocumentAsync(DocumentRecord item)
         {
-            string sql = "SELECT * FROM TBL_Documents";
-            return _data.LoadData<DocumentRecord, dynamic>(sql, new { });
+            var record = new DocumentRecord
+            {
+                Id = item.Id,
+                DocumentNumber = item.DocumentNumber,
+                ClientId = item.ClientId,
+                EmployeeId = item.EmployeeId,
+                Created = DateTime.Now
+            };
+
+            await _conn
+                .InsertAsync(record)
+                .ConfigureAwait(false);
         }
-
-        public Task InsertDocumentAsync(DocumentRecord item)
+        public async Task UpdateDocumentAsync(DocumentRecord item)
         {
-            string sql = @"INSERT INTO TBL_Documents (ClientID, EmployeeID, DocumentNumber) 
-                         VALUES (@ClientID, @EmployeeID, @DocumentNumber);";
-            return _data.SaveData(sql, item);
-        }
+            var record = new DocumentRecord
+            {
+                Id = item.Id,
+                DocumentNumber = item.DocumentNumber,
+                ClientId = item.ClientId,
+                EmployeeId = item.EmployeeId,
+                Created = DateTime.Now
+            };
 
-        public Task UpdateDocumentAsync(DocumentRecord item)
-        {
-            string sql = @"UPDATE TBL_Documents SET ClientID = @ClientID, EmployeeID = @EmployeeID, DocumentNumber = @DocumentNumber WHERE ID = @ID";
-            return _data.SaveData(sql, item);
+            await _conn
+                .UpdateAsync(record)
+                .ConfigureAwait(false);
         }
     }
 }
