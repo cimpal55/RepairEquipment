@@ -76,6 +76,12 @@ else
     }
 
     private async Task GetEquipmentList() => EquipmentList = await _data.GetEquipmentListAsync().ConfigureAwait(false);
+        EquipmentList = await _data.GetEquipmentListAsync();
+    }
+        EquipmentList = await _data.GetEquipmentListAsync();
+    }
+        EquipmentList = await _data.GetEquipmentListAsync();
+    }
 
     private async Task GetEquipmentType() => EquipmentTypeList = await _equipmentType.GetEquipmentTypeListAsync();
 

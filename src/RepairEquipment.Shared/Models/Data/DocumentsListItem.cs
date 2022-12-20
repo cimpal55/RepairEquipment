@@ -4,7 +4,7 @@
     {
         private readonly string _id;
 
-        public DocumentsListItem(int key)
+        public DocumentsListItem(int key) 
         {
             _id = key.ToString();
         }
