@@ -13,18 +13,30 @@ namespace RepairEquipment.Client.Services
         {
             _conn = conn;
         }
-        public async Task<string> GetClientNameById(int? id) =>
+        public async Task<string> GetClientNameByIdAsync(int? id) =>
             await _conn
                 .ClientsRecords
                 .Where(x => x.ID == id)
                 .Select(x => $"{x.Name}")
                 .FirstOrDefaultAsync() ?? string.Empty;
-        public async Task<string> GetEmployeeNameById(int? id) =>
+        public async Task<string> GetEmployeeNameByIdAsync(int? id) =>
         await _conn
             .EmployeesRecords
             .Where(x => x.ID == id)
             .Select(x => $"{x.Name}")
             .FirstOrDefaultAsync() ?? string.Empty;
+        public async Task<string> GetEquipmentTypeNameByIdAsync(int? id) =>
+            await _conn
+                .EquipmentTypeRecords
+                .Where(x => x.ID == id)
+                .Select(x => $"{x.Name}")
+                .FirstOrDefaultAsync() ?? string.Empty;
+        public async Task<string> GetLocationNameByIdAsync(int? id) =>
+            await _conn
+                .LocationRecords
+                .Where(x => x.ID == id)
+                .Select(x => $"{x.Name}")
+                .FirstOrDefaultAsync() ?? string.Empty;
     }
 }
 

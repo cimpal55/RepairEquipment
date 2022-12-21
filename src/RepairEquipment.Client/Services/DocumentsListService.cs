@@ -1,10 +1,5 @@
 ﻿using RepairEquipment.Client.Services.Interfaces;
 using RepairEquipment.Shared.Models.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RepairEquipment.Client.Services
 {
@@ -27,14 +22,14 @@ namespace RepairEquipment.Client.Services
 
             foreach (var item in document)
             {
-                var el = new DocumentsListItem(item.Id)
+                var el = new DocumentsListItem(item.ID)
                 {
-                    Id = item.Id,
+                    ID = item.ID,
                     DocumentNumber = item.DocumentNumber,
-                    ClientId = item.ClientId,
-                    EmployeeId = item.EmployeeId,
-                    Client = await _utilsService.GetClientNameById(item.ClientId).ConfigureAwait(false),
-                    Employee = await _utilsService.GetEmployeeNameById(item.EmployeeId).ConfigureAwait(false)
+                    ClientID = item.ClientID,
+                    EmployeeID = item.EmployeeID,
+                    Client = await _utilsService.GetClientNameByIdAsync(item.ClientID).ConfigureAwait(false),
+                    Employee = await _utilsService.GetEmployeeNameByIdAsync(item.EmployeeID).ConfigureAwait(false)
                 };
 
                 list.Add(el);

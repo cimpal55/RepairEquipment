@@ -50,8 +50,7 @@
 
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    [Parameter]
-    public DocumentRecord Document { get; set; } = new DocumentRecord();
+    [Parameter] public DocumentRecord Document { get; set; } = new DocumentRecord();
     [Parameter] public List<EmployeeRecord>? Employees { get; set; }
     [Parameter] public List<ClientRecord>? Clients { get; set; }
     [Parameter] public static ClientRecord? _selectedClient { get; set; }
@@ -60,8 +59,8 @@
 
     void Submit()
     {
-        Document.ClientId = _selectedClient.ID;
-        Document.EmployeeId = _selectedEmployee.ID;
+        Document.ClientID = _selectedClient.ID;
+        Document.EmployeeID = _selectedEmployee.ID;
         MudDialog.Close(DialogResult.Ok(Document));
     }
     

@@ -8,16 +8,16 @@ namespace RepairEquipment.Shared.Models.Data
     public sealed record DocumentRecord
     {
         [Column(Document.Id, IsPrimaryKey = true, IsIdentity = true)]
-        public int Id { get; init; }
+        public int ID { get; init; }
         
         [Column(Document.DocumentNumber, CanBeNull = false)]
         public string DocumentNumber { get; set; } = string.Empty;
 
         [Column(Document.ClientId, CanBeNull = true)]
-        public int? ClientId { get; set; }
+        public int? ClientID { get; set; }
 
         [Column(Document.EmployeeId, CanBeNull = true)]
-        public int? EmployeeId { get; set; }
+        public int? EmployeeID { get; set; }
 
         [Column(Document.Created, CanBeNull = false)]
         public DateTime Created { get; init; }

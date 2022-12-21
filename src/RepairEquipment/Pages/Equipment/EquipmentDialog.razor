@@ -100,8 +100,8 @@
 
     void Submit()
     {
-        Equipment.LocationId = _selectedLocation.Id;
-        Equipment.TypeId = _selectedEquipmentType.Id;
+        Equipment.LocationID = _selectedLocation.ID;
+        Equipment.TypeID = _selectedEquipmentType.ID;
         MudDialog.Close(DialogResult.Ok(Equipment));
     }
     void Cancel() => MudDialog.Cancel();

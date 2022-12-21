@@ -4,9 +4,11 @@ namespace RepairEquipment.Client.Services.Interfaces
 {
     public interface IUtilsService
     {
-        public Task<string> GetClientNameById(int? id);
-
-        public Task<string> GetEmployeeNameById(int? id);
+        public Task<string> GetClientNameByIdAsync(int? id);
+        public Task<string> GetEmployeeNameByIdAsync(int? id);
+        public Task<string> GetEquipmentTypeNameByIdAsync(int? id);
+        public Task<string> GetLocationNameByIdAsync(int? id);
+        
 
     }
 }

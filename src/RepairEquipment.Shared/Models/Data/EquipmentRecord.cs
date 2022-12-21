@@ -8,16 +8,16 @@ namespace RepairEquipment.Shared.Models.Data
     public sealed record EquipmentRecord
     {
         [Column(Equipment.Id, IsPrimaryKey = true, IsIdentity = true)]
-        public int Id { get; init; }
+        public int ID { get; init; }
 
         [Column(Equipment.Name, CanBeNull = false)]
         public string Name { get; set; } = string.Empty;
 
         [Column(Equipment.TypeId, CanBeNull = false)]
-        public int TypeId { get; set; }
+        public int TypeID { get; set; }
 
         [Column(Equipment.LocationId, CanBeNull = false)]
-        public int LocationId { get; set; }
+        public int LocationID { get; set; }
 
         [Column(Equipment.SerialNumber, CanBeNull = true)]
         public string SerialNumber { get; set; } = string.Empty;

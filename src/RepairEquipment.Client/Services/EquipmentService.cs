@@ -16,19 +16,7 @@ namespace RepairEquipment.Client.Services
         {
             var record = new EquipmentRecord
             {
-                Id = item.Id,
-                Name = item.Name,
-                TypeId = item.TypeId,
-                SerialNumber = item.SerialNumber,
-                FixedAssetNr = item.FixedAssetNr,
-                PurchaseDate = item.PurchaseDate,
-                PurchaseSum = item.PurchaseSum,
-                PurchaseInvoiceNr = item.PurchaseInvoiceNr,
-                PurchaseInvoiceLink = item.PurchaseInvoiceLink,
-                DepreciationPeriod = item.DepreciationPeriod,
-                Depreciation = item.Depreciation,
-                Notes = item.Notes,
-                Created = DateTime.Now
+                ID = item.ID
             };
 
             await _conn
@@ -50,9 +38,9 @@ namespace RepairEquipment.Client.Services
         {
             var record = new EquipmentRecord
             {
-                Id = item.Id,
+                ID = item.ID,
                 Name = item.Name,
-                TypeId = item.TypeId,
+                TypeID = item.TypeID,
                 SerialNumber = item.SerialNumber,
                 FixedAssetNr = item.FixedAssetNr,
                 PurchaseDate = item.PurchaseDate,
@@ -62,7 +50,7 @@ namespace RepairEquipment.Client.Services
                 DepreciationPeriod = item.DepreciationPeriod,
                 Depreciation = item.Depreciation,
                 Notes = item.Notes,
-                LocationId = item.LocationId,
+                LocationID = item.LocationID,
                 Created = DateTime.Now
             };
 
@@ -75,9 +63,9 @@ namespace RepairEquipment.Client.Services
         {
             var record = new EquipmentRecord
             {
-                Id = item.Id,
+                ID = item.ID,
                 Name = item.Name,
-                TypeId = item.TypeId,
+                TypeID = item.TypeID,
                 SerialNumber = item.SerialNumber,
                 FixedAssetNr = item.FixedAssetNr,
                 PurchaseDate = item.PurchaseDate,
@@ -87,7 +75,7 @@ namespace RepairEquipment.Client.Services
                 DepreciationPeriod = item.DepreciationPeriod,
                 Depreciation = item.Depreciation,
                 Notes = item.Notes,
-                LocationId = item.LocationId,
+                LocationID = item.LocationID,
                 Created = DateTime.Now
             };
 

@@ -2,8 +2,9 @@
 
 namespace RepairEquipment.Client.Services.Interfaces
 {
-    public interface IDocumentListService
+    public interface IEquipmentListService
     {
-        public Task<List<DocumentsListItem>> GetListItemsAsync();
+        public Task<List<EquipmentListItem>> GetListItemsAsync();
+
     }
 }

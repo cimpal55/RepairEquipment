@@ -16,7 +16,7 @@ namespace RepairEquipment.Client.Services
         {
             var record = new DocumentRecord
             {
-                Id = item.Id
+                ID = item.ID
             };
 
             await _conn
@@ -31,10 +31,10 @@ namespace RepairEquipment.Client.Services
         {
             var record = new DocumentRecord
             {
-                Id = item.Id,
+                ID = item.ID,
                 DocumentNumber = item.DocumentNumber,
-                ClientId = item.ClientId,
-                EmployeeId = item.EmployeeId,
+                ClientID = item.ClientID,
+                EmployeeID = item.EmployeeID,
                 Created = DateTime.Now
             };
 
@@ -46,10 +46,10 @@ namespace RepairEquipment.Client.Services
         {
             var record = new DocumentRecord
             {
-                Id = item.Id,
+                ID = item.ID,
                 DocumentNumber = item.DocumentNumber,
-                ClientId = item.ClientId,
-                EmployeeId = item.EmployeeId,
+                ClientID = item.ClientID,
+                EmployeeID = item.EmployeeID,
                 Created = DateTime.Now
             };
 

@@ -48,9 +48,9 @@ else
         </HeaderContent>
         
         <RowTemplate>
-            <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
-            <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Client">@context.Client</MudTd>
-            <MudTd @ondblclick="@(()=>UpdateDocument(@context.Id))" DataLabel="Employee">@context.Employee</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="Client">@context.Client</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="Employee">@context.Employee</MudTd>
             <MudTd Style="text-align: right">
                 
                 <MudLink Href="">
@@ -66,7 +66,7 @@ else
                     Color="Color.Error"
                     Variant="Variant.Filled"
                     Icon="@Icons.Rounded.Delete"
-                    @onclick="@(()=>DeleteDocument(@context.Id))"/>   
+                    @onclick="@(()=>DeleteDocument(@context.ID))"/>   
                     
             </MudTd>
         </RowTemplate>
@@ -151,12 +151,10 @@ else
 
         if (!result.Cancelled)
         {
-            DocumentRecord document = Documents.Where(x => x.Id == id).FirstOrDefault();
-            await _data.UpdateDocumentAsync(document);
-            Snackbar.Add($"#{document.Id} Document successfully updated");
+            await _data.UpdateDocumentAsync(result.Data as DocumentRecord);
+            Snackbar.Add("Document successfully updated");
             await GetDocumentsList();
         }
-
     }
 
     private async Task DeleteDocument(int id)
@@ -167,13 +165,12 @@ else
         parameters.Add("Color", Color.Error);
 
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-
         var dialog = _dialogService.Show<DeleteConfirmation>("Delete", parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled) {
-            DocumentRecord? document = Documents.Where(x => x.Id == id).FirstOrDefault();
+            DocumentRecord? document = Documents.Where(x => x.ID == id).FirstOrDefault();
             await _data.DeleteDocumentAsync(document);
-            Snackbar.Add($"#{document.Id} Document successfully deleted");
+            Snackbar.Add($"#{document.ID} Document successfully deleted");
             await GetDocumentsList();
         }
     }
@@ -181,10 +178,10 @@ else
     private bool Filter(DocumentRecord document)
     {
         if (string.IsNullOrWhiteSpace(searchString)) return true;
-        if (Convert.ToString(document.Id).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (Convert.ToString(document.ID).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         if (document.DocumentNumber.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (_util.GetClientNameById(document.Id).ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (_util.GetEmployeeNameById(document.Id).ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (_util.GetClientNameByIdAsync(document.ID).ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (_util.GetEmployeeNameByIdAsync(document.ID).ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         return false;
     }
 
