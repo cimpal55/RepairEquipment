@@ -25,6 +25,7 @@ namespace RepairEquipment.Client.Services
             {
                 var el = new EquipmentListItem(item.ID)
                 {
+                    ID = item.ID,
                     Name = item.Name,
                     TypeID = item.TypeID,
                     Type = await _utilsService.GetEquipmentTypeNameByIdAsync(item.TypeID)
