@@ -9,7 +9,7 @@
                        
                           <MudItem xs="12">
                               @* Name *@
-                              <MudTextField Xs="12" AutoFocus="true" T="string" Label="Name" Immediate="true" Required="true" RequiredError="Name is required!" @bind-Value="Equipment.Name"/>
+                              <MudTextField Xs="12" MaxLength="200" AutoFocus="true" T="string" Label="Name" Immediate="true" Required="true" RequiredError="Name is required!" @bind-Value="Equipment.Name"/>
                           </MudItem>
 
                           <MudItem xs="6">
@@ -34,7 +34,7 @@
 
                           <MudItem xs="6">
                               @* SerialNumber *@
-                              <MudTextField Xs="12" T="string" Label="SerialNumber" Immediate="true" Required="true" RequiredError="Serial number is required!" @bind-Value="Equipment.SerialNumber"/>
+                              <MudTextField Xs="12" MaxLength="20" T="string" Label="SerialNumber" Immediate="true" Required="true" RequiredError="Serial number is required!" @bind-Value="Equipment.SerialNumber"/>
                           </MudItem>
                        
                           <MudItem xs="6">
@@ -55,12 +55,12 @@
 
                           <MudItem xs="6">
                               @* PurchaseInvoiceNr *@ 
-                              <MudTextField Xs="12" T="string" Label="PurchaseInvoiceNr" Immediate="true" Required="true" RequiredError="PurchaseInvoiceNr is required!" @bind-Value="Equipment.PurchaseInvoiceNr"/>
+                              <MudTextField Xs="12" MaxLength="20" T="string" Label="PurchaseInvoiceNr" Immediate="true" Required="true" RequiredError="PurchaseInvoiceNr is required!" @bind-Value="Equipment.PurchaseInvoiceNr"/>
                           </MudItem>
 
                           <MudItem xs="6">
                               @* PurchaseInvoiceLink *@ 
-                              <MudTextField T="string" Label="PurchaseInvoiceLink" Immediate="true" Required="true" RequiredError="PurchaseInvoiceLink is required!" @bind-Value="Equipment.PurchaseInvoiceLink"/>
+                              <MudTextField T="string" MaxLength="100" Label="PurchaseInvoiceLink" Immediate="true" Required="true" RequiredError="PurchaseInvoiceLink is required!" @bind-Value="Equipment.PurchaseInvoiceLink"/>
                           </MudItem>
                        
                           <MudItem xs="6">
@@ -75,7 +75,7 @@
 
                           <MudItem xs="12">
                               @* Notes *@ 
-                              <MudTextField Xs="12" T="string" Immediate="true" Label="Notes" @bind-Value="Equipment.Notes"/> 
+                              <MudTextField Xs="12" MaxLength="500" T="string" Immediate="true" Label="Notes" @bind-Value="Equipment.Notes"/> 
                           </MudItem>
 
                     </MudGrid>

@@ -9,17 +9,17 @@
                        
                        <MudItem xs="6">
                            @* Name *@
-                           <MudTextField T="string" Label="Name" Immediate="true" Required="true" RequiredError="Name is required!" @bind-Value="Employee.Name"/>   
+                           <MudTextField MaxLength="20" T="string" Label="Name" Immediate="true" Required="true" RequiredError="Name is required!" @bind-Value="Employee.Name"/>   
                        </MudItem>                        
 
                        <MudItem xs="6">
                            @* Surname *@
-                           <MudTextField T="string" Label="Surname" Immediate="true" Required="true" RequiredError="Surname is required!"  @bind-Value="Employee.Surname"/>
+                           <MudTextField MaxLength="20" T="string" Label="Surname" Immediate="true" Required="true" RequiredError="Surname is required!"  @bind-Value="Employee.Surname"/>
                        </MudItem>
 
                        <MudItem xs="6">
                            @* Code *@ 
-                           <MudTextField T="string" Label="Code" Immediate="true" Required="true" RequiredError="Code is required!" @bind-Value="Employee.Code"/>
+                           <MudTextField MaxLength="10" T="string" Label="Code" Immediate="true" Required="true" RequiredError="Code is required!" @bind-Value="Employee.Code"/>
                        </MudItem>
 
                        <MudItem xs="6">
@@ -30,12 +30,12 @@
 
                        <MudItem xs="6">
                             @* Phone *@ 
-                           <MudTextField T="string" Label="Phone" Immediate="true" Required="true" RequiredError="Phone is required!" @bind-Value="Employee.Phone"/>
+                           <MudTextField MaxLength="20" T="string" Label="Phone" Immediate="true" Required="true" RequiredError="Phone is required!" @bind-Value="Employee.Phone"/>
                        </MudItem>
 
                        <MudItem xs="6">
                             @* Email *@ 
-                            <MudTextField T="string" Label="Email" Validation="@(new EmailAddressAttribute() { ErrorMessage = "The email address is invalid"})" 
+                            <MudTextField MaxLength="50" T="string" Label="Email" Validation="@(new EmailAddressAttribute() { ErrorMessage = "The email address is invalid"})" 
                                      @bind-Value="Employee.Email" Immediate="true" Required="true" RequiredError="Email is required!"/>
                        </MudItem>
 

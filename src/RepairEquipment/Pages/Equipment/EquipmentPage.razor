@@ -38,6 +38,11 @@ else
             <MudTh>SerialNumber</MudTh>
             <MudTh>FixedAssetNr</MudTh>
             <MudTh>PurchaseDate</MudTh>
+            <MudTh>PurchaseSum</MudTh>
+            <MudTh>PurchaseInvoiceNr</MudTh>
+            <MudTh>PurchaseInvoiceLink</MudTh>
+            <MudTh>DepreciationPeriod</MudTh>
+            <MudTh>Depreciation</MudTh>
             <MudTh></MudTh>
             <MudTh></MudTh>
         </HeaderContent>
@@ -49,6 +54,11 @@ else
             <MudTd DataLabel="SerialNumber">@context.SerialNumber</MudTd>
             <MudTd DataLabel="FixedAssetNr">@context.FixedAssetNr</MudTd>
             <MudTd DataLabel="PurchaseDate">@context.PurchaseDate.ToString("dd/MM/yyyy")</MudTd>
+            <MudTd DataLabel="PurchaseSum">@context.PurchaseSum</MudTd>
+            <MudTd DataLabel="PurchaseInvoiceNr">@context.PurchaseInvoiceNr</MudTd>
+            <MudTd DataLabel="PurchaseInvoiceLink">@context.PurchaseInvoiceLink</MudTd>
+            <MudTd DataLabel="DepreciationPeriod">@context.DepreciationPeriod</MudTd>
+            <MudTd DataLabel="Depreciation">@context.Depreciation</MudTd>
             <MudTd Style="text-align: right">
                 <MudIconButton
                     Class="hoverable-item top-0 right-0 mt-3 mr-4"
@@ -125,17 +135,17 @@ else
             
             Equipment = new EquipmentRecord();
             Snackbar.Add("Equipment successfully added");
-            await GetEquipmentList();
+            await GetEquipmentListItem();
         }
     }
 
     //private async Task UpdateEquipment(int id)
     //{
     //    var parameters = new DialogParameters();
-    //    parameters.Add("Document", _selectedItem);
-    //    parameters.Add("Employees", Employees);
-    //    parameters.Add("Clients", Clients);
-    //    var dialog = _dialogService.Show<DocumentDialog>("Edit Document", parameters);
+    //    parameters.Add("Equipment", _selectedItem);
+    //    parameters.Add("EquipmentType", EquipmentTypeList);
+    //    parameters.Add("Location", LocationList);
+    //    var dialog = _dialogService.Show<EquipmentDialog>("Edit Document", parameters);
     //    var result = await dialog.Result;
 
     //    if (!result.Cancelled)
