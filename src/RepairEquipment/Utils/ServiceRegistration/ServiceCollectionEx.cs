@@ -15,10 +15,11 @@ namespace RepairEquipment.Utils.ServiceRegistration
                 .AddScoped<IEmployeeService, EmployeeService>()
                 .AddScoped<IEquipmentService, EquipmentService>()
                 .AddScoped<IDocumentService, DocumentService>()
-                .AddScoped<IEquipmentTypeService, EquipmentTypeService>()
-                .AddScoped<IUtilsService, UtilsService>()
                 .AddScoped<IDocumentsListService, DocumentListService>()
+                .AddScoped<IDocumentDetailsService, DocumentDetailsService>()
+                .AddScoped<IEquipmentTypeService, EquipmentTypeService>()
                 .AddScoped<IEquipmentListService, EquipmentListService>()
+                .AddScoped<IUtilsService, UtilsService>()
                 .AddScoped<ILocationService, LocationService>();
     }
 }
