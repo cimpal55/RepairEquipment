@@ -1,6 +1,5 @@
 ﻿using LinqToDB.Mapping;
 using RepairEquipment.Data;
-using System.ComponentModel.DataAnnotations;
 using static RepairEquipment.Data.Columns;
 
 namespace RepairEquipment.Shared.Models.Data

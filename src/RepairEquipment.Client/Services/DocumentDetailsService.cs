@@ -64,11 +64,15 @@ namespace RepairEquipment.Client.Services
                 .UpdateAsync(record)
                 .ConfigureAwait(false);
         }
-        public async Task<IEnumerable<DocumentDetailRecord>> GetDocumentDetailsListAsync(int docId) =>
+        public async Task<IEnumerable<DocumentDetailRecord>> GetDocumentDetailsAsync(int docId) =>
             await _conn
                 .DocumentDetailsRecords
                 .Where(x => x.DocumentID == docId)
                 .ToListAsync();
 
+        public async Task<IEnumerable<DocumentDetailRecord>> GetDocumentDetailsListAsync() =>
+            await _conn
+                .DocumentDetailsRecords
+                .ToListAsync();
     }
 }

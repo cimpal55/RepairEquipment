@@ -11,28 +11,49 @@
                     
                     <MudItem xs="12">
                          @* Name *@
-                        <MudTextField MaxLength="50" T="string" Label="DocumentNumber" Required="true" RequiredError="Document number is required!" @bind-Value="Document.DocumentNumber"/>                       
+                        <MudTextField MaxLength="50" T="string" Label="DocumentNumber" Required="true" RequiredError="Document number is required!" 
+                                      @bind-Value="DocumentDetails.DocumentNumber" AutoFocus="true"/>                       
                     </MudItem>
                
-                    <MudItem xs="12">
-                        @* Client *@
-                        <MudSelect Label="Client" Required="true" RequiredError="Client is required!" @bind-Value="_selectedClient">
-                            @foreach (ClientRecord client in Clients)
-                            {
-                                <MudSelectItem Value="@client">@client.Name</MudSelectItem>
-                            }
-                        </MudSelect>                        
+                    <MudItem xs="6">
+                        @* DocumentDateOut *@
+                        <MudDatePicker Label="DocumentDateOut" Required="true" RequiredError="DocumentDateOut is required!" 
+                                       @bind-Value="DocumentDetails.DocumentDateOut" DateFormat="dd.MM.yyyy"/>                  
                     </MudItem>
 
-                    <MudItem xs="12">
-                        @* Employee *@
-                        <MudSelect Label="Employee" Required="true" RequiredError="Employee is required!" @bind-Value="_selectedEmployee">
-                            @foreach (EmployeeRecord employee in Employees)
-                            {
-                                <MudSelectItem Value="@employee">@employee.Name</MudSelectItem>
-                            }
-                        </MudSelect>                        
+                    <MudItem xs="6">
+                        @* DocumentDateIn *@
+                        <MudDatePicker Label="DocumentDateIn" Required="true" RequiredError="DocumentDateIn is required!" 
+                                       @bind-Value="DocumentDetails.DocumentDateIn" DateFormat="dd.MM.yyyy"/>                  
                     </MudItem>
+                    
+                    <MudItem xs="6">
+                         @* Quantity *@
+                        <MudTextField T="decimal" Label="Quantity" Required="true" RequiredError="Quantity is required!" 
+                                      @bind-Value="DocumentDetails.Quantity"/>                       
+                    </MudItem>
+                 
+                    <MudItem xs="6">
+                         @* Sum *@
+                        <MudTextField T="decimal" Label="Sum" Required="true" RequiredError="Sum is required!" 
+                                      @bind-Value="DocumentDetails.Sum"/>                       
+                    </MudItem>  
+                    
+                    <MudItem xs="6">
+                         @* TotalSum *@
+                        <MudTextField T="decimal" Label="TotalSum" Required="true" RequiredError="TotalSum is required!" 
+                                      @bind-Value="DocumentDetails.TotalSum"/>                       
+                    </MudItem>                
+                    
+                    <MudItem xs="6">
+                         @* Equipment *@
+                         <MudSelect Label="Equipment" Required="true" Immediate="true" RequiredError="Equipment is required!" @bind-Value="_selectedEquipment">
+                             @foreach (EquipmentRecord equipment in EquipmentList)
+                             {
+                                 <MudSelectItem Value="@equipment">@equipment.Name</MudSelectItem>
+                             }
+                         </MudSelect>                                          
+                    </MudItem>                                   
 
                 </MudGrid>
             </MudItem>
@@ -51,11 +72,15 @@
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public DocumentDetailRecord DocumentDetails { get; set; } = new DocumentDetailRecord();
+    [Parameter] public List<EquipmentRecord>? EquipmentList { get; set; }
+    [Parameter] public static EquipmentRecord? _selectedEquipment { get; set; } 
     bool success;
 
-    void Submit() => MudDialog.Close(DialogResult.Ok(Document));
-  
-    
+    void Submit() {
+        DocumentDetails.EquipmentID = _selectedEquipment.ID;
+        MudDialog.Close(DialogResult.Ok(DocumentDetails));
+    }
+ 
     void Cancel() => MudDialog.Cancel();
 
 }

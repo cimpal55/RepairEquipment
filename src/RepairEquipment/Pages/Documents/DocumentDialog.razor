@@ -9,12 +9,13 @@
                     
                     <MudItem xs="12">
                          @* Name *@
-                        <MudTextField MaxLength="50" T="string" Label="DocumentNumber" Required="true" RequiredError="Document number is required!" @bind-Value="Document.DocumentNumber"/>                       
+                        <MudTextField MaxLength="50" T="string" Label="DocumentNumber" Required="true" RequiredError="Document number is required!" 
+                                      @bind-Value="Document.DocumentNumber" AutoFocus="true" Immediate="true"/>                       
                     </MudItem>
                
                     <MudItem xs="12">
                         @* Client *@
-                        <MudSelect Label="Client" Required="true" RequiredError="Client is required!" @bind-Value="_selectedClient">
+                        <MudSelect Label="Client" Required="true" Immediate="true" RequiredError="Client is required!" @bind-Value="_selectedClient">
                             @foreach (ClientRecord client in Clients)
                             {
                                 <MudSelectItem Value="@client">@client.Name</MudSelectItem>
@@ -24,7 +25,7 @@
 
                     <MudItem xs="12">
                         @* Employee *@
-                        <MudSelect Label="Employee" Required="true" RequiredError="Employee is required!" @bind-Value="_selectedEmployee">
+                        <MudSelect Label="Employee" Required="true" Immediate="true" RequiredError="Employee is required!" @bind-Value="_selectedEmployee">
                             @foreach (EmployeeRecord employee in Employees)
                             {
                                 <MudSelectItem Value="@employee">@employee.Name</MudSelectItem>

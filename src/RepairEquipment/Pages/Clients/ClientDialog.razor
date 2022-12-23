@@ -9,7 +9,8 @@
                     
                     <MudItem xs="6">
                         @* Name *@
-                        <MudTextField MaxLength="50" T="string" Label="Name" Immediate="true" Required="true" RequiredError="Name is required!" @bind-Value="Client.Name" />                        
+                        <MudTextField MaxLength="50" T="string" Label="Name" Immediate="true" Required="true" RequiredError="Name is required!" 
+                                      @bind-Value="Client.Name" AutoFocus="true"/>                        
                     </MudItem>
                     
                     <MudItem xs="6">

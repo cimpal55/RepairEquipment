@@ -1,5 +1,4 @@
 ﻿@page "/"
-@using Dapper
 @using RepairEquipment.Client.DbAccess
 @using RepairEquipment.Client.Services.Interfaces
 @using RepairEquipment.Shared.Models
@@ -33,10 +32,11 @@ else
                 Icon="@Icons.Filled.Logout"
                 Text="Outgoing"/>               
         </MudContainer>
-
+        
     </MudPaper>
-
-    <MudTable Class="mud-fab-layout-content" @ref="_documentTable" Items="@DocumentsList" Dense="@dense" Hover="@hover" @bind-SelectedItem="_selectedItem">
+    
+    <MudTable Class="mud-fab-layout-content" @ref="_documentTable" Items="@DocumentsList" Dense="@dense" Hover="@hover" Filter="new Func<DocumentsListItem, bool>(Filter)" 
+              @bind-SelectedItem="_selectedItem">
         <ToolBarContent>
             <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
@@ -99,11 +99,12 @@ else
     private string searchString = "";
     private bool hover = true;
     private bool dense = false;
+    private MudToolTipIconButtonEx? _exportIncomingHref;
+    private MudToolTipIconButtonEx? _exportOutgoingHref;
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Documents", href: null, disabled: true),
     };
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -181,14 +182,17 @@ else
         }
     }
 
-    private bool Filter(DocumentRecord document)
+    private bool Filter(DocumentsListItem document)
     {
         if (string.IsNullOrWhiteSpace(searchString)) return true;
         if (Convert.ToString(document.ID).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         if (document.DocumentNumber.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (_util.GetClientNameByIdAsync(document.ID).ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (_util.GetEmployeeNameByIdAsync(document.ID).ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         return false;
+    }
+
+    private string ExportUrl(string format, string docType, string searchText)
+    {
+        return $"/api/doc-export/file?fmt={format}&doctype={docType}&search={searchText}";
     }
 
     private string DocumentDetailUrl(DocumentsListItem item)

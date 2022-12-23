@@ -11,28 +11,28 @@ namespace RepairEquipment.Shared.Models.Data
         public int ID { get; init; }
 
         [Column(DocumentDetail.DocumentId)]
-        public int DocumentID { get; init; }
+        public int DocumentID { get; set; }
 
         [Column(DocumentDetail.DocumentNumber)]
-        public string DocumentNumber { get; init; } = string.Empty;
+        public string DocumentNumber { get; set; } = string.Empty;
 
         [Column(DocumentDetail.DocumentDateOut)]
-        public DateTime? DocumentDateOut { get; init; }
+        public DateTime? DocumentDateOut { get; set; }
 
         [Column(DocumentDetail.DocumentDateIn)]
-        public DateTime? DocumentDateIn { get; init; }
+        public DateTime? DocumentDateIn { get; set; }
 
         [Column(DocumentDetail.Quantity)]
-        public decimal Quantity { get; init; }
+        public decimal Quantity { get; set; }
 
         [Column(DocumentDetail.Sum)]
-        public decimal Sum { get; init; }
+        public decimal Sum { get; set; }
 
         [Column(DocumentDetail.TotalSum)]
-        public decimal TotalSum { get; init; }
+        public decimal TotalSum { get; set; }
 
         [Column(DocumentDetail.EquipmentId)]
-        public int EquipmentID { get; init; }
+        public int EquipmentID { get; set; }
 
         [Column(DocumentDetail.Created, CanBeNull = false)]
         public DateTime Created { get; init; }

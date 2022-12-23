@@ -7,6 +7,7 @@ namespace RepairEquipment.Client.Services.Interfaces
         public Task InsertDocumentDetailAsync(DocumentDetailRecord item);
         public Task UpdateDocumentDetailAsync(DocumentDetailRecord item);
         public Task DeleteDocumentDetailAsync(DocumentDetailRecord item);
-        public Task<IEnumerable<DocumentDetailRecord>> GetDocumentDetailsListAsync(int docId);
+        public Task<IEnumerable<DocumentDetailRecord>> GetDocumentDetailsAsync(int docId);
+        public Task<IEnumerable<DocumentDetailRecord>> GetDocumentDetailsListAsync();
     }
 }
