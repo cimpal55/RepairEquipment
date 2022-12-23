@@ -74,6 +74,9 @@ namespace RepairEquipment.Shared.Models.Export
     }
     [AttributeUsage(AttributeTargets.Property)]
     internal sealed class MapIgnoreAttribute : Attribute { }
+
+
+
     internal enum FileType : byte
     {
         Pdf

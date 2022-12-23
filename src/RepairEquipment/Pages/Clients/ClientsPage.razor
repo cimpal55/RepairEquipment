@@ -15,7 +15,9 @@
 else
 {
     <MudPaper Square="true" Style="text-align: left" Class="pa-4 d-flex flex-grow-1">
-        <MudText Typo="Typo.h6">Clients </MudText>
+        <MudContainer Class="align-self-stretch" Style="text-align: left">
+            <MudBreadcrumbs Items="@_items" Separator=">"></MudBreadcrumbs>
+        </MudContainer>
         <MudSpacer />
         <MudButton Style="margin-right: 15px" @onclick="InsertClient" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
     </MudPaper>
@@ -89,6 +91,10 @@ else
     private string searchString = "";
     private bool hover = true;
     private bool dense = false;
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Clients", href: null, disabled: true),
+    };
 
 
     protected override async Task OnInitializedAsync()

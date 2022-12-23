@@ -20,7 +20,9 @@ else
 {
     <MudPaper Square="true" Class="pa-4 d-flex flex-grow-1">
 
-        <MudText Typo="Typo.h6">Documents</MudText>
+        <MudContainer Class="align-self-stretch" Style="text-align: left">
+            <MudBreadcrumbs Items="@_items" Separator=">"></MudBreadcrumbs>
+        </MudContainer>
         
         <MudContainer Style="text-align: right; padding-right: unset; margin-right: 15px">
             <MudButton @onclick="InsertDocument" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>      
@@ -53,7 +55,7 @@ else
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="Employee">@context.Employee</MudTd>
             <MudTd Style="text-align: right">
                 
-                <MudLink Href="">
+                <MudLink Href="@DocumentDetailUrl(@context)">
                     <MudIconButton
                         Class="hoverable-item top-0 right-0 mt-3 mr-4"
                         Color="Color.Info"
@@ -97,6 +99,11 @@ else
     private string searchString = "";
     private bool hover = true;
     private bool dense = false;
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Documents", href: null, disabled: true),
+    };
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -182,6 +189,11 @@ else
         if (_util.GetClientNameByIdAsync(document.ID).ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         if (_util.GetEmployeeNameByIdAsync(document.ID).ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         return false;
+    }
+
+    private string DocumentDetailUrl(DocumentsListItem item)
+    {
+        return $"/documentdetails/{item.ID}";
     }
 
 }

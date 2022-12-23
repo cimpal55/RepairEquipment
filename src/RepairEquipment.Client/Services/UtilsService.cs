@@ -17,26 +17,46 @@ namespace RepairEquipment.Client.Services
             await _conn
                 .ClientsRecords
                 .Where(x => x.ID == id)
-                .Select(x => $"{x.Name}")
+                .Select(x => x.Name)
                 .FirstOrDefaultAsync() ?? string.Empty;
         public async Task<string> GetEmployeeNameByIdAsync(int? id) =>
         await _conn
             .EmployeesRecords
             .Where(x => x.ID == id)
-            .Select(x => $"{x.Name}")
+            .Select(x => x.Name)
             .FirstOrDefaultAsync() ?? string.Empty;
         public async Task<string> GetEquipmentTypeNameByIdAsync(int? id) =>
             await _conn
                 .EquipmentTypeRecords
                 .Where(x => x.ID == id)
-                .Select(x => $"{x.Name}")
+                .Select(x => x.Name)
                 .FirstOrDefaultAsync() ?? string.Empty;
         public async Task<string> GetLocationNameByIdAsync(int? id) =>
             await _conn
                 .LocationRecords
                 .Where(x => x.ID == id)
-                .Select(x => $"{x.Name}")
+                .Select(x => x.Name)
                 .FirstOrDefaultAsync() ?? string.Empty;
+
+        public string GetClientNameById(int? id) =>
+            _conn
+                .ClientsRecords
+                .Where(x => x.ID == id)
+                .Select(x => x.Name)
+                .FirstOrDefault() ?? string.Empty;
+        public string GetEmployeeNameById(int? id) =>
+            _conn
+                .EmployeesRecords
+                .Where(x => x.ID == id)
+                .Select(x => x.Name)
+                .FirstOrDefault() ?? string.Empty;
+        public string GetEquipmentNameById(int id) =>
+            _conn
+                .EquipmentRecords
+                .Where(x => x.ID == id)
+                .Select(x => x.Name)
+                .FirstOrDefault() ?? string.Empty;
+
     }
 }
 

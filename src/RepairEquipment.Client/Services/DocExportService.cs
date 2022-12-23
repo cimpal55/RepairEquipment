@@ -1,4 +1,5 @@
-﻿using QuestPDF.Fluent;
+﻿using MyNihongo.LinqAsync;
+using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using RepairEquipment.Client.Services.Interfaces;
 using RepairEquipment.Shared.Models.Export;
@@ -24,65 +25,65 @@ namespace RepairEquipment.Client.Services
             _pdfService = pdfService;
         }
 
-        //public async Task<IEnumerable<DocExportRecord>> CreateAsync(string? search, CancellationToken ct = default)
-        //{
-        //    var items = await _documentService
-        //        .GetDocumentsListAsync(search, ct)
-        //        .Select(x => new DocExportRecord
-        //        {
-        //            DocumentNumber = x.DocumentNumber,
-        //            DocumentDetailNumber = x.DocumentDetailNumber,
-        //            DocumentDateOut = x.DocumentDateOut,
-        //            DocumentDateIn = x.DocumentDateIn,
-        //            Quantity = x.Quantity,
-        //            Sum = x.Sum,
-        //            TotalSum = x.TotalSum,
-        //            Client = _utilsService.GetClientById(x.ClientId),
-        //            ClientRegistrationNr = x.ClientRegistrationNr,
-        //            ClientContactPerson = x.ClientContactPerson,
-        //            Employee = _utilsService.GetEmployeeById(x.EmployeeId),
-        //            Equipment = _utilsService.GetEquipmentById(x.EquipmentId)
-        //        })
-        //        .ConfigureAwait(false);
+        public async Task<IEnumerable<DocExportRecord>> CreateAsync(string? search, CancellationToken ct = default)
+        {
+            var items = await _documentService
+                .GetDocumentsAsync(search, ct)
+                .Select(x => new DocExportRecord
+                {
+                    DocumentNumber = x.DocumentNumber,
+                    DocumentDetailNumber = x.DocumentDetailNumber,
+                    DocumentDateOut = x.DocumentDateOut,
+                    DocumentDateIn = x.DocumentDateIn,
+                    Quantity = x.Quantity,
+                    Sum = x.Sum,
+                    TotalSum = x.TotalSum,
+                    Client = _utilsService.GetClientNameById(x.ClientId),
+                    ClientRegistrationNr = x.ClientRegistrationNr,
+                    ClientContactPerson = x.ClientContactPerson,
+                    Employee = _utilsService.GetEmployeeNameById(x.EmployeeId),
+                    Equipment = _utilsService.GetEquipmentNameById(x.EquipmentId)
+                })
+                .ConfigureAwait(false);
 
-        //    return items;
-        //}
+            return items;
+        }
 
-        //        public async Task<DocExportFileResponse> ExportPdfAsync(DocExportFileRequest req, string? search, CancellationToken ct = default)
-        //        {
-        //            IDocument document;
-        //            var data = await CreateAsync(search, ct)
-        //                                                    .ConfigureAwait(false);
+        public async Task<DocExportFileResponse> ExportPdfAsync(DocExportFileRequest req, string? search, CancellationToken ct = default)
+        {
+            IDocument document;
+            var data = await CreateAsync(search, ct)
+                                .ConfigureAwait(false);
 
-        //            var docExportRecords = data.ToList();
-        //            if (docExportRecords.Any(x => !string.IsNullOrEmpty(x.Employee)))
-        //            {
-        //                document = await _pdfService.CreateEmployeePdf(docExportRecords, req.DocType)
-        //                                .ConfigureAwait(false);
-        //            }
-        //            else if (docExportRecords.Any(x => !string.IsNullOrEmpty(x.Client)))
-        //            {
-        //                document = await _pdfService.CreateClientPdf(docExportRecords, req.DocType)
-        //                                .ConfigureAwait(false);
-        //            }
-        //            else
-        //            {
-        //                throw new Exception("No one Employee or Client is found!!!");
-        //            }
+            var docExportRecords = data.ToList();
+            if (docExportRecords.Any(x => !string.IsNullOrEmpty(x.Employee)))
+            {
+                document = await _pdfService.CreateEmployeePdf(docExportRecords, req.DocType)
+                                .ConfigureAwait(false);
+            }
+            else if (docExportRecords.Any(x => !string.IsNullOrEmpty(x.Client)))
+            {
+                document = await _pdfService.CreateClientPdf(docExportRecords, req.DocType)
+                                .ConfigureAwait(false);
+            }
+            else
+            {
+                throw new Exception("No one Employee or Client is found!!!");
+            }
 
-        //            return CreateExportResponse(document);
-        //        }
+            return CreateExportResponse(document);
+        }
 
-        //        private static DocExportFileResponse CreateExportResponse(IDocument document)
-        //        {
-        //            var stream = new MemoryStream();
-        //            document.GeneratePdf(stream);
-        //            stream.Position = 0;
+        private static DocExportFileResponse CreateExportResponse(IDocument document)
+        {
+            var stream = new MemoryStream();
+            document.GeneratePdf(stream);
+            stream.Position = 0;
 
-        //            return new DocExportFileResponse(stream)
-        //            {
-        //                ContentType = PdfContentType
-        //            };
-        //        }
+            return new DocExportFileResponse(stream)
+            {
+                ContentType = PdfContentType
+            };
+        }
     }
 }

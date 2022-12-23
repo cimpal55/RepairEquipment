@@ -64,7 +64,8 @@
             public const string DocumentId = "DocumentID";
             public const string EquipmentId = "EquipmentID";
             public const string DocumentNumber = "DocumentNumber";
-            public const string DocumentDate = "DocumentDate";
+            public const string DocumentDateOut = "DocumentDateOut";
+            public const string DocumentDateIn = "DocumentDateIn";
             public const string Quantity = "Quantity";
             public const string Sum = "Sum";
             public const string TotalSum = "TotalSum";
