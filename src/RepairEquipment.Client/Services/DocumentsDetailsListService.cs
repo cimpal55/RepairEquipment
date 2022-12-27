@@ -13,6 +13,7 @@ namespace RepairEquipment.Client.Services
             _utilsService = utilsService;
             _documentDetailsService = documentDetailsService;
         }
+
         public async Task<List<DocumentsDetailsListItem>> GetListItemsAsync()
         {
             var document = await _documentDetailsService.GetDocumentDetailsListAsync()

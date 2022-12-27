@@ -17,14 +17,14 @@
                
                     <MudItem xs="6">
                         @* DocumentDateOut *@
-                        <MudDatePicker Label="DocumentDateOut" Required="true" RequiredError="DocumentDateOut is required!" 
-                                       @bind-Value="DocumentDetails.DocumentDateOut" DateFormat="dd.MM.yyyy"/>                  
+                        <MudDatePicker Label="DocumentDateOut" Required="true" Editable="true" RequiredError="DocumentDateOut is required!" 
+                                       @bind-Date="DocumentDetails.DocumentDateOut" DateFormat="dd.MM.yyyy" Mask="@(new DateMask("dd.MM.yyyy"))"/>                  
                     </MudItem>
 
                     <MudItem xs="6">
                         @* DocumentDateIn *@
-                        <MudDatePicker Label="DocumentDateIn" Required="true" RequiredError="DocumentDateIn is required!" 
-                                       @bind-Value="DocumentDetails.DocumentDateIn" DateFormat="dd.MM.yyyy"/>                  
+                        <MudDatePicker Label="DocumentDateIn" Required="true" Editable="true" RequiredError="DocumentDateIn is required!" 
+                                       @bind-Date="DocumentDetails.DocumentDateIn" DateFormat="dd.MM.yyyy" Mask="@(new DateMask("dd.MM.yyyy"))"/>                  
                     </MudItem>
                     
                     <MudItem xs="6">
@@ -74,10 +74,12 @@
     [Parameter] public DocumentDetailRecord DocumentDetails { get; set; } = new DocumentDetailRecord();
     [Parameter] public List<EquipmentRecord>? EquipmentList { get; set; }
     [Parameter] public static EquipmentRecord? _selectedEquipment { get; set; } 
+    [Parameter] public string? DocumentID { get; set; }
     bool success;
 
     void Submit() {
         DocumentDetails.EquipmentID = _selectedEquipment.ID;
+        DocumentDetails.DocumentID = Convert.ToInt32(DocumentID);
         MudDialog.Close(DialogResult.Ok(DocumentDetails));
     }
  

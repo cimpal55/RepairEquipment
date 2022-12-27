@@ -2,6 +2,9 @@
 @using RepairEquipment.Client.Services.Interfaces
 @inject IDocumentDetailsService _data
 @inject IDocumentsDetailsListService _listData
+@inject IEquipmentService _equipment
+@inject IDialogService _dialogService
+@inject ISnackbar Snackbar
 
     <MudPaper Square="true" Class="pa-4 d-flex flex-grow-1">
 
@@ -12,7 +15,7 @@
         <MudContainer Style="text-align: right; padding-right: unset; margin-right: 15px">
 
             @* Сreate *@
-            <MudButton  StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>      
+            <MudButton @onclick="InsertDocumentDetails" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>      
             
             @* BackToDocument *@
             <MudToolTipIconButtonEx
@@ -24,7 +27,7 @@
         
     </MudPaper>
     
-    <MudTable Class="mud-fab-layout-content" Items="@DocumentsDetailsList" Dense="@dense" Hover="@hover">
+    <MudTable Class="mud-fab-layout-content" Items="@DocumentDetails" Dense="@dense" Hover="@hover">
         <ToolBarContent>
             <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
@@ -48,7 +51,7 @@
             <MudTd DataLabel="Quantity">@context.Quantity</MudTd>
             <MudTd DataLabel="Sum">@context.Sum</MudTd>
             <MudTd DataLabel="TotalSum">@context.TotalSum</MudTd>
-            <MudTd DataLabel="TotalSum">@context.Equipment</MudTd>            
+            <MudTd DataLabel="Equipment">@context.EquipmentID</MudTd>            
             <MudTd Style="text-align: right">
                 
             <MudIconButton
@@ -74,6 +77,7 @@
 
 @code {
     private List<DocumentsDetailsListItem>? DocumentsDetailsList;
+    private List<EquipmentRecord>? EquipmentList;
     private string searchString = "";
     private bool hover = true;
     private bool dense = false;
@@ -82,23 +86,42 @@
         new BreadcrumbItem("Documents", href: "/"),
         new BreadcrumbItem("DocumentDetails", href: null, disabled: true)
     };
+    public IEnumerable<DocumentDetailRecord> DocumentDetails { get; set; }
+    [Parameter]
+    public string? DocumentID { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        await GetDocumentsDetailsList();
+        DocumentDetails = await _data.GetDocumentDetailsAsync(Convert.ToInt32(DocumentID));
     }
 
     private async Task GetDocumentsDetailsList() {
-        var items = await _listData.GetListItemsAsync();
+        var items = await _listData.GetListItemsAsync().ConfigureAwait(false);
         DocumentsDetailsList = items.ToList();
     }
 
-    private async Task GetDetails()
+    
+
+    private async Task GetEquipmentList() => EquipmentList = await _equipment.GetEquipmentListAsync().ConfigureAwait(false);
+
+    private async Task InsertDocumentDetails()
     {
-        
+        var parameters = new DialogParameters();
+        parameters.Add("DocumentDetails", new DocumentDetailRecord());
+        parameters.Add("DocumentID", DocumentID);
+        parameters.Add("EquipmentList", EquipmentList);
+        var dialog = _dialogService.Show<DocumentDetailsDialog>("Create document details", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Cancelled)
+        {
+            var document = result.Data as DocumentDetailRecord;
+
+            await _data.InsertDocumentDetailAsync(document);
+
+            Snackbar.Add("Document details successfully added");
+            await GetDocumentsDetailsList();
+        }
     }
-
-    [Parameter] 
-    public string? DocumentID { get; set; }
-
+    
 }
