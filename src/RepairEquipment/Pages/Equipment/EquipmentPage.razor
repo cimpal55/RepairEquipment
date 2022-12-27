@@ -147,7 +147,6 @@ else
 
         if (!result.Cancelled)
         {
-            EquipmentRecord? equipment = EquipmentList.Where(x => x.ID == id).FirstOrDefault();
             await _data.UpdateEquipmentAsync(result.Data as EquipmentRecord);
             Snackbar.Add("Equipment successfully updated");
             await GetEquipmentList();

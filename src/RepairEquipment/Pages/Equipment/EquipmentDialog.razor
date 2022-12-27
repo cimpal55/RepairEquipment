@@ -82,11 +82,14 @@
                 </MudGrid>
             </MudItem>
         </MudForm>
-        <MudCardActions>
-            <MudButton OnClick="Cancel">Cancel</MudButton>
-            <MudButton Color="Color.Primary" Disabled="@(!success)" OnClick="Submit">Ok</MudButton>
-        </MudCardActions>
     </DialogContent>
+    <DialogActions>        
+        @* Save *@
+        <MudButton OnClick="Submit" StartIcon="@Icons.Rounded.Save" Disabled="@(!success)">Save</MudButton>
+
+        @* Cancel *@
+        <MudButton OnClick="Cancel" Color="Color.Error">Cancel</MudButton>         
+    </DialogActions>
 </MudDialog>
 
 

@@ -1,7 +1,6 @@
 ﻿@page "/documentdetails/{DocumentID}"
 @using RepairEquipment.Client.Services.Interfaces
 @inject IDocumentDetailsService _data
-@inject IDocumentsDetailsListService _listData
 @inject IEquipmentService _equipment
 @inject IUtilsService _utils
 @inject IDialogService _dialogService
@@ -46,13 +45,13 @@
         </HeaderContent>
         
         <RowTemplate>
-            <MudTd DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
-            <MudTd DataLabel="DocumentDateOut">@context.DocumentDateOut.Value.ToShortDateString()</MudTd>
-            <MudTd DataLabel="DocumentDateIn">@context.DocumentDateIn.Value.ToShortDateString()</MudTd>
-            <MudTd DataLabel="Quantity">@context.Quantity</MudTd>
-            <MudTd DataLabel="Sum">@context.Sum</MudTd>
-            <MudTd DataLabel="TotalSum">@context.TotalSum</MudTd>
-            <MudTd DataLabel="Equipment">@_utils.GetEquipmentNameById(@context.EquipmentID)</MudTd>            
+            <MudTd @ondblclick="@(()=>UpdateDocumentDetails(@context.ID))" DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocumentDetails(@context.ID))" DataLabel="DocumentDateOut">@context.DocumentDateOut.Value.ToShortDateString()</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocumentDetails(@context.ID))" DataLabel="DocumentDateIn">@context.DocumentDateIn.Value.ToShortDateString()</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocumentDetails(@context.ID))" DataLabel="Quantity">@context.Quantity</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocumentDetails(@context.ID))" DataLabel="Sum">@context.Sum</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocumentDetails(@context.ID))" DataLabel="TotalSum">@context.TotalSum</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocumentDetails(@context.ID))" DataLabel="Equipment">@_utils.GetEquipmentNameById(@context.EquipmentID)</MudTd>            
             <MudTd Style="text-align: right">
                 
             <MudIconButton
@@ -78,6 +77,7 @@
 
 @code {
     private List<EquipmentRecord>? EquipmentList;
+    private DocumentDetailRecord? _selectedItem;
     private string searchString = "";
     private bool hover = true;
     private bool dense = false;
@@ -88,7 +88,7 @@
         new BreadcrumbItem("DocumentDetails", href: null, disabled: true)
     };
 
-    public IEnumerable<DocumentDetailRecord> DocumentDetails { get; set; }
+    public IEnumerable<DocumentDetailRecord>? DocumentDetails { get; set; }
 
     [Parameter]
     public string? DocumentID { get; set; }
@@ -109,7 +109,7 @@
         parameters.Add("DocumentDetails", new DocumentDetailRecord());
         parameters.Add("DocumentID", DocumentID);
         parameters.Add("EquipmentList", EquipmentList);
-        var dialog = _dialogService.Show<DocumentDetailsDialog>("Create document details", parameters);
+        var dialog = _dialogService.Show<DocumentsDetailsDialog>("Create document details", parameters);
         var result = await dialog.Result;
 
         if (!result.Cancelled)
@@ -119,6 +119,24 @@
             await _data.InsertDocumentDetailAsync(document);
 
             Snackbar.Add("Document details successfully added");
+            await GetDocumentsDetailsList();
+        }
+    }
+    
+    private async Task UpdateDocumentDetails(int id)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("DocumentDetails", _selectedItem);     
+        parameters.Add("DocumentID", DocumentID);
+        parameters.Add("EquipmentList", EquipmentList);
+        var dialog = _dialogService.Show<DocumentsDetailsDialog>("Edit document details", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Cancelled)
+        {
+            DocumentDetailRecord? details = DocumentDetails.Where(x => x.ID == id).FirstOrDefault();
+            await _data.UpdateDocumentDetailAsync(details);
+            Snackbar.Add("Document details successfully updated");
             await GetDocumentsDetailsList();
         }
     }
