@@ -1,26 +1,30 @@
-﻿@page "/documentdetails"
-@page "/documentdetails/{DocumentID}"
+﻿@page "/documentdetails/{DocumentID}"
+@using RepairEquipment.Client.Services.Interfaces
+@inject IDocumentDetailsService _data
+@inject IDocumentsDetailsListService _listData
 
     <MudPaper Square="true" Class="pa-4 d-flex flex-grow-1">
 
         <MudContainer Class="align-self-stretch" Style="text-align: left">
-            <MudBreadcrumbs Items="@_items" Separator="></MudBreadcrumbs>
+            <MudBreadcrumbs Items="@_items" Separator=">"></MudBreadcrumbs>
         </MudContainer>
         
         <MudContainer Style="text-align: right; padding-right: unset; margin-right: 15px">
-            <MudButton @onclick="InsertDocument" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>      
+
+            @* Сreate *@
+            <MudButton  StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>      
+            
+            @* BackToDocument *@
             <MudToolTipIconButtonEx
-                Icon="@Icons.Filled.Login"
-                Text="Incoming"/>       
-            <MudToolTipIconButtonEx
-                Icon="@Icons.Filled.Logout"
-                Text="Outgoing"/>               
+                Icon="@Icons.Filled.KeyboardReturn"
+                Text="Back"
+                Href="/"/>    
+                
         </MudContainer>
         
     </MudPaper>
     
-    <MudTable Class="mud-fab-layout-content" @ref="_documentTable" Items="@DocumentsList" Dense="@dense" Hover="@hover" Filter="new Func<DocumentsListItem, bool>(Filter)" 
-              @bind-SelectedItem="_selectedItem">
+    <MudTable Class="mud-fab-layout-content" Items="@DocumentsDetailsList" Dense="@dense" Hover="@hover">
         <ToolBarContent>
             <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
@@ -28,21 +32,38 @@
 
         <HeaderContent>
             <MudTh>DocumentNumber</MudTh>
-            <MudTh>Client</MudTh>
-            <MudTh>Employee</MudTh>
+            <MudTh>DocumentDateOut</MudTh>
+            <MudTh>DocumentDateIn</MudTh>
+            <MudTh>Quantity</MudTh>
+            <MudTh>Sum</MudTh>
+            <MudTh>TotalSum</MudTh>
+            <MudTh>Equipment</MudTh>           
             <MudTh></MudTh>
         </HeaderContent>
         
         <RowTemplate>
             <MudTd DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
-            <MudTd DataLabel="Client">@context.Client</MudTd>
-            <MudTd DataLabel="Employee">@context.Employee</MudTd>
+            <MudTd DataLabel="DocumentDateOut">@context.DocumentDateOut</MudTd>
+            <MudTd DataLabel="DocumentDateIn">@context.DocumentDateIn</MudTd>
+            <MudTd DataLabel="Quantity">@context.Quantity</MudTd>
+            <MudTd DataLabel="Sum">@context.Sum</MudTd>
+            <MudTd DataLabel="TotalSum">@context.TotalSum</MudTd>
+            <MudTd DataLabel="TotalSum">@context.Equipment</MudTd>            
+            <MudTd Style="text-align: right">
+                
+            <MudIconButton
+                Class="hoverable-item top-0 right-0 mt-3 mr-4"
+                Color="Color.Error"
+                Variant="Variant.Filled"
+                Icon="@Icons.Rounded.Delete"/>   
+                    
+            </MudTd>
         </RowTemplate>
 
         <PagerContent>
             <MudTablePager />
         </PagerContent>
-    </MudTable>
+    </MudTable>    
 
     <div class="d-flex flex-wrap mt-4">
         <MudSwitch @bind-Checked="@hover" Color="Color.Primary">Hover</MudSwitch>
@@ -52,8 +73,32 @@
 
 
 @code {
-    
-[Parameter] 
-public int DocumentID { get; set; }
+    private List<DocumentsDetailsListItem>? DocumentsDetailsList;
+    private string searchString = "";
+    private bool hover = true;
+    private bool dense = false;
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Documents", href: "/"),
+        new BreadcrumbItem("DocumentDetails", href: null, disabled: true)
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetDocumentsDetailsList();
+    }
+
+    private async Task GetDocumentsDetailsList() {
+        var items = await _listData.GetListItemsAsync();
+        DocumentsDetailsList = items.ToList();
+    }
+
+    private async Task GetDetails()
+    {
+        
+    }
+
+    [Parameter] 
+    public string? DocumentID { get; set; }
 
 }

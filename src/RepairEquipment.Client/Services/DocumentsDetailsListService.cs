@@ -3,12 +3,12 @@ using RepairEquipment.Shared.Models.Data;
 
 namespace RepairEquipment.Client.Services
 {
-    public class DocumentDetailsListService : IDocumentsDetailsListService
+    public class DocumentsDetailsListService : IDocumentsDetailsListService
     {
         private readonly IUtilsService _utilsService;
 
         private readonly IDocumentDetailsService _documentDetailsService;
-        public DocumentDetailsListService(IUtilsService utilsService, IDocumentDetailsService documentDetailsService)
+        public DocumentsDetailsListService(IUtilsService utilsService, IDocumentDetailsService documentDetailsService)
         {
             _utilsService = utilsService;
             _documentDetailsService = documentDetailsService;

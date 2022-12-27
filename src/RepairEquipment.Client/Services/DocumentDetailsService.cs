@@ -69,7 +69,6 @@ namespace RepairEquipment.Client.Services
                 .DocumentDetailsRecords
                 .Where(x => x.DocumentID == docId)
                 .ToListAsync();
-
         public async Task<IEnumerable<DocumentDetailRecord>> GetDocumentDetailsListAsync() =>
             await _conn
                 .DocumentDetailsRecords

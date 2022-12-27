@@ -81,38 +81,6 @@ namespace RepairEquipment.Client.Services
         {
             IEnumerable<DocExportModel> res;
 
-            if (!string.IsNullOrEmpty(search))
-            {
-                var clientId = await GetDocumentClientByNameAsync(search, ct);
-                var employeeId = await GetDocumentEmployeeByNameAsync(search, ct);
-
-                res = _conn.DocumentsRecords
-                    .SelectMany(d => _conn.DocumentDetailsRecords.InnerJoin(ddd => ddd.DocumentID == d.ID),
-                        (d, dd) => new { d, dd })
-                    .SelectMany(@t => _conn.ClientsRecords.LeftJoin(cd => cd.ID == @t.d.ClientID),
-                        (@t, c) => new { @t, c })
-                    .Where(@t =>
-                        @t.@t.dd.DocumentNumber.Contains(search) || @t.@t.d.ClientID == clientId ||
-                        @t.@t.d.EmployeeID == employeeId)
-                    .Select(@t => new DocExportModel
-                    {
-                        DocumentNumber = @t.@t.d.DocumentNumber,
-                        ClientId = @t.@t.d.ClientID,
-                        ClientRegistrationNr = @t.c.RegistrationNr,
-                        ClientContactPerson = @t.c.ContactPersonName,
-                        EmployeeId = @t.@t.d.EmployeeID,
-                        DocumentDetailNumber = @t.@t.dd.DocumentNumber,
-                        DocumentDateOut = @t.@t.dd.DocumentDateOut,
-                        DocumentDateIn = @t.@t.dd.DocumentDateIn,
-                        EquipmentId = @t.@t.dd.EquipmentID,
-                        Quantity = @t.@t.dd.Quantity,
-                        Sum = @t.@t.dd.Sum,
-                        TotalSum = @t.@t.dd.TotalSum
-                    });
-
-            }
-            else
-            {
                 res = _conn.DocumentDetailsRecords
                     .SelectMany(dd => _conn.DocumentsRecords
                             .InnerJoin(ddd => ddd.ID == dd.DocumentID),
@@ -129,7 +97,6 @@ namespace RepairEquipment.Client.Services
                         Sum = dd.Sum,
                         TotalSum = dd.TotalSum
                     });
-            }
             return res.ToList();
         }
 
