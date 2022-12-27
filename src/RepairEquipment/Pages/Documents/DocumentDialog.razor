@@ -52,8 +52,8 @@
     [Parameter] public DocumentRecord Document { get; set; } = new DocumentRecord();
     [Parameter] public List<EmployeeRecord>? Employees { get; set; }
     [Parameter] public List<ClientRecord>? Clients { get; set; }
-    [Parameter] public static ClientRecord? _selectedClient { get; set; }
-    [Parameter] public static EmployeeRecord? _selectedEmployee { get; set; }
+    [Parameter] public ClientRecord? _selectedClient { get; set; }
+    [Parameter] public EmployeeRecord? _selectedEmployee { get; set; }
     bool success;
 
     void Submit()

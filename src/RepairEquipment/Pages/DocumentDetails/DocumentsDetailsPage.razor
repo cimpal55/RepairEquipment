@@ -3,6 +3,7 @@
 @inject IDocumentDetailsService _data
 @inject IDocumentsDetailsListService _listData
 @inject IEquipmentService _equipment
+@inject IUtilsService _utils
 @inject IDialogService _dialogService
 @inject ISnackbar Snackbar
 
@@ -46,12 +47,12 @@
         
         <RowTemplate>
             <MudTd DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
-            <MudTd DataLabel="DocumentDateOut">@context.DocumentDateOut</MudTd>
-            <MudTd DataLabel="DocumentDateIn">@context.DocumentDateIn</MudTd>
+            <MudTd DataLabel="DocumentDateOut">@context.DocumentDateOut.Value.ToShortDateString()</MudTd>
+            <MudTd DataLabel="DocumentDateIn">@context.DocumentDateIn.Value.ToShortDateString()</MudTd>
             <MudTd DataLabel="Quantity">@context.Quantity</MudTd>
             <MudTd DataLabel="Sum">@context.Sum</MudTd>
             <MudTd DataLabel="TotalSum">@context.TotalSum</MudTd>
-            <MudTd DataLabel="Equipment">@context.EquipmentID</MudTd>            
+            <MudTd DataLabel="Equipment">@_utils.GetEquipmentNameById(@context.EquipmentID)</MudTd>            
             <MudTd Style="text-align: right">
                 
             <MudIconButton
@@ -76,31 +77,29 @@
 
 
 @code {
-    private List<DocumentsDetailsListItem>? DocumentsDetailsList;
     private List<EquipmentRecord>? EquipmentList;
     private string searchString = "";
     private bool hover = true;
     private bool dense = false;
+
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Documents", href: "/"),
         new BreadcrumbItem("DocumentDetails", href: null, disabled: true)
     };
+
     public IEnumerable<DocumentDetailRecord> DocumentDetails { get; set; }
+
     [Parameter]
     public string? DocumentID { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        DocumentDetails = await _data.GetDocumentDetailsAsync(Convert.ToInt32(DocumentID));
+        await GetDocumentsDetailsList();
+        await GetEquipmentList();
     }
-
-    private async Task GetDocumentsDetailsList() {
-        var items = await _listData.GetListItemsAsync().ConfigureAwait(false);
-        DocumentsDetailsList = items.ToList();
-    }
-
     
+    private async Task GetDocumentsDetailsList() => DocumentDetails = await _data.GetDocumentDetailsAsync(Convert.ToInt32(DocumentID));
 
     private async Task GetEquipmentList() => EquipmentList = await _equipment.GetEquipmentListAsync().ConfigureAwait(false);
 

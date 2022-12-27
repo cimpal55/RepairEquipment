@@ -5,13 +5,12 @@
 @using RepairEquipment.Client.Services
 @inject IEquipmentService _data
 @inject IEquipmentTypeService _equipmentType
-@inject IEquipmentListService _listData
 @inject ILocationService _location
 @inject IUtilsService _utilService
 @inject IDialogService _dialogService
 @inject ISnackbar Snackbar
 
-@if (EquipmentItemList == null)
+@if (EquipmentList == null)
 {
     <p><em>Loading ... </em></p>
 }
@@ -22,10 +21,10 @@ else
             <MudBreadcrumbs Items="@_items" Separator=">"></MudBreadcrumbs>
         </MudContainer>
         <MudSpacer />
-        <MudButton Style="margin-right: 15px" @onclick="InsertEquipment" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
+        <MudButton Class="mud-button" Style="margin-right: 15px" @onclick="InsertEquipment" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
     </MudPaper>
     
-    <MudTable Class="mud-fab-layout-content" @ref="_equipmentTable" Items="@EquipmentItemList" Dense="@dense" Hover="@hover">
+    <MudTable Class="mud-fab-layout-content" @ref="_equipmentTable" Items="@EquipmentList" Dense="@dense" Hover="@hover" @bind-SelectedItem="_selectedItem">
 
         <ToolBarContent>
             <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start"
@@ -49,17 +48,17 @@ else
         </HeaderContent>
             
         <RowTemplate>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Type">@context.Type</MudTd>
-            <MudTd DataLabel="Location">@context.Location</MudTd>
-            <MudTd DataLabel="SerialNumber">@context.SerialNumber</MudTd>
-            <MudTd DataLabel="FixedAssetNr">@context.FixedAssetNr</MudTd>
-            <MudTd DataLabel="PurchaseDate">@context.PurchaseDate.ToString("dd/MM/yyyy")</MudTd>
-            <MudTd DataLabel="PurchaseSum">@context.PurchaseSum</MudTd>
-            <MudTd DataLabel="PurchaseInvoiceNr">@context.PurchaseInvoiceNr</MudTd>
-            <MudTd DataLabel="PurchaseInvoiceLink">@context.PurchaseInvoiceLink</MudTd>
-            <MudTd DataLabel="DepreciationPeriod">@context.DepreciationPeriod</MudTd>
-            <MudTd DataLabel="Depreciation">@context.Depreciation</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateEquipment(@context.ID))" DataLabel="Name">@context.Name</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateEquipment(@context.ID))" DataLabel="Type">@_utilService.GetEquipmentTypeNameById(@context.TypeID)</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateEquipment(@context.ID))" DataLabel="Location">@_utilService.GetLocationNameById(@context.LocationID)</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateEquipment(@context.ID))" DataLabel="SerialNumber">@context.SerialNumber</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateEquipment(@context.ID))" DataLabel="FixedAssetNr">@context.FixedAssetNr</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateEquipment(@context.ID))" DataLabel="PurchaseDate">@context.PurchaseDate.Value.ToShortDateString()</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateEquipment(@context.ID))" DataLabel="PurchaseSum">@context.PurchaseSum</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateEquipment(@context.ID))" DataLabel="PurchaseInvoiceNr">@context.PurchaseInvoiceNr</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateEquipment(@context.ID))" DataLabel="PurchaseInvoiceLink">@context.PurchaseInvoiceLink</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateEquipment(@context.ID))" DataLabel="DepreciationPeriod">@context.DepreciationPeriod</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateEquipment(@context.ID))" DataLabel="Depreciation">@context.Depreciation</MudTd>
             <MudTd Style="text-align: right">
                 <MudIconButton
                     Class="hoverable-item top-0 right-0 mt-3 mr-4"
@@ -87,12 +86,11 @@ else
 
 @code {
 
-    MudTable<EquipmentListItem>? _equipmentTable;
-    private EquipmentListItem? _selectedItem;
+    MudTable<EquipmentRecord>? _equipmentTable;
+    private EquipmentRecord? _selectedItem;
     private List<EquipmentRecord>? EquipmentList;
     private List<EquipmentTypeRecord>? EquipmentTypeList;
     private List<LocationRecord>? LocationList;
-    private List<EquipmentListItem>? EquipmentItemList;
     private EquipmentRecord Equipment = new EquipmentRecord();
     private string searchString = "";
     private bool hover = true;
@@ -104,15 +102,9 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await GetEquipmentListItem();
         await GetEquipmentList();
         await GetLocation();
         await GetEquipmentType();
-    }
-    
-    private async ValueTask GetEquipmentListItem() {
-        var items = await _listData.GetListItemsAsync().ConfigureAwait(false);
-        EquipmentItemList = items.ToList();
     }
     
     private async Task GetEquipmentList() => EquipmentList = await _data.GetEquipmentListAsync().ConfigureAwait(false);
@@ -140,26 +132,27 @@ else
             
             Equipment = new EquipmentRecord();
             Snackbar.Add("Equipment successfully added");
-            await GetEquipmentListItem();
+            await GetEquipmentList();
         }
     }
 
-    //private async Task UpdateEquipment(int id)
-    //{
-    //    var parameters = new DialogParameters();
-    //    parameters.Add("Equipment", _selectedItem);
-    //    parameters.Add("EquipmentType", EquipmentTypeList);
-    //    parameters.Add("Location", LocationList);
-    //    var dialog = _dialogService.Show<EquipmentDialog>("Edit Document", parameters);
-    //    var result = await dialog.Result;
+    private async Task UpdateEquipment(int id)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("Equipment", _selectedItem);
+        parameters.Add("EquipmentType", EquipmentTypeList);
+        parameters.Add("Location", LocationList);
+        var dialog = _dialogService.Show<EquipmentDialog>("Edit Document", parameters);
+        var result = await dialog.Result;
 
-    //    if (!result.Cancelled)
-    //    {
-    //        await _data.UpdateDocumentAsync(result.Data as DocumentRecord);
-    //        Snackbar.Add("Document successfully updated");
-    //        await GetDocumentsList();
-    //    }
-    //}
+        if (!result.Cancelled)
+        {
+            EquipmentRecord? equipment = EquipmentList.Where(x => x.ID == id).FirstOrDefault();
+            await _data.UpdateEquipmentAsync(result.Data as EquipmentRecord);
+            Snackbar.Add("Equipment successfully updated");
+            await GetEquipmentList();
+        }
+    }
 
     private async Task DeleteEquipment(int id)
     {
@@ -175,7 +168,7 @@ else
             EquipmentRecord? equipment = EquipmentList.Where(x => x.ID == id).FirstOrDefault();
             await _data.DeleteEquipmentAsync(equipment);
             Snackbar.Add($"#{equipment.ID} Document successfully deleted");
-            await GetEquipmentListItem();
+            await GetEquipmentList();
         }
     }
     

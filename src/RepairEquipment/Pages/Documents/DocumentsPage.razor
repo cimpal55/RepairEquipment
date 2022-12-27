@@ -4,14 +4,13 @@
 @using RepairEquipment.Shared.Models
 @using RepairEquipment.Client.Services
 @inject IDocumentService _data
-@inject IDocumentsListService _listData
 @inject IDialogService _dialogService
 @inject IEmployeeService _employee
 @inject IClientService _client
-@inject IUtilsService _util
+@inject IUtilsService _utilService
 @inject ISnackbar Snackbar
 
-@if (DocumentsList == null)
+@if (Documents == null)
 {
     <p><em>Loading ... </em></p>
 }
@@ -35,8 +34,8 @@ else
         
     </MudPaper>
     
-    <MudTable Class="mud-fab-layout-content" @ref="_documentTable" Items="@DocumentsList" Dense="@dense" Hover="@hover" Filter="new Func<DocumentsListItem, bool>(Filter)" 
-              @bind-SelectedItem="_selectedItem">
+    <MudTable Class="mud-fab-layout-content" @ref="_documentTable" Items="@Documents" Dense="@dense" Hover="@hover" @bind-SelectedItem="_selectedItem"
+              Filter="new Func<DocumentRecord, bool>(Filter)">
         <ToolBarContent>
             <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
@@ -50,9 +49,9 @@ else
         </HeaderContent>
         
         <RowTemplate>
-            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
-            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="Client">@context.Client</MudTd>
-            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="Employee">@context.Employee</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="DocumentNumber">@context.ID</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="Client">@_utilService.GetClientNameById(@context.ClientID)</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="Employee">@_utilService.GetEmployeeNameById(@context.EmployeeID)</MudTd>
             <MudTd Style="text-align: right">
                 
                 <MudLink Href="@DocumentDetailUrl(@context)">
@@ -89,12 +88,11 @@ else
 
 @code {
 
-    MudTable<DocumentsListItem>? _documentTable;
-    private DocumentsListItem? _selectedItem;
+    MudTable<DocumentRecord>? _documentTable;
+    private DocumentRecord? _selectedItem;
     private List<DocumentRecord>? Documents;
     private List<EmployeeRecord>? Employees;
     private List<ClientRecord>? Clients;
-    private List<DocumentsListItem>? DocumentsList;
     private DocumentRecord Document = new DocumentRecord();
     private string searchString = "";
     private bool hover = true;
@@ -108,17 +106,11 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await GetDocumentsList();
         await GetDocuments();
         await GetEmployees();
         await GetClients();
     }
 
-    private async ValueTask GetDocumentsList() {
-        var items = await _listData.GetListItemsAsync().ConfigureAwait(false);
-        DocumentsList = items.ToList();
-    }
-    
     private async Task GetDocuments() {
         Documents = await _data.GetDocumentsListAsync().ConfigureAwait(false);
     }
@@ -143,14 +135,14 @@ else
             await _data.InsertDocumentAsync(document);
 
             Snackbar.Add("Document successfully added");
-            await GetDocumentsList();
+            await GetDocuments();
         }
     }
 
     private async Task UpdateDocument(int id)
     {
         var parameters = new DialogParameters();
-        parameters.Add("Document", _selectedItem);
+        parameters.Add("Document", _selectedItem);     
         parameters.Add("Employees", Employees);
         parameters.Add("Clients", Clients);
         var dialog = _dialogService.Show<DocumentDialog>("Edit Document", parameters);
@@ -160,7 +152,7 @@ else
         {
             await _data.UpdateDocumentAsync(result.Data as DocumentRecord);
             Snackbar.Add("Document successfully updated");
-            await GetDocumentsList();
+            await GetDocuments();
         }
     }
 
@@ -178,11 +170,11 @@ else
             DocumentRecord? document = Documents.Where(x => x.ID == id).FirstOrDefault();
             await _data.DeleteDocumentAsync(document);
             Snackbar.Add($"#{document.ID} Document successfully deleted");
-            await GetDocumentsList();
+            await GetDocuments();
         }
     }
 
-    private bool Filter(DocumentsListItem document)
+    private bool Filter(DocumentRecord document)
     {
         if (string.IsNullOrWhiteSpace(searchString)) return true;
         if (Convert.ToString(document.ID).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
@@ -195,7 +187,7 @@ else
         return $"/api/doc-export/file?fmt={format}&doctype={docType}&search={searchText}";
     }
 
-    private string DocumentDetailUrl(DocumentsListItem item)
+    private string DocumentDetailUrl(DocumentRecord item)
     {
         return $"/documentdetails/{item.ID}";
     }
