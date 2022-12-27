@@ -71,13 +71,12 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public DocumentDetailRecord DocumentDetails { get; set; } = new DocumentDetailRecord();
     [Parameter] public List<EquipmentRecord>? EquipmentList { get; set; }
-    [Parameter] public static EquipmentRecord? _selectedEquipment { get; set; } 
+    [Parameter] public EquipmentRecord? _selectedEquipment { get; set; } 
     [Parameter] public string? DocumentID { get; set; }
     bool success;
 
     void Submit() {
         DocumentDetails.EquipmentID = _selectedEquipment.ID;
-        DocumentDetails.DocumentID = Convert.ToInt32(DocumentID);
         MudDialog.Close(DialogResult.Ok(DocumentDetails));
     }
  

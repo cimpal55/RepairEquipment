@@ -27,9 +27,9 @@
         
     </MudPaper>
     
-    <MudTable Class="mud-fab-layout-content" Items="@DocumentDetails" Dense="@dense" Hover="@hover">
+    <MudTable Class="mud-fab-layout-content" Items="@DocumentDetails" Dense="@dense" Hover="@hover" Filter="new Func<DocumentDetailRecord, bool>(Filter)">
         <ToolBarContent>
-            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start"
+            <MudTextField @bind-Value="searchString" Immediate="true" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
         </ToolBarContent>
 
@@ -139,6 +139,19 @@
             Snackbar.Add("Document details successfully updated");
             await GetDocumentsDetailsList();
         }
+    }
+    
+    private bool Filter(DocumentDetailRecord document) 
+    {
+        if (string.IsNullOrWhiteSpace(searchString)) return true;
+        if (document.DocumentNumber.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (document.DocumentDateOut.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (document.DocumentDateIn.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (document.Quantity.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (document.Sum.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (document.TotalSum.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (_utils.GetEquipmentNameById(document.EquipmentID).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        return false;
     }
     
 }

@@ -24,7 +24,7 @@ else
     <MudTable Class="mud-fab-layout-content" @ref="_employeeTable" Items="@Employees" Dense="@dense" Hover="@hover" Filter="new Func<EmployeeRecord, bool>(Filter)" @bind-SelectedItem="_selectedItem">
 
             <ToolBarContent>
-                <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start"
+                <MudTextField @bind-Value="searchString" Immediate="true" Placeholder="Search" Adornment="Adornment.Start"
                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
             </ToolBarContent>
             

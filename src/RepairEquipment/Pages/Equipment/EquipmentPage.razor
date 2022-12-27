@@ -24,10 +24,10 @@ else
         <MudButton Class="mud-button" Style="margin-right: 15px" @onclick="InsertEquipment" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
     </MudPaper>
     
-    <MudTable Class="mud-fab-layout-content" @ref="_equipmentTable" Items="@EquipmentList" Dense="@dense" Hover="@hover" @bind-SelectedItem="_selectedItem">
+    <MudTable Class="mud-fab-layout-content" @ref="_equipmentTable" Items="@EquipmentList" Dense="@dense" Hover="@hover" Filter="new Func<EquipmentRecord, bool>(Filter)" @bind-SelectedItem="_selectedItem">
 
         <ToolBarContent>
-            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start"
+            <MudTextField @bind-Value="searchString" Immediate="true" Placeholder="Search" Adornment="Adornment.Start"
                         AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
         </ToolBarContent>
             
@@ -171,10 +171,21 @@ else
         }
     }
     
-
-    private bool Filter(EquipmentRecord item) 
+    private bool Filter(EquipmentRecord equipment) 
     {
-            return false;
+        if (string.IsNullOrWhiteSpace(searchString)) return true;
+        if (equipment.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (_utilService.GetEquipmentTypeNameById(equipment.TypeID).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (_utilService.GetLocationNameById(equipment.LocationID).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (equipment.SerialNumber.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (equipment.FixedAssetNr.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (equipment.PurchaseDate.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (equipment.PurchaseSum.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (equipment.PurchaseInvoiceNr.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (equipment.PurchaseInvoiceLink.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (equipment.DepreciationPeriod.ToString().ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (equipment.Depreciation.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        return false;
     }
 
 }

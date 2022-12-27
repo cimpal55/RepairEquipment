@@ -21,11 +21,11 @@ else
         <MudButton Style="margin-right: 15px" @onclick="InsertClient" StartIcon="@Icons.Material.Filled.Create" Variant="Variant.Filled" Color="Color.Success">CREATE</MudButton>
     </MudPaper>
     
-    <MudTable Class="mud-fab-layout-content" @ref="_clientTable" Items="@Clients" Dense="@dense" Hover="@hover" Filter="new Func<ClientRecord, bool>(Filter)"
-              CommitEditTooltip="Commit Edit" @bind-SelectedItem="_selectedItem" OnCommitEditClick="@(()=>UpdateClient(_selectedItem.ID))">
+    <MudTable Class="mud-fab-layout-content" Items="@Clients" Dense="@dense" Hover="@hover" Filter="new Func<ClientRecord, bool>(Filter)"
+              @bind-SelectedItem="_selectedItem">
 
             <ToolBarContent>
-                <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start"
+                <MudTextField @bind-Value="searchString" Immediate="true" Placeholder="Search" Adornment="Adornment.Start"
                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
             </ToolBarContent>
             
@@ -83,7 +83,6 @@ else
 
 @code {
 
-    MudTable<ClientRecord> _clientTable;
     private ClientRecord _selectedItem;
     private List<ClientRecord>? Clients;
     private ClientRecord Client = new ClientRecord();
