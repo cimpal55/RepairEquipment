@@ -4,10 +4,11 @@
 @using RepairEquipment.Shared.Models
 @using RepairEquipment.Client.Services
 @inject IDocumentService _data
+@inject IDocumentDetailsService _details
 @inject IDialogService _dialogService
 @inject IEmployeeService _employee
 @inject IClientService _client
-@inject IUtilsService _utilService
+@inject IUtilsService _utils
 @inject ISnackbar Snackbar
 
 @if (Documents == null)
@@ -52,8 +53,8 @@ else
         
         <RowTemplate>
             <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
-            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="Client">@_utilService.GetClientNameById(@context.ClientID)</MudTd>
-            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="Employee">@_utilService.GetEmployeeNameById(@context.EmployeeID)</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="Client">@_utils.GetClientNameById(@context.ClientID)</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocument(@context.ID))" DataLabel="Employee">@_utils.GetEmployeeNameById(@context.EmployeeID)</MudTd>
             <MudTd Style="text-align: right">
                 
                 <MudLink Href="@DocumentDetailUrl(@context)">
@@ -160,19 +161,33 @@ else
 
     private async Task DeleteDocument(int id)
     {
-        var parameters = new DialogParameters();
-        parameters.Add("ContentText", "Do you really want to delete this record? This process cannot be undone.");
-        parameters.Add("ButtonText", "Delete");
-        parameters.Add("Color", Color.Error);
+        var docDetails = await _details.GetDocumentDetailsAsync(id);
 
-        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-        var dialog = _dialogService.Show<DeleteConfirmation>("Delete", parameters, options);
-        var result = await dialog.Result;
-        if (!result.Cancelled) {
-            DocumentRecord? document = Documents.Where(x => x.ID == id).FirstOrDefault();
-            await _data.DeleteDocumentAsync(document);
-            Snackbar.Add($"#{document.ID} Document successfully deleted");
-            await GetDocuments();
+        if (docDetails.Any())
+        {
+            var opt = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+            var param = new DialogParameters();
+            param.Add("ContentText", "Document has details, firstly you have to delete them");
+            param.Add("ButtonText", "Ok");
+            param.Add("Color", Color.Info);
+            _dialogService.Show<DeleteConfirmation>("Warning", param, opt);
+            return;
+        }
+        if (!docDetails.Any()) {
+            var parameters = new DialogParameters();
+            parameters.Add("ContentText", "Do you really want to delete this record? This process cannot be undone.");
+            parameters.Add("CancelButton", "Cancel");
+            parameters.Add("ButtonText", "Delete");
+            parameters.Add("Color", Color.Error);
+            var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+            var dialog = _dialogService.Show<DeleteConfirmation>("Delete", parameters, options);
+            var result = await dialog.Result;
+            if (!result.Cancelled) {
+                DocumentRecord? document = Documents.Where(x => x.ID == id).FirstOrDefault();
+                await _data.DeleteDocumentAsync(document);
+                Snackbar.Add($"#{document.ID} Document successfully deleted");
+                await GetDocuments();
+            }   
         }
     }
 
@@ -180,8 +195,8 @@ else
     {
         if (string.IsNullOrWhiteSpace(searchString)) return true;
         if (document.DocumentNumber.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (_utilService.GetClientNameById(document.ClientID).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (_utilService.GetEmployeeNameById(document.EmployeeID).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (_utils.GetClientNameById(document.ClientID).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (_utils.GetEmployeeNameById(document.EmployeeID).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         return false;
     }
 

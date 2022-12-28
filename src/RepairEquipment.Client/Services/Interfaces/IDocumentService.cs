@@ -9,6 +9,11 @@ namespace RepairEquipment.Client.Services.Interfaces
         public Task InsertDocumentAsync(DocumentRecord item);
         public Task UpdateDocumentAsync(DocumentRecord item);
         public Task DeleteDocumentAsync(DocumentRecord item);
-        public Task<IEnumerable<DocExportModel>> GetDocumentsAsync(string? search, CancellationToken ct = default);
+        public Task<int> GetDocumentClientByNameAsync(string name);
+        public Task<int> GetDocumentEmployeeByNameAsync(string code);
+        public Task<IEnumerable<DocExportModel>> GetDocumentsAsync(string? search);
+        
+        
+
     }
 }

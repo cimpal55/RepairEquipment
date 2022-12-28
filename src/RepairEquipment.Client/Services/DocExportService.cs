@@ -28,7 +28,7 @@ namespace RepairEquipment.Client.Services
         public async Task<IEnumerable<DocExportRecord>> CreateAsync(string? search, CancellationToken ct = default)
         {
             var items = await _documentService
-                .GetDocumentsAsync(search, ct)
+                .GetDocumentsAsync(search)
                 .Select(x => new DocExportRecord
                 {
                     DocumentNumber = x.DocumentNumber,

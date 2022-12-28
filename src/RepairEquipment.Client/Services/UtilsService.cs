@@ -21,10 +21,10 @@ namespace RepairEquipment.Client.Services
                 .FirstOrDefaultAsync() ?? string.Empty;
         public async Task<string> GetEmployeeNameByIdAsync(int? id) =>
         await _conn
-            .EmployeesRecords
-            .Where(x => x.ID == id)
-            .Select(x => x.Name)
-            .FirstOrDefaultAsync() ?? string.Empty;
+                .EmployeesRecords
+                .Where(x => x.ID == id)
+                .Select(x => x.Name)
+                .FirstOrDefaultAsync() ?? string.Empty;
         public string GetEquipmentTypeNameById(int? id) =>
             _conn
                 .EquipmentTypeRecords
@@ -55,6 +55,27 @@ namespace RepairEquipment.Client.Services
                 .Where(x => x.ID == id)
                 .Select(x => x.Name)
                 .FirstOrDefault() ?? string.Empty;
+
+        public async Task<IEnumerable<DocumentDetailRecord>> GetDocumentDetailEquipmentByIdAsync(int id) =>
+            await _conn
+                .DocumentDetailsRecords
+                .Where(x => x.EquipmentID == id)
+                .ToListAsync()
+                .ConfigureAwait(false);
+
+        public async Task<IEnumerable<DocumentRecord>> GetDocumentEmployeeByIdAsync(int id) =>
+            await _conn
+                .DocumentsRecords
+                .Where(x => x.EmployeeID == id)
+                .ToListAsync()
+                .ConfigureAwait(false);
+
+        public async Task<IEnumerable<DocumentRecord>> GetDocumentClientByIdAsync(int id) =>
+            await _conn
+                .DocumentsRecords
+                .Where(x => x.ClientID == id)
+                .ToListAsync()
+                .ConfigureAwait(false);
 
     }
 }

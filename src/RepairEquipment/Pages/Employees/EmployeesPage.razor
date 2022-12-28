@@ -4,6 +4,7 @@
 @using RepairEquipment.Shared.Models
 @using RepairEquipment.Client.Services
 @inject IEmployeeService _data
+@inject IUtilsService _utils
 @inject IDialogService _dialogService
 @inject ISnackbar Snackbar
 
@@ -135,20 +136,36 @@ else
 
     private async Task DeleteEmployee(int id)
     {
-        var parameters = new DialogParameters();
-        parameters.Add("ContentText", "Do you really want to delete this record? This process cannot be undone.");
-        parameters.Add("ButtonText", "Delete");
-        parameters.Add("Color", Color.Error);
+        var documents = await _utils.GetDocumentEmployeeByIdAsync(id);
+        if (documents.Any())
+        {
+            var opt = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+            var param = new DialogParameters();
+            param.Add("ContentText", "Employee is used in documents, firstly you have to delete them");
+            param.Add("ButtonText", "Ok");
+            param.Add("Color", Color.Info);
+            _dialogService.Show<DeleteConfirmation>("Warning", param, opt);
+            return;            
+        }
 
-        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        if (!documents.Any())
+        {
+            var parameters = new DialogParameters();
+            parameters.Add("ContentText", "Do you really want to delete this record? This process cannot be undone.");
+            parameters.Add("CancelButton", "Cancel");
+            parameters.Add("ButtonText", "Delete");
+            parameters.Add("Color", Color.Error);
 
-        var dialog = _dialogService.Show<DeleteConfirmation>("Delete", parameters, options);
-        var result = await dialog.Result;
-        if (!result.Cancelled) {
-            EmployeeRecord? employee = Employees.Where(x => x.ID == id).FirstOrDefault();
-            await _data.DeleteEmployeeAsync(employee);
-            Snackbar.Add($"#{employee.ID} Employee successfully deleted");
-            await GetEmployees();
+            var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+            var dialog = _dialogService.Show<DeleteConfirmation>("Delete", parameters, options);
+            var result = await dialog.Result;
+            if (!result.Cancelled) {
+                EmployeeRecord? employee = Employees.Where(x => x.ID == id).FirstOrDefault();
+                await _data.DeleteEmployeeAsync(employee);
+                Snackbar.Add($"#{employee.ID} Employee successfully deleted");
+                await GetEmployees();
+            }            
         }
     }
 

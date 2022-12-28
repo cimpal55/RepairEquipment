@@ -58,7 +58,8 @@
                 Class="hoverable-item top-0 right-0 mt-3 mr-4"
                 Color="Color.Error"
                 Variant="Variant.Filled"
-                Icon="@Icons.Rounded.Delete"/>   
+                Icon="@Icons.Rounded.Delete"
+                @onclick="@(()=>DeleteDocumentDetails(@context.ID))"/>   
                     
             </MudTd>
         </RowTemplate>
@@ -137,6 +138,25 @@
             DocumentDetailRecord? details = DocumentDetails.Where(x => x.ID == id).FirstOrDefault();
             await _data.UpdateDocumentDetailAsync(details);
             Snackbar.Add("Document details successfully updated");
+            await GetDocumentsDetailsList();
+        }
+    }
+    
+    private async Task DeleteDocumentDetails(int id)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText", "Do you really want to delete this record? This process cannot be undone.");
+        parameters.Add("ButtonText", "Delete");
+        parameters.Add("Color", Color.Error);
+        
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        var dialog = _dialogService.Show<DeleteConfirmation>("Delete", parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled) {
+            DocumentDetailRecord? details = DocumentDetails.Where(x => x.ID == id).FirstOrDefault();
+            await _data.DeleteDocumentDetailAsync(details);
+            Snackbar.Add("Document details successfully deleted");
             await GetDocumentsDetailsList();
         }
     }

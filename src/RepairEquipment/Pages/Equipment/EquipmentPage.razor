@@ -6,7 +6,7 @@
 @inject IEquipmentService _data
 @inject IEquipmentTypeService _equipmentType
 @inject ILocationService _location
-@inject IUtilsService _utilService
+@inject IUtilsService _utils
 @inject IDialogService _dialogService
 @inject ISnackbar Snackbar
 
@@ -49,8 +49,8 @@ else
             
         <RowTemplate>
             <MudTd @ondblclick="@(()=>UpdateEquipment(@context.ID))" DataLabel="Name">@context.Name</MudTd>
-            <MudTd @ondblclick="@(()=>UpdateEquipment(@context.ID))" DataLabel="Type">@_utilService.GetEquipmentTypeNameById(@context.TypeID)</MudTd>
-            <MudTd @ondblclick="@(()=>UpdateEquipment(@context.ID))" DataLabel="Location">@_utilService.GetLocationNameById(@context.LocationID)</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateEquipment(@context.ID))" DataLabel="Type">@_utils.GetEquipmentTypeNameById(@context.TypeID)</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateEquipment(@context.ID))" DataLabel="Location">@_utils.GetLocationNameById(@context.LocationID)</MudTd>
             <MudTd @ondblclick="@(()=>UpdateEquipment(@context.ID))" DataLabel="SerialNumber">@context.SerialNumber</MudTd>
             <MudTd @ondblclick="@(()=>UpdateEquipment(@context.ID))" DataLabel="FixedAssetNr">@context.FixedAssetNr</MudTd>
             <MudTd @ondblclick="@(()=>UpdateEquipment(@context.ID))" DataLabel="PurchaseDate">@context.PurchaseDate.Value.ToShortDateString()</MudTd>
@@ -106,7 +106,7 @@ else
         await GetLocation();
         await GetEquipmentType();
     }
-    
+
     private async Task GetEquipmentList() => EquipmentList = await _data.GetEquipmentListAsync().ConfigureAwait(false);
 
     private async Task GetEquipmentType() => EquipmentTypeList = await _equipmentType.GetEquipmentTypeListAsync().ConfigureAwait(false);
@@ -129,7 +129,7 @@ else
             await _data.InsertEquipmentAsync(equipment);
 
             EquipmentList.Add(equipment);
-            
+
             Equipment = new EquipmentRecord();
             Snackbar.Add("Equipment successfully added");
             await GetEquipmentList();
@@ -155,19 +155,35 @@ else
 
     private async Task DeleteEquipment(int id)
     {
-        var parameters = new DialogParameters();
-        parameters.Add("ContentText", "Do you really want to delete this record? This process cannot be undone.");
-        parameters.Add("ButtonText", "Delete");
-        parameters.Add("Color", Color.Error);
+        var documentDetails = await _utils.GetDocumentDetailEquipmentByIdAsync(id);
+        if (documentDetails.Any())
+        {
+            var opt = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+            var param = new DialogParameters();
+            param.Add("ContentText", "Equipment is used in document details, firstly you have to delete them");
+            param.Add("ButtonText", "Ok");
+            param.Add("Color", Color.Info);
+            _dialogService.Show<DeleteConfirmation>("Warning", param, opt);
+            return;                        
+        }
 
-        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-        var dialog = _dialogService.Show<DeleteConfirmation>("Delete", parameters, options);
-        var result = await dialog.Result;
-        if (!result.Cancelled) {
-            EquipmentRecord? equipment = EquipmentList.Where(x => x.ID == id).FirstOrDefault();
-            await _data.DeleteEquipmentAsync(equipment);
-            Snackbar.Add($"#{equipment.ID} Document successfully deleted");
-            await GetEquipmentList();
+        if (!documentDetails.Any())
+        {
+            var parameters = new DialogParameters();
+            parameters.Add("ContentText", "Do you really want to delete this record? This process cannot be undone.");
+            parameters.Add("ButtonText", "Delete");
+            parameters.Add("ButtonText", "Delete");
+            parameters.Add("Color", Color.Error);
+
+            var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+            var dialog = _dialogService.Show<DeleteConfirmation>("Delete", parameters, options);
+            var result = await dialog.Result;
+            if (!result.Cancelled) {
+                EquipmentRecord? equipment = EquipmentList.Where(x => x.ID == id).FirstOrDefault();
+                await _data.DeleteEquipmentAsync(equipment);
+                Snackbar.Add($"#{equipment.ID} Document successfully deleted");
+                await GetEquipmentList();
+            }            
         }
     }
     
@@ -175,8 +191,8 @@ else
     {
         if (string.IsNullOrWhiteSpace(searchString)) return true;
         if (equipment.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (_utilService.GetEquipmentTypeNameById(equipment.TypeID).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (_utilService.GetLocationNameById(equipment.LocationID).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (_utils.GetEquipmentTypeNameById(equipment.TypeID).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (_utils.GetLocationNameById(equipment.LocationID).Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         if (equipment.SerialNumber.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         if (equipment.FixedAssetNr.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         if (equipment.PurchaseDate.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;

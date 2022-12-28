@@ -11,6 +11,11 @@ namespace RepairEquipment.Client.Services.Interfaces
         public string GetClientNameById(int? id);
         public string GetEmployeeNameById(int? id);
         public string GetEquipmentNameById(int id);
+        public Task<IEnumerable<DocumentDetailRecord>> GetDocumentDetailEquipmentByIdAsync(int id);
+        public Task<IEnumerable<DocumentRecord>> GetDocumentEmployeeByIdAsync(int id);
+        public Task<IEnumerable<DocumentRecord>> GetDocumentClientByIdAsync(int id);
+
+
 
 
     }

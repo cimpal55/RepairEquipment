@@ -61,23 +61,22 @@ namespace RepairEquipment.Client.Services
                 .UpdateAsync(record)
                 .ConfigureAwait(false);
         }
-
-        public async Task<int> GetDocumentClientByNameAsync(string name, CancellationToken ct = default) =>
+        public async Task<int> GetDocumentClientByNameAsync(string name) =>
             await _conn
-        .ClientsRecords
-        .Where(x => x.Name.Contains(name))
-        .Select(x => x.ID)
-        .FirstOrDefaultAsync(ct)
-        .ConfigureAwait(false);
+                .ClientsRecords
+                .Where(x => x.Name.Contains(name))
+                .Select(x => x.ID)
+                .FirstOrDefaultAsync()
+                .ConfigureAwait(false);
 
-        public async Task<int> GetDocumentEmployeeByNameAsync(string code, CancellationToken ct = default) =>
+        public async Task<int> GetDocumentEmployeeByNameAsync(string code) =>
             await _conn
                 .EmployeesRecords
                 .Where(x => x.Code.Contains(code))
                 .Select(x => x.ID)
-                .FirstOrDefaultAsync(ct)
+                .FirstOrDefaultAsync()
                 .ConfigureAwait(false);
-        public async Task<IEnumerable<DocExportModel>> GetDocumentsAsync(string? search, CancellationToken ct = default)
+        public async Task<IEnumerable<DocExportModel>> GetDocumentsAsync(string? search)
         {
             IEnumerable<DocExportModel> res;
 
