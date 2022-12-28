@@ -41,12 +41,17 @@
         public static class EquipmentHistory
         {
             public const string Id = "ID";
-            public const string EquipmentId = "EquipmentID";
-            public const string ClientId = "ClientID";
-            public const string EmployeeId = "EmployeeID";
+            public const string Equipment = "Equipment";
+            public const string EquipmentType = "EquipmentType";
             public const string Location = "Location";
+            public const string Client = "Client";
+            public const string Employee = "Employee";
+            public const string DocumentNumber = "DocumentNumber";
             public const string DateOut = "DateOut";
             public const string DateIn = "DateIn";
+            public const string Quantity = "Quantity";
+            public const string Sum = "Sum";
+            public const string TotalSum = "TotalSum";
             public const string Created = "Created";
         }
         public static class Document

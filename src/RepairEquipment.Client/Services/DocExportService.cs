@@ -24,7 +24,6 @@ namespace RepairEquipment.Client.Services
             _utilsService = utilsService;
             _pdfService = pdfService;
         }
-
         public async Task<IEnumerable<DocExportRecord>> CreateAsync(string? search, CancellationToken ct = default)
         {
             var items = await _documentService
@@ -48,7 +47,6 @@ namespace RepairEquipment.Client.Services
 
             return items;
         }
-
         public async Task<DocExportFileResponse> ExportPdfAsync(DocExportFileRequest req, string? search, CancellationToken ct = default)
         {
             IDocument document;

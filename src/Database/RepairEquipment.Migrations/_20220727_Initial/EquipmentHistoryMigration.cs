@@ -12,17 +12,18 @@ namespace RepairEquipment.Migrations._20220727_Initial
         {
             migration.Create.Table(TableName)
                 .WithColumn(EquipmentHistory.Id).AsInt32().NotNullable().PrimaryKey().Identity()
-                .WithColumn(EquipmentHistory.EquipmentId).AsInt32().NotNullable().ForeignKey(Tables.Equipment, Equipment.Id)
-                .WithColumn(EquipmentHistory.ClientId).AsInt32().Nullable()
-                .WithColumn(EquipmentHistory.EmployeeId).AsInt32().Nullable()
+                .WithColumn(EquipmentHistory.Equipment).AsString(50).NotNullable()
+                .WithColumn(EquipmentHistory.EquipmentType).AsString(30).NotNullable()
                 .WithColumn(EquipmentHistory.Location).AsString(50).NotNullable()
+                .WithColumn(EquipmentHistory.Client).AsString(50).NotNullable()
+                .WithColumn(EquipmentHistory.Employee).AsString(50).NotNullable()
+                .WithColumn(EquipmentHistory.DocumentNumber).AsString(50).NotNullable()
                 .WithColumn(EquipmentHistory.DateOut).AsDateTime().NotNullable()
                 .WithColumn(EquipmentHistory.DateIn).AsDateTime().Nullable()
+                .WithColumn(EquipmentHistory.Quantity).AsDecimal(7, 2).NotNullable()
+                .WithColumn(EquipmentHistory.Sum).AsDecimal(7, 2).NotNullable()
+                .WithColumn(EquipmentHistory.TotalSum).AsDecimal(7, 2).NotNullable()
                 .WithColumn(EquipmentHistory.Created).AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
-
-            migration.Create.Index($"IX_{TableName}_{EquipmentHistory.EquipmentId}")
-                .OnTable(TableName)
-                .OnColumn(EquipmentHistory.EquipmentId).Ascending();
         }
 
         public void Down(Migration migration)
