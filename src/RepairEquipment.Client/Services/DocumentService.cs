@@ -6,7 +6,7 @@ using RepairEquipment.Shared.Models.Export;
 
 namespace RepairEquipment.Client.Services
 {
-    public class DocumentService : IDocumentService
+    public sealed class DocumentService : IDocumentService
     {
         private readonly SqlDataAccess _conn;
 

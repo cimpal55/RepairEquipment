@@ -8,8 +8,8 @@ namespace RepairEquipment.Shared.Models.Data
     public sealed record EmployeeRecord
     {
         [Column(Client.Id, IsPrimaryKey = true, IsIdentity = true)]
-        public int ID { get; set; }
-
+        public int ID { get; init; }
+        
         [Column(Employee.Name, CanBeNull = false)]
         public string Name { get; set; } = string.Empty;
 
@@ -30,6 +30,8 @@ namespace RepairEquipment.Shared.Models.Data
 
         [Column(Employee.Address, CanBeNull = false)]
         public string Address { get; set; } = string.Empty;
+
+        [Column(Employee.Created, CanBeNull = false)]
         public DateTime Created { get; init; }
     }
 }

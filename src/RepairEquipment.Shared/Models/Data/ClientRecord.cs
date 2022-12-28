@@ -8,7 +8,7 @@ namespace RepairEquipment.Shared.Models.Data
     public sealed record ClientRecord
     {
         [Column(Client.Id, IsPrimaryKey = true, IsIdentity = true)]
-        public int ID { get; set; }
+        public int ID { get; init; }
 
         [Column(Client.Name, CanBeNull = false)]
         public string Name { get; set; } = string.Empty;

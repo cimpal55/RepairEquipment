@@ -5,7 +5,7 @@ using RepairEquipment.Shared.Models.Data;
 
 namespace RepairEquipment.Client.Services
 {
-    public class LocationService : ILocationService
+    public sealed class LocationService : ILocationService
     {
         private readonly SqlDataAccess _conn;
         public LocationService(SqlDataAccess conn)

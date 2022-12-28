@@ -8,7 +8,6 @@ namespace RepairEquipment.Client.Services
     public sealed class UtilsService : IUtilsService
     {
         private readonly SqlDataAccess _conn;
-
         public UtilsService(SqlDataAccess conn)
         {
             _conn = conn;

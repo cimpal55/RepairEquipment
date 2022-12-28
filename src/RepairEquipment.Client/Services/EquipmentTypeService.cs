@@ -5,7 +5,7 @@ using RepairEquipment.Shared.Models.Data;
 
 namespace RepairEquipment.Client.Services
 {
-    public class EquipmentTypeService : IEquipmentTypeService
+    public sealed class EquipmentTypeService : IEquipmentTypeService
     {
         private readonly SqlDataAccess _conn;
         public EquipmentTypeService(SqlDataAccess conn)
