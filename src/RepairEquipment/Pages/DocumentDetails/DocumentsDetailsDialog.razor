@@ -76,6 +76,7 @@
     bool success;
 
     void Submit() {
+        DocumentDetails.DocumentID = Convert.ToInt32(DocumentID);
         DocumentDetails.EquipmentID = _selectedEquipment.ID;
         MudDialog.Close(DialogResult.Ok(DocumentDetails));
     }

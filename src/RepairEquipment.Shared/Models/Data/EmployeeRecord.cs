@@ -30,8 +30,6 @@ namespace RepairEquipment.Shared.Models.Data
 
         [Column(Employee.Address, CanBeNull = false)]
         public string Address { get; set; } = string.Empty;
-
-        [Column(Employee.Created, CanBeNull = false)]
         public DateTime Created { get; init; }
     }
 }

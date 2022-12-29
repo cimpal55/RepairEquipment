@@ -2,8 +2,10 @@
 @using RepairEquipment.Client.Services.Interfaces
 @inject IDocumentDetailsService _data
 @inject IEquipmentService _equipment
+@inject IEquipmentHistoryService _equipmentHistory
 @inject IUtilsService _utils
 @inject IDialogService _dialogService
+@inject IEquipmentHistoryService _history
 @inject ISnackbar Snackbar
 
     <MudPaper Square="true" Class="pa-4 d-flex flex-grow-1">
@@ -27,7 +29,7 @@
         
     </MudPaper>
     
-    <MudTable Class="mud-fab-layout-content" Items="@DocumentDetails" Dense="@dense" Hover="@hover" Filter="new Func<DocumentDetailRecord, bool>(Filter)">
+    <MudTable Class="mud-fab-layout-content" @bind-SelectedItem="_selectedItem" Items="@DocumentDetails" Dense="@dense" Hover="@hover" Filter="new Func<DocumentDetailRecord, bool>(Filter)">
         <ToolBarContent>
             <MudTextField @bind-Value="searchString" Immediate="true" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
@@ -46,8 +48,8 @@
         
         <RowTemplate>
             <MudTd @ondblclick="@(()=>UpdateDocumentDetails(@context.ID))" DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
-            <MudTd @ondblclick="@(()=>UpdateDocumentDetails(@context.ID))" DataLabel="DocumentDateOut">@context.DocumentDateOut.Value.ToShortDateString()</MudTd>
-            <MudTd @ondblclick="@(()=>UpdateDocumentDetails(@context.ID))" DataLabel="DocumentDateIn">@context.DocumentDateIn.Value.ToShortDateString()</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocumentDetails(@context.ID))" DataLabel="DocumentDateOut">@context.DocumentDateOut</MudTd>
+            <MudTd @ondblclick="@(()=>UpdateDocumentDetails(@context.ID))" DataLabel="DocumentDateIn">@context.DocumentDateIn</MudTd>
             <MudTd @ondblclick="@(()=>UpdateDocumentDetails(@context.ID))" DataLabel="Quantity">@context.Quantity</MudTd>
             <MudTd @ondblclick="@(()=>UpdateDocumentDetails(@context.ID))" DataLabel="Sum">@context.Sum</MudTd>
             <MudTd @ondblclick="@(()=>UpdateDocumentDetails(@context.ID))" DataLabel="TotalSum">@context.TotalSum</MudTd>
@@ -99,7 +101,7 @@
         await GetDocumentsDetailsList();
         await GetEquipmentList();
     }
-    
+
     private async Task GetDocumentsDetailsList() => DocumentDetails = await _data.GetDocumentDetailsAsync(Convert.ToInt32(DocumentID));
 
     private async Task GetEquipmentList() => EquipmentList = await _equipment.GetEquipmentListAsync().ConfigureAwait(false);
@@ -116,9 +118,9 @@
         if (!result.Cancelled)
         {
             var document = result.Data as DocumentDetailRecord;
-
+            
             await _data.InsertDocumentDetailAsync(document);
-
+            
             Snackbar.Add("Document details successfully added");
             await GetDocumentsDetailsList();
         }

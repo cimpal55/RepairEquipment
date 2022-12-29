@@ -1,0 +1,83 @@
+﻿@page "/equipmenthistory"
+@using RepairEquipment.Client.DbAccess
+@using RepairEquipment.Client.Services.Interfaces
+@using RepairEquipment.Shared.Models
+@using RepairEquipment.Client.Services
+@inject IEquipmentHistoryService _data
+
+@if (EquipmentHistory == null)
+{
+    <p><em>Loading ... </em></p>
+}
+else
+{
+    <MudPaper Square="true" Style="text-align: left" Class="pa-4 d-flex flex-grow-1">
+        <MudContainer Class="align-self-stretch" Style="text-align: left">
+            <MudBreadcrumbs Items="@_items" Separator=">"></MudBreadcrumbs>
+        </MudContainer>
+        <MudSpacer />
+    </MudPaper>
+    
+    <MudTable Class="mud-fab-layout-content" Items="@EquipmentHistory" Dense="@dense" Hover="@hover">
+
+        <ToolBarContent>
+            <MudTextField @bind-Value="searchString" Immediate="true" Placeholder="Search" Adornment="Adornment.Start"
+                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
+        </ToolBarContent>
+            
+        <HeaderContent>
+            <MudTh>Equipment</MudTh>
+            <MudTh>EquipmentType</MudTh>
+            <MudTh>Location</MudTh>
+            <MudTh>Client</MudTh>
+            <MudTh>Employee</MudTh>
+            <MudTh>DocumentNumber</MudTh>
+            <MudTh>DateOut</MudTh>
+            <MudTh>DateIn</MudTh>
+            <MudTh>Quantity</MudTh>
+            <MudTh>Sum</MudTh>
+            <MudTh>TotalSum</MudTh>
+        </HeaderContent>
+            
+        <RowTemplate>
+            <MudTd DataLabel="Equipment">@context.Equipment</MudTd>
+            <MudTd DataLabel="EquipmentType">@context.EquipmentType</MudTd>
+            <MudTd DataLabel="Location">@context.Location</MudTd>
+            <MudTd DataLabel="Client">@context.Client</MudTd>
+            <MudTd DataLabel="Employee">@context.Employee</MudTd>
+            <MudTd DataLabel="DocumentNumber">@context.DocumentNumber</MudTd>
+            <MudTd DataLabel="DateOut">@context.DocumentDateOut.Value.ToShortDateString()</MudTd>
+            <MudTd DataLabel="DateIn">@context.DocumentDateIn</MudTd>
+            <MudTd DataLabel="Quantity">@context.Quantity</MudTd>
+            <MudTd DataLabel="Sum">@context.Sum</MudTd>
+            <MudTd DataLabel="TotalSum">@context.TotalSum</MudTd>        
+        </RowTemplate>
+
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+
+    <div class="d-flex flex-wrap mt-4">
+        <MudSwitch @bind-Checked="@hover" Color="Color.Primary">Hover</MudSwitch>
+        <MudSwitch @bind-Checked="@dense" Color="Color.Secondary">Dense</MudSwitch>
+    </div>
+}
+    
+@code {
+    private string searchString = "";
+    private bool hover = true;
+    private bool dense = false;
+    private IEnumerable<EquipmentHistoryRecord> EquipmentHistory;
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("EquipmentHistory", href: null, disabled: true),
+    };
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await GetEquipmentHistory();
+    }
+
+    private async Task GetEquipmentHistory() => EquipmentHistory = await _data.GetEquipmentHistoryListAsync();
+}

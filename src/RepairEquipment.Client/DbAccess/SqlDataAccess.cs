@@ -22,5 +22,6 @@ namespace RepairEquipment.Client.DbAccess
         public ITable<DocumentRecord> DocumentsRecords => this.GetTable<DocumentRecord>();
         public ITable<DocumentDetailRecord> DocumentDetailsRecords => this.GetTable<DocumentDetailRecord>();
         public ITable<LocationRecord> LocationRecords => this.GetTable<LocationRecord>();
+        public ITable<EquipmentHistoryRecord> EquipmentHistoryRecords => this.GetTable<EquipmentHistoryRecord>();
     }
 }

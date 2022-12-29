@@ -28,11 +28,11 @@ namespace RepairEquipment.Shared.Models.Data
         [Column(EquipmentHistory.DocumentNumber, CanBeNull = false)]
         public string DocumentNumber { get; set; } = string.Empty;
 
-        [Column(EquipmentHistory.DateOut, CanBeNull = false)]
-        public DateTime? DateOut { get; set; }
+        [Column(EquipmentHistory.DocumentDateOut, CanBeNull = false)]
+        public DateTime? DocumentDateOut { get; set; }
 
-        [Column(EquipmentHistory.DateIn)]
-        public DateTime? DateIn { get; set; }
+        [Column(EquipmentHistory.DocumentDateIn)]
+        public DateTime? DocumentDateIn { get; set; }
 
         [Column(EquipmentHistory.Quantity, CanBeNull = false)]
         public decimal Quantity { get; set; }

@@ -90,7 +90,6 @@ else
 
 
 @code {
-
     MudTable<DocumentRecord>? _documentTable;
     private DocumentRecord? _selectedItem;
     private List<DocumentRecord>? Documents;
@@ -114,13 +113,11 @@ else
         await GetClients();
     }
 
-    private async Task GetDocuments() {
-        Documents = await _data.GetDocumentsListAsync().ConfigureAwait(false);
-    }
+    private async Task GetDocuments() => Documents = await _data.GetDocumentsListAsync().ConfigureAwait(false);
 
-    private async Task GetEmployees() => Employees = await _employee.GetEmployeesListAsync();
-
-    private async Task GetClients() => Clients = await _client.GetClientsListAsync();
+    private async Task GetEmployees() => Employees = await _employee.GetEmployeesListAsync().ConfigureAwait(false);
+    
+    private async Task GetClients() => Clients = await _client.GetClientsListAsync().ConfigureAwait(false);
 
     private async Task InsertDocument()
     {

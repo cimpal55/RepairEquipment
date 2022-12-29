@@ -6,7 +6,7 @@ using RepairEquipment.Shared.Models.Export;
 
 namespace RepairEquipment.Client.Services
 {
-    public sealed class DocExportService
+    public sealed class DocExportService : IDocExportService
     {
         private const string FileName = "doc_export";
         private const string PdfContentType = "application/pdf";

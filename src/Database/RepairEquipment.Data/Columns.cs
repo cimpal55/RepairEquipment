@@ -47,8 +47,8 @@
             public const string Client = "Client";
             public const string Employee = "Employee";
             public const string DocumentNumber = "DocumentNumber";
-            public const string DateOut = "DateOut";
-            public const string DateIn = "DateIn";
+            public const string DocumentDateOut = "DocumentDateOut";
+            public const string DocumentDateIn = "DocumentDateIn";
             public const string Quantity = "Quantity";
             public const string Sum = "Sum";
             public const string TotalSum = "TotalSum";
