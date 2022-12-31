@@ -1,5 +1,6 @@
 ﻿@using RepairEquipment.Client.Services
 @using RepairEquipment.Client.Services.Interfaces
+@inject IUtilsService _utilsService
 
 <MudDialog>
     <DialogContent>
@@ -55,6 +56,13 @@
     [Parameter] public ClientRecord? _selectedClient { get; set; }
     [Parameter] public EmployeeRecord? _selectedEmployee { get; set; }
     bool success;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _selectedClient = await _utilsService.GetClientNameByIdAsync(Document.ClientID);
+        _selectedEmployee = await _utilsService.GetEmployeeNameByIdAsync(Document.EmployeeID);
+    }
 
     void Submit()
     {

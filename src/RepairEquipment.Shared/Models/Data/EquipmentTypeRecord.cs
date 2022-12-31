@@ -8,13 +8,13 @@ namespace RepairEquipment.Shared.Models.Data
     public sealed record EquipmentTypeRecord
     {
         [Column(EquipmentType.Id, IsPrimaryKey = true, IsIdentity = true)]
-        public int ID { get; init; }
+        public int ID { get; set; }
 
         [Column(EquipmentType.Name, CanBeNull = false)]
-        public string Name { get; init; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
         [Column(EquipmentType.FixedAssetNeeded, CanBeNull = false)]
-        public bool FixedAssetNeeded { get; init; } = false;
+        public bool FixedAssetNeeded { get; set; } = false;
 
         [Column(EquipmentType.Created, CanBeNull = false)]
         public DateTime Created { get; init; }

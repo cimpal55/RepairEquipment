@@ -1,5 +1,7 @@
 ﻿@using RepairEquipment.Client.Services
 @using System.ComponentModel.DataAnnotations
+@using RepairEquipment.Client.Services.Interfaces
+@inject IUtilsService _utilsService
 
 <MudDialog>
     <DialogContent>
@@ -28,8 +30,15 @@
                             <MudSelect Xs="12" Label="Location" Immediate="true" Required="true" RequiredError="Location is required!" @bind-Value="_selectedLocation">
                                 @foreach (LocationRecord location in Location)
                                 {
+                                    @if (location.ID == Equipment.LocationID) 
+                                    {
                                     <MudSelectItem Value="@location">@location.Name</MudSelectItem>
-                                }
+                                    }
+                                    else
+                                    {
+                                    <MudSelectItem Value="@location">@location.Name</MudSelectItem>                                    
+                                    }
+                            }
                             </MudSelect>
                         </MudItem>
 
@@ -101,6 +110,13 @@
     [Parameter] public List<EquipmentTypeRecord> EquipmentType { get; set; }
     [Parameter] public List<LocationRecord> Location { get; set; }
     bool success;
+
+    protected override async Task OnInitializedAsync() 
+    {
+        await base.OnInitializedAsync();
+        _selectedLocation = await _utilsService.GetLocationByIdAsync(Equipment.LocationID);
+        _selectedEquipmentType = await _utilsService.GetEquipmentTypeByIdAsync(Equipment.TypeID);
+    }
 
     void Submit()
     {

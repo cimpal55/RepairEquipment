@@ -12,18 +12,33 @@ namespace RepairEquipment.Client.Services
         {
             _conn = conn;
         }
-        public async Task<string> GetClientNameByIdAsync(int? id) =>
+        public async Task<ClientRecord> GetClientNameByIdAsync(int? id) =>
             await _conn
                     .ClientsRecords
                     .Where(x => x.ID == id)
-                    .Select(x => x.Name)
-                    .FirstOrDefaultAsync() ?? string.Empty;
-        public async Task<string> GetEmployeeNameByIdAsync(int? id) =>
+                    .FirstOrDefaultAsync();
+        public async Task<EmployeeRecord> GetEmployeeNameByIdAsync(int? id) =>
             await _conn
                     .EmployeesRecords
                     .Where(x => x.ID == id)
-                    .Select(x => x.Name)
-                    .FirstOrDefaultAsync() ?? string.Empty;
+                    .FirstOrDefaultAsync();
+        public async Task<EquipmentTypeRecord> GetEquipmentTypeByIdAsync(int? id) =>
+            await _conn
+                    .EquipmentTypeRecords
+                    .Where(x => x.ID == id)
+                    .FirstOrDefaultAsync();
+        public async Task<EquipmentRecord> GetEquipmentByIdAsync(int? id) =>
+            await _conn
+                    .EquipmentRecords
+                    .Where(x => x.ID == id)
+                    .FirstOrDefaultAsync();
+
+        public async Task<LocationRecord> GetLocationByIdAsync(int? id) =>
+            await _conn
+                    .LocationRecords
+                    .Where(x => x.ID == id)
+                    .FirstOrDefaultAsync();
+
         public string GetEquipmentTypeNameById(int? id) =>
             _conn
                 .EquipmentTypeRecords
@@ -72,6 +87,13 @@ namespace RepairEquipment.Client.Services
                 .Where(x => x.ClientID == id)
                 .ToListAsync()
                 .ConfigureAwait(false);
+
+        //public async Task<IEnumerable<EquipmentRecord>> GetUsedEquipmentAsync() =>
+        //    await _conn
+        //        .DocumentDetailsRecords
+        //        .Where(x => x.EquipmentID)
+        //        .ToListAsync()
+        //        .ConfigureAwait(false);
 
     }
 }

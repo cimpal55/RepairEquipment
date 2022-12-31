@@ -1,5 +1,6 @@
 ﻿@using RepairEquipment.Client.Services
 @using RepairEquipment.Client.Services.Interfaces
+@inject IUtilsService _utilsService
 
 <MudDialog>
     <DialogContent>
@@ -74,6 +75,12 @@
     [Parameter] public EquipmentRecord? _selectedEquipment { get; set; } 
     [Parameter] public string? DocumentID { get; set; }
     bool success;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _selectedEquipment = await _utilsService.GetEquipmentByIdAsync(DocumentDetails.EquipmentID);
+    }
 
     void Submit() {
         DocumentDetails.DocumentID = Convert.ToInt32(DocumentID);
