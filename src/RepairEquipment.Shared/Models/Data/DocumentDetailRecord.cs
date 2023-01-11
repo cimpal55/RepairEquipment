@@ -8,7 +8,7 @@ namespace RepairEquipment.Shared.Models.Data
     public sealed record DocumentDetailRecord
     {
         [Column(DocumentDetail.Id, IsPrimaryKey = true, IsIdentity = true)]
-        public int ID { get; init; }
+        public int ID { get; set; }
 
         [Column(DocumentDetail.DocumentId)]
         public int DocumentID { get; set; }

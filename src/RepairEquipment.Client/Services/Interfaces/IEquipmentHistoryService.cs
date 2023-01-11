@@ -5,7 +5,8 @@ namespace RepairEquipment.Client.Services.Interfaces
     public interface IEquipmentHistoryService
     {
         public Task<IEnumerable<EquipmentHistoryRecord>> GetEquipmentHistoryListAsync();
-        public Task<IEnumerable<EquipmentHistoryRecord>> GetEquipmentHistoryListAsyncById(int id);
-        public Task InsertEquipmentHistoryAsync(EquipmentHistoryRecord item);
+        public Task<IEnumerable<EquipmentHistoryRecord>> GetEquipmentHistoryFromDbAsync();
+        public Task<IEnumerable<EquipmentHistoryRecord>> GetEquipmentHistoryListAsyncByData(int id);
+        public Task InsertEquipmentHistoryAsync(IEnumerable<EquipmentHistoryRecord> item);
     }
 }

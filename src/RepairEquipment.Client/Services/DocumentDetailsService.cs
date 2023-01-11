@@ -40,7 +40,7 @@ namespace RepairEquipment.Client.Services
             };
 
             await _conn
-                .InsertAsync(record)
+                .InsertWithInt64IdentityAsync(record)
                 .ConfigureAwait(false);
         }
 

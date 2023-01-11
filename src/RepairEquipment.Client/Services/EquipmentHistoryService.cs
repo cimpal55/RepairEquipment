@@ -9,8 +9,6 @@ namespace RepairEquipment.Client.Services
     public sealed class EquipmentHistoryService : IEquipmentHistoryService
     {
         private readonly SqlDataAccess _conn;
-
-        private readonly IUtilsService _utilsService;
         public EquipmentHistoryService(SqlDataAccess conn)
         {
             _conn = conn;
@@ -30,8 +28,12 @@ namespace RepairEquipment.Client.Services
 
             return await _conn.QueryToListAsync<EquipmentHistoryRecord>(sql);
         }
+        public async Task<IEnumerable<EquipmentHistoryRecord>> GetEquipmentHistoryFromDbAsync() =>
+            await _conn
+                    .EquipmentHistoryRecords
+                    .ToListAsync();
 
-        public async Task<IEnumerable<EquipmentHistoryRecord>> GetEquipmentHistoryListAsyncById(int id)
+        public async Task<IEnumerable<EquipmentHistoryRecord>> GetEquipmentHistoryListAsyncByData(int id)
         {
             var sql = @"SELECT ROW_NUMBER() OVER(ORDER BY eq.Name ASC) AS ID, dd.ID as DocumentDetailsID, eq.Name AS Equipment,
                       et.Name AS EquipmentType, lo.Name AS Location, cl.Name AS Client, CONCAT(em.Name, em.Surname) AS Employee,
@@ -44,15 +46,38 @@ namespace RepairEquipment.Client.Services
                       LEFT JOIN TBL_CONF_Clients cl ON cl.ID = do.ClientID 
                       LEFT JOIN TBL_CONF_Employees em ON em.ID = do.EmployeeID
                       WHERE dd.ID = @id";
-            
-            return await _conn.QueryToListAsync<EquipmentHistoryRecord>(sql);
-            
+
+            return await _conn.QueryToListAsync<EquipmentHistoryRecord>(sql, id);
         }
-        public async Task InsertEquipmentHistoryAsync(EquipmentHistoryRecord equipmentHistory)
+        //public bool CompareRows(List<EquipmentHistoryRecord> list)
+        //{
+        //    var sql = @"SELECT 
+        //                 (CASE WHEN EXISTS 
+        //                   (SELECT NULL AS EMPTY
+        //                      FROM TBL_EquipmentHistory";
+
+        //    foreach (EquipmentHistoryRecord item in list) {
+                
+        //    }
+        //}
+
+        public async Task InsertEquipmentHistoryAsync(IEnumerable<EquipmentHistoryRecord> item)
         {
-            await _conn
-                    .InsertAsync(equipmentHistory)
-                    .ConfigureAwait(false);
+            IEnumerable<EquipmentHistoryRecord>? data = await GetEquipmentHistoryFromDbAsync().ConfigureAwait(false);
+            
+            foreach (EquipmentHistoryRecord record in item)
+            {
+                if (!data.Any() || !data.Equals(record))
+                {
+                    await _conn
+                        .InsertAsync(record)
+                        .ConfigureAwait(false);
+                }
+                else
+                {
+                    return;
+                }
+            }
         }
     }
 }

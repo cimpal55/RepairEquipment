@@ -42,8 +42,6 @@ namespace RepairEquipment.Shared.Models.Data
 
         [Column(EquipmentHistory.TotalSum, CanBeNull = false)]
         public decimal TotalSum { get; set; }
-
-        [Column(EquipmentHistory.Created, CanBeNull = false)]
         public DateTime Created { get; init; }
         
     }

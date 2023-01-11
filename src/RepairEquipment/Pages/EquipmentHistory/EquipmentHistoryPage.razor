@@ -73,11 +73,14 @@ else
     {
         new BreadcrumbItem("EquipmentHistory", href: null, disabled: true),
     };
-    
+
     protected override async Task OnInitializedAsync()
     {
         await GetEquipmentHistory();
     }
 
-    private async Task GetEquipmentHistory() => EquipmentHistory = await _data.GetEquipmentHistoryListAsync();
+    private async Task GetEquipmentHistory() { 
+        EquipmentHistory = await _data.GetEquipmentHistoryListAsync();
+        await _data.InsertEquipmentHistoryAsync(EquipmentHistory).ConfigureAwait(true);
+    }
 }

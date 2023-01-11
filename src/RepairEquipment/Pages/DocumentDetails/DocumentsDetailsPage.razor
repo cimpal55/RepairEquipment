@@ -118,9 +118,11 @@
         if (!result.Cancelled)
         {
             var document = result.Data as DocumentDetailRecord;
-            
+
             await _data.InsertDocumentDetailAsync(document);
-            
+
+            var equipmentHistory = _equipmentHistory.GetEquipmentHistoryListAsyncByData(document.ID);
+
             Snackbar.Add("Document details successfully added");
             await GetDocumentsDetailsList();
         }
